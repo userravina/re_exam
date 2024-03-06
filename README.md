@@ -28,7 +28,6 @@ https://github.com/userravina/re_exam/assets/120082785/9202c17e-e157-4c48-9aba-c
 
 
 
-
 import 'dart:async';
 import 'dart:ui';
 import 'package:better_player/better_player.dart';
@@ -68,9 +67,7 @@ class _Bottom_SheetState extends State<Bottom_Sheet> {
 
     betterPlayerController = BetterPlayerController(
       BetterPlayerConfiguration(
-        aspectRatio: 16 / 9, // Set the aspect ratio as needed
         autoPlay: true,
-        looping: true,
         fit: BoxFit.cover,
         controlsConfiguration: BetterPlayerControlsConfiguration(
           // Customize controls if needed
@@ -81,7 +78,15 @@ class _Bottom_SheetState extends State<Bottom_Sheet> {
         'https://www.groworbit.in/videoapp/images/video/v_1698472254541_Lisa%20Aamn%20Stream%204.mp4',
       ),
     );
-    betterPlayerController.enterFullScreen();
+
+    // betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
+
+    betterPlayerController!.setControlsAlwaysVisible(false);
+    betterPlayerController!.setOverriddenAspectRatio(0.3);
+    betterPlayerController!.setControlsVisibility(false);
+    betterPlayerController!.setControlsEnabled(false);
+    // betterPlayerController!.addEventsListener(_handleEvent);
+    // betterPlayerController!.setupDataSource(dataSource);
     super.initState();
   }
 
@@ -1168,6 +1173,7 @@ class _Bottom_SheetState extends State<Bottom_Sheet> {
     return '${duration.inHours}:${(duration.inMinutes % 60).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
   }
 }
+
 
 
 
