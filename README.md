@@ -20,6 +20,153 @@ samples, guidance on mobile development, and a full API reference.
   <img src="https://github.com/userravina/re_exam/assets/120082785/5c989356-429c-42cb-af53-b846c047d09f" height="50%" width="30%">
   <img src="https://github.com/userravina/re_exam/assets/120082785/f047ff5f-f02b-4762-9b23-c0c8345ea5d2"  height="50%" width="30%">
 </p>
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:gallary_app/controller/version_controller.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:sizer/sizer.dart';
+import '../../controller/instal_controller.dart';
+import '../../utils/ads_helper.dart';
+class Version_Scren extends StatefulWidget {
+  const Version_Scren({super.key});
+
+  @override
+  State<Version_Scren> createState() => _Version_ScrenState();
+}
+
+class _Version_ScrenState extends State<Version_Scren> {
+  Version_Controller controller = Get.put(Version_Controller());
+
+  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+  InstalController installController = Get.put(InstalController());
+
+  late AppLifecycleReactor _appLifecycleReactor;
+
+
+String? str;
+  Future<void> fetchRemoteConfig() async {
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(minutes: 1),
+      minimumFetchInterval: const Duration(hours: 1),
+    ));
+    await remoteConfig.fetchAndActivate().then((value) {
+      str=remoteConfig.getString("data");
+      print(str);
+    });
+
+
+  }
+  @override
+  void initState() {
+    super.initState();
+    fetchRemoteConfig();
+    Ads_helper ads_helper = Ads_helper()..loadAppOpenAd();
+    _appLifecycleReactor = AppLifecycleReactor(ads_helper: ads_helper);
+    _appLifecycleReactor.listenToAppStateChanges();
+    controller.versionload();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Obx(
+          () => controller.islodin.value
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              SizedBox(
+                                width: 4.w,
+                              ),
+                              controller.data!.data!.adMaster![index].enable ==
+                                      1
+                                  ? Text(
+                                      "${controller.data!.data!.adMaster![index].admName} is enable ${controller.data!.data!.adMaster![index].enable}",
+                                      style: TextStyle(fontSize: 15),
+                                    )
+                                  : Text(""),
+                              ListView.builder(
+                                itemBuilder: (context, c) {
+                                  return controller.data!.data!.adMaster![index]
+                                              .adChield![c].enable ==
+                                          1
+                                      ? Text(
+                                          "${controller.data!.data!.adMaster![index].adChield![c].adKeyword} is enable ${controller.data!.data!.adMaster![index].adChield![c].enable}",
+                                          style: TextStyle(fontSize: 15),
+                                        )
+                                      : Text("");
+                                },
+                                itemCount: controller.data!.data!
+                                    .adMaster![index].adChield!.length,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                              ),
+                            ],
+                          );
+                        },
+                        itemCount: controller.data!.data!.adMaster!.length,
+                      ),
+                    ),
+                    Text("Google Keyword same enable"),
+                    controller.keybool.value == true
+                        ? Container(
+                            height: 170,
+                            child: AdWidget(
+                              ad: Ads_helper.ads_helper.bannerAd3!,
+                            ),
+                          )
+                        : Container(),
+                    controller.keybool.value == true
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black),
+                            onPressed: () {
+                              Ads_helper.ads_helper.interstitialAd!.show();
+                              Ads_helper.ads_helper.loadInterstitialAd();
+                            },
+                            child: Text(
+                              "Interstitial Ads",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        : Container(),
+                    controller.keybool.value == true
+                        ? Obx(
+                            () => installController.isLoading.value == false
+                                ? Container(
+                                    height: 350,
+                                    child: AdWidget(
+                                      ad: installController.nativeAd!,
+                                    ),
+                                  )
+                                : Container(),
+                          )
+                        : Container(),
+                    controller.keybool.value == true
+                        ? ElevatedButton(
+                            onPressed: () {
+                              Ads_helper.ads_helper.appOpenAd!.show();
+                              Ads_helper.ads_helper.loadAppOpenAd();
+                            },
+                            child: Text("AppOpen Ad"),
+                          )
+                        : Container(),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+}
+
 import 'package:applovin_max/applovin_max.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
