@@ -20,6 +20,63 @@ samples, guidance on mobile development, and a full API reference.
   <img src="https://github.com/userravina/re_exam/assets/120082785/5c989356-429c-42cb-af53-b846c047d09f" height="50%" width="30%">
   <img src="https://github.com/userravina/re_exam/assets/120082785/f047ff5f-f02b-4762-9b23-c0c8345ea5d2"  height="50%" width="30%">
 </p>
+apply plugin: 'com.google.gms.google-services'
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
+import 'package:gallary_app/model/remote_config_model.dart';
+import 'package:gallary_app/utils/api_helper.dart';
+
+class Splash_Screen extends StatefulWidget {
+  const Splash_Screen({super.key});
+
+  @override
+  State<Splash_Screen> createState() => _Splash_ScreenState();
+}
+
+class _Splash_ScreenState extends State<Splash_Screen> {
+  @override
+  void initState() {
+    fetchRemoteConfig();
+    super.initState();
+  }
+  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+  String? str;
+  Future<void> fetchRemoteConfig() async {
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(minutes: 1),
+      minimumFetchInterval: const Duration(hours: 1),
+    ));
+    await remoteConfig.fetchAndActivate().then((value) {
+      str=remoteConfig.getString("data")!;
+      print(str);
+
+      RemoteConfigModel remoteConfigs=RemoteConfigModel.fromJson(json.decode(str!));
+
+      Api_helper.baseUrl=remoteConfigs.baseUrl!;
+      Api_helper.appSecret=remoteConfigs.appSecret!;
+
+
+      Timer(Duration(seconds: 3), () {
+        Navigator.pushNamed(context, 'version');
+      });
+    });
+
+  }
+  @override
+  Widget build(BuildContext context) {
+
+    return SafeArea(
+        child: Scaffold(
+      body: Column(
+        children: [],
+      ),
+    ));
+  }
+}
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
