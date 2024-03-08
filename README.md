@@ -20,7 +20,372 @@ samples, guidance on mobile development, and a full API reference.
   <img src="https://github.com/userravina/re_exam/assets/120082785/5c989356-429c-42cb-af53-b846c047d09f" height="50%" width="30%">
   <img src="https://github.com/userravina/re_exam/assets/120082785/f047ff5f-f02b-4762-9b23-c0c8345ea5d2"  height="50%" width="30%">
 </p>
+import 'package:applovin_max/applovin_max.dart';
+import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+class Ads_helper {
 
+  static final Ads_helper ads_helper = Ads_helper();
+
+  final Duration maxCacheDuration = const Duration(hours: 4);
+
+  DateTime? appOpenLoadTime;
+
+  late AppOpenAd? appOpenAd;
+
+  BannerAd? bannerAd;
+  BannerAd? bannerAd2;
+  BannerAd? bannerAd3;
+  InterstitialAd? interstitialAd;
+  NativeAd? nativeAd;
+  RewardedAd? rewardedAd;
+
+
+  void loadBannerAd() {
+    bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: "ca-app-pub-3940256099942544/9214589741",
+      listener: BannerAdListener(),
+      request: AdRequest(),
+    );
+
+    bannerAd!.load();
+  }
+
+  void loadBannerAd2() {
+    bannerAd2 = BannerAd(
+      size: AdSize.banner,
+      adUnitId: "ca-app-pub-3940256099942544/9214589741",
+      listener: BannerAdListener(),
+      request: AdRequest(),
+    );
+
+    bannerAd2!.load();
+  }
+
+  void loadBannerAd3() {
+    bannerAd3 = BannerAd(
+      size: AdSize.banner,
+      adUnitId: "ca-app-pub-3940256099942544/9214589741",
+      listener: BannerAdListener(),
+      request: AdRequest(),
+    );
+
+    bannerAd3!.load();
+  }
+
+  void loadInterstitialAd()
+  {
+    InterstitialAd.load(
+      adUnitId: "ca-app-pub-3940256099942544/1033173712",
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          interstitialAd = ad;
+        },
+        onAdFailedToLoad: (error) {},
+      ),
+    );
+  }
+
+
+  void loadRewardAd() {
+    RewardedAd.load(
+      adUnitId: "ca-app-pub-3940256099942544/5224354917",
+      request: AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          rewardedAd = ad;
+        },
+        onAdFailedToLoad: (error) {
+
+        },
+      ),
+    );
+  }
+
+  void loadAppOpenAd() {
+    AppOpenAd.load(
+        adUnitId: "ca-app-pub-3940256099942544/9257395921",
+        request: AdRequest(),
+        adLoadCallback: AppOpenAdLoadCallback(
+          onAdLoaded: (ad) {
+            appOpenLoadTime = DateTime.now();
+            appOpenAd = ad;
+            print(" ====================== load appopen =====================");
+          },
+          onAdFailedToLoad: (error) {
+              print(error);
+          },
+        ),
+        orientation: AppOpenAd.orientationPortrait);
+
+  }
+
+  void showAdIfAvailable() {
+
+    if (DateTime.now().subtract(maxCacheDuration).isAfter(appOpenLoadTime!)) {
+      debugPrint('Maximum cache duration exceeded. Loading another ad.');
+      appOpenAd!.dispose();
+      appOpenAd = null;
+      loadAppOpenAd();
+      return;
+    }
+
+    appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (ad) {
+
+        debugPrint('$ad onAdShowedFullScreenContent');
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
+
+        ad.dispose();
+        appOpenAd = null;
+      },
+      onAdDismissedFullScreenContent: (ad) {
+        debugPrint('$ad onAdDismissedFullScreenContent');
+        ad.dispose();
+        appOpenAd = null;
+        loadAppOpenAd();
+      },
+    );
+    appOpenAd!.show();
+  }
+  // Applovin ads
+
+  void lovinbanner()
+  {
+    MaxAdView(
+        adUnitId: "ANDROID_BANNER_AD_UNIT_ID",
+        adFormat: AdFormat.banner,
+        listener: AdViewAdListener(onAdLoadedCallback: (ad) {
+          // logStatus('Banner widget ad loaded from ${ad.networkName}');
+        }, onAdLoadFailedCallback: (adUnitId, error) {
+          // logStatus('Banner widget ad failed to load with error code ${error.code} and message: ${error.message}');
+        }, onAdClickedCallback: (ad) {
+          // logStatus('Banner widget ad clicked');
+        }, onAdExpandedCallback: (ad) {
+          // logStatus('Banner widget ad expanded');
+        }, onAdCollapsedCallback: (ad) {
+          // logStatus('Banner widget ad collapsed');
+        }, onAdRevenuePaidCallback: (ad) {
+          // logStatus('Banner widget ad revenue paid: ${ad.revenue}');
+        }));
+  }
+
+}
+
+class AppLifecycleReactor {
+  final Ads_helper ads_helper;
+
+  AppLifecycleReactor({required this.ads_helper});
+
+  void listenToAppStateChanges() {
+    AppStateEventNotifier.startListening();
+    AppStateEventNotifier.appStateStream
+        .forEach((state) => _onAppStateChanged(state));
+  }
+
+  void _onAppStateChanged(AppState appState) {
+    debugPrint('New AppState state: $appState');
+    if (appState == AppState.foreground) {
+      ads_helper.showAdIfAvailable();
+    }
+  }
+}
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:gallary_app/controller/version_controller.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:sizer/sizer.dart';
+import '../../controller/instal_controller.dart';
+import '../../utils/ads_helper.dart';
+
+class Version_Scren extends StatefulWidget {
+  const Version_Scren({super.key});
+
+  @override
+  State<Version_Scren> createState() => _Version_ScrenState();
+}
+
+class _Version_ScrenState extends State<Version_Scren> {
+  Version_Controller controller = Get.put(Version_Controller());
+
+  InstalController installController = Get.put(InstalController());
+
+  late AppLifecycleReactor _appLifecycleReactor;
+  final RemoteConfig remoteConfig = RemoteConfig.instance;
+
+  Future<void> fetchRemoteConfig() async {
+    await remoteConfig.fetch(expiration: const Duration(hours: 1));
+    await remoteConfig.activateFetched();
+  }
+  @override
+  void initState() {
+    super.initState();
+    Ads_helper ads_helper = Ads_helper()..loadAppOpenAd();
+    _appLifecycleReactor = AppLifecycleReactor(ads_helper: ads_helper);
+    _appLifecycleReactor.listenToAppStateChanges();
+    controller.versionload();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Obx(
+          () => controller.islodin.value
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              SizedBox(
+                                width: 4.w,
+                              ),
+                              controller.data!.data!.adMaster![index].enable ==
+                                      1
+                                  ? Text(
+                                      "${controller.data!.data!.adMaster![index].admName} is enable ${controller.data!.data!.adMaster![index].enable}",
+                                      style: TextStyle(fontSize: 15),
+                                    )
+                                  : Text(""),
+                              ListView.builder(
+                                itemBuilder: (context, c) {
+                                  return controller.data!.data!.adMaster![index]
+                                              .adChield![c].enable ==
+                                          1
+                                      ? Text(
+                                          "${controller.data!.data!.adMaster![index].adChield![c].adKeyword} is enable ${controller.data!.data!.adMaster![index].adChield![c].enable}",
+                                          style: TextStyle(fontSize: 15),
+                                        )
+                                      : Text("");
+                                },
+                                itemCount: controller.data!.data!
+                                    .adMaster![index].adChield!.length,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                              ),
+                            ],
+                          );
+                        },
+                        itemCount: controller.data!.data!.adMaster!.length,
+                      ),
+                    ),
+                    Text("Google Keyword same enable"),
+                    controller.keybool.value == true
+                        ? Container(
+                            height: 170,
+                            child: AdWidget(
+                              ad: Ads_helper.ads_helper.bannerAd3!,
+                            ),
+                          )
+                        : Container(),
+                    controller.keybool.value == true
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black),
+                            onPressed: () {
+                              Ads_helper.ads_helper.interstitialAd!.show();
+                              Ads_helper.ads_helper.loadInterstitialAd();
+                            },
+                            child: Text(
+                              "Interstitial Ads",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        : Container(),
+                    controller.keybool.value == true
+                        ? Obx(
+                            () => installController.isLoading.value == false
+                                ? Container(
+                                    height: 350,
+                                    child: AdWidget(
+                                      ad: installController.nativeAd!,
+                                    ),
+                                  )import 'package:gallary_app/utils/api_helper.dart';
+import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import '../model/version_model.dart';
+import '../utils/ads_helper.dart';
+import 'instal_controller.dart';
+
+class Version_Controller extends GetxController{
+  InstalController installController = Get.put(InstalController());
+  RxInt enable =1.obs;
+  RxBool adsnameb = false.obs;
+  RxBool keybool = false.obs;
+  RxInt bannereeneble = 0.obs;
+  RxBool islodin = false.obs;
+  int i = 0;
+  int j = 0;
+  String? name = "APP_OPEN";
+  String adkeyword = "Google";
+  VersionModel? data;
+  late AppLifecycleReactor _appLifecycleReactor;
+
+
+  Future versionload() async {
+    islodin.value = true;
+    await Api_helper.api_helper.version().then((value) {
+         data=value;
+         for (i = 0; i < data!.data!.adMaster!.length; i++) {
+           if (name == data!.data!.adMaster![i].admName) {
+             if (data!.data!.adMaster![i].enable == 1) {
+               for (j = 0; j < data!.data!.adMaster![i].adChield!.length; j++) {
+                 if (name == data!.data!.adMaster![i].admName) {
+                   if (adkeyword == data!.data!.adMaster![i].adChield![j].adKeyword) {
+                     if (data!.data!.adMaster![i].adChield![j].enable == 1) {
+                       keybool.value = true;
+                       Ads_helper.ads_helper.loadBannerAd3();
+                       Ads_helper.ads_helper.loadInterstitialAd();
+                       installController.loadNativeAd();
+
+                       Ads_helper.ads_helper.loadAppOpenAd();
+                       Ads_helper ads_helper = Ads_helper()..loadAppOpenAd();
+                       _appLifecycleReactor = AppLifecycleReactor(ads_helper: ads_helper);
+                       _appLifecycleReactor.listenToAppStateChanges();
+
+                       print("==================== ${keybool} ==============================");
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         }
+         islodin.value = false;
+       },
+    );
+  }
+}
+                                : Container(),
+                          )
+                        : Container(),
+                    controller.keybool.value == true
+                        ? ElevatedButton(
+                            onPressed: () {
+                              Ads_helper.ads_helper.appOpenAd!.show();
+                              Ads_helper.ads_helper.loadAppOpenAd();
+                            },
+                            child: Text("AppOpen Ad"),
+                          )
+                        : Container(),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+}
+https://groworbit.in/testadmin/apps/version/list
 
 
 
