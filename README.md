@@ -2490,4 +2490,233 @@ apply plugin: 'com.google.gms.google-services'
         </intent>
     </queries>
 </manifest>
-        
+        import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:gallary_app/controller/version_controller.dart';
+import 'package:gallary_app/flore_databse/dao/databaseDAO.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:sizer/sizer.dart';
+import '../../controller/instal_controller.dart';
+import '../../model/version_model.dart';
+import '../../utils/ads_helper.dart';
+
+class Version_Scren extends StatefulWidget {
+  final VersionModelDao versionModelDao;
+
+  const Version_Scren({Key? key, required this.versionModelDao})
+      : super(key: key);
+
+  @override
+  State<Version_Scren> createState() => _Version_ScrenState();
+}
+
+class _Version_ScrenState extends State<Version_Scren> {
+  Version_Controller controller = Get.put(Version_Controller());
+
+  InstalController installController = Get.put(InstalController());
+
+  late AppLifecycleReactor _appLifecycleReactor;
+
+  String? str;
+
+  @override
+  void initState() {
+    super.initState();
+    Ads_helper ads_helper = Ads_helper()..loadAppOpenAd();
+    _appLifecycleReactor = AppLifecycleReactor(ads_helper: ads_helper);
+    _appLifecycleReactor.listenToAppStateChanges();
+    controller.versionload(widget.versionModelDao);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Obx(
+          () => controller.islodin.value
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              SizedBox(
+                                width: 4.w,
+                              ),
+                            ],
+                          );
+                        },
+                        itemCount: controller.allVersions.length,
+                      ),
+                    ),
+                    Text("Google Keyword same enable"),
+                    controller.keybool.value == true
+                        ? Container(
+                            height: 170,
+                            child: AdWidget(
+                              ad: Ads_helper.ads_helper.bannerAd3!,
+                            ),
+                          )
+                        : Container(),
+                    controller.keybool.value == true
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black),
+                            onPressed: () {
+                              Ads_helper.ads_helper.interstitialAd!.show();
+                              Ads_helper.ads_helper.loadInterstitialAd();
+                            },
+                            child: Text(
+                              "Interstitial Ads",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        : Container(),
+                    controller.keybool.value == true
+                        ? Obx(
+                            () => installController.isLoading == false
+                                ? Container(
+                                    height: 330,
+                                    child: AdWidget(
+                                      ad: installController.nativeAd!,
+                                    ),
+                                  )
+                                : Container(),
+                          )
+                        : Container(),
+                    controller.keybool.value == true
+                        ? ElevatedButton(
+                            onPressed: () {
+                              Ads_helper.ads_helper.appOpenAd!.show();
+                              Ads_helper.ads_helper.loadAppOpenAd();
+                            },
+                            child: Text("AppOpen Ad"),
+                          )
+                        : Container(),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+}
+import 'package:gallary_app/flore_databse/dao/databaseDAO.dart';
+import 'package:gallary_app/utils/api_helper.dart';
+import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import '../model/version_model.dart';
+import '../utils/ads_helper.dart';
+import 'instal_controller.dart';
+
+class Version_Controller extends GetxController {
+  InstalController installController = Get.put(InstalController());
+  RxInt enable = 1.obs;
+  RxBool adsnameb = false.obs;
+  RxBool keybool = false.obs;
+  RxInt bannereeneble = 0.obs;
+  RxBool islodin = false.obs;
+  int i = 0;
+  int j = 0;
+  String? name = "APP_OPEN";
+  String adkeyword = "Google";
+  VersionModel? data;
+  late AppLifecycleReactor _appLifecycleReactor;
+  VersionModelDao? dao;
+  List<AdChield> allVersions =[];
+
+  Future versionload(VersionModelDao deo) async {
+    islodin.value = true;
+
+    dao=deo;
+    await Api_helper.api_helper.version().then((value) async {
+      data = value;
+
+      dao!.deleteVersionModel();
+
+      for (i = 0; i < data!.data!.adMaster!.length; i++) {
+        for (j = 0; j < data!.data!.adMaster![i].adChield!.length; j++) {
+          print("==================================");
+          dao!.insertVersionModel(AdChield(
+              adname: data!.data!.adMaster![i].admName,
+              count: data!.data!.adMaster![i].count,
+              admaenable: data!.data!.adMaster![i].enable,
+              id: data!.data!.adMaster![i].adChield![j].id,
+              enable: data!.data!.adMaster![i].adChield![j].enable,
+              adKeyword: data!.data!.adMaster![i].adChield![j].adKeyword,
+              adToken: data!.data!.adMaster![i].adChield![j].adToken,
+              tag: data!.data!.adMaster![i].adChield![j].tag,
+              versionAdMastersId: data!.data!.adMaster![i].adChield![j].versionAdMastersId,
+              versionId: data!.data!.adMaster![i].adChield![j].versionId,
+          ));
+        }
+      }
+      keybool.value = true;
+      Ads_helper.ads_helper.loadBannerAd3();
+      Ads_helper.ads_helper.loadInterstitialAd();
+      installController.loadNativeAd();
+
+      Ads_helper.ads_helper.loadAppOpenAd();
+      Ads_helper ads_helper = Ads_helper()
+        ..loadAppOpenAd();
+      _appLifecycleReactor =
+          AppLifecycleReactor(ads_helper: ads_helper);
+      _appLifecycleReactor.listenToAppStateChanges();
+      allVersions = await dao!.getAllVersions();
+      // for (i = 0; i < data!.data!.adMaster!.length; i++) {
+      //   if (name == data!.data!.adMaster![i].admName) {
+      //     if (data!.data!.adMaster![i].enable == 1) {
+      //       for (j = 0; j < data!.data!.adMaster![i].adChield!.length; j++) {
+      //         if (name == data!.data!.adMaster![i].admName) {
+      //           if (adkeyword ==
+      //               data!.data!.adMaster![i].adChield![j].adKeyword) {
+      //             if (data!.data!.adMaster![i].adChield![j].enable == 1) {
+      //               keybool.value = true;
+      //               Ads_helper.ads_helper.loadBannerAd3();
+      //               Ads_helper.ads_helper.loadInterstitialAd();
+      //               installController.loadNativeAd();
+      //
+      //               Ads_helper.ads_helper.loadAppOpenAd();
+      //               Ads_helper ads_helper = Ads_helper()
+      //                 ..loadAppOpenAd();
+      //               _appLifecycleReactor =
+      //                   AppLifecycleReactor(ads_helper: ads_helper);
+      //               _appLifecycleReactor.listenToAppStateChanges();
+      //
+      //               print(
+      //                   "==================== ${keybool} ==============================");
+      //             }
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
+      print("===================== ${allVersions.length} =========================================");
+      islodin.value = false;
+    },
+    );
+  }
+}
+import 'dart:async';
+import 'package:floor/floor.dart';
+import '../../model/version_model.dart';
+
+@dao
+abstract class VersionModelDao {
+
+  @Query('SELECT * FROM AdChield')
+  Future<List<AdChield>> getAllVersions();
+
+  @insert
+  Future<void> insertVersionModel(AdChield versionModel);
+
+  @Query('DELETE FROM AdChield')
+  Future<void> deleteVersionModel();
+
+}
