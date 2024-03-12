@@ -2720,3 +2720,694 @@ abstract class VersionModelDao {
   Future<void> deleteVersionModel();
 
 }
+
+
+name: gallary_app
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.6
+  provider: ^6.1.2
+  sizer: ^2.0.15
+  flutter_storage_path: ^1.0.4
+  easy_image_viewer: ^1.4.1
+  permission_handler: ^11.3.0
+  image_picker: ^1.0.7
+  http: ^1.2.1
+  get: ^4.6.6
+  better_player: ^0.0.83
+  shared_preferences: ^2.2.2
+  google_mobile_ads: ^4.0.0
+  applovin_max: ^3.7.0
+  firebase_core: any
+  firebase_remote_config: ^4.3.8
+  firebase_analytics: ^10.8.0
+  path_provider: ^2.1.2
+  floor: ^1.4.2
+  faker: ^2.1.0
+  flutter_slidable: ^3.0.1
+  easy_audience_network: ^0.0.6
+  url_launcher: ^6.2.5
+  flutter_custom_tabs: ^2.0.0+1
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  floor_generator: ^1.4.2
+  build_runner: ^2.4.8
+  analyzer: ^5.13.0
+
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^3.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
+
+  // Custom_Api_Called
+
+  Future<CustomModel> custom_Api() async {
+    String? like = "https://groworbit.in/dynamic_admin/d_node_api/video_call_live_streaming_broadcasting_app_chat/api/";
+
+    var headers = {
+      "app_secret": "athh@1234",
+      "Content-Type": "application/json",
+    };
+
+    var body = jsonEncode({
+      "event_name": "CustomInApp",
+      "islive": "true",
+    });
+
+    var responce = await http.post(Uri.parse(like),
+        headers: headers,
+        body: body);
+    debugPrint(like);
+    print(responce.headers);
+    print(responce.body);
+
+
+    if (responce.statusCode == 200) {
+      var jsonData = jsonDecode(responce.body);
+      CustomModel data = CustomModel.fromJson(jsonData);
+      return data;
+
+    } else {
+      debugPrint("Request failed with status: ${responce.headers}");
+
+      throw Exception("Failed to fetch data");
+    }
+  }
+  import 'dart:math';
+
+import 'package:gallary_app/model/Custom_Model.dart';
+import 'package:gallary_app/utils/api_helper.dart';
+import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
+
+class Custom_Controller extends GetxController{
+
+  CustomModel? data;
+  RxBool islodin = false.obs;
+  Random random = Random();
+  RxInt current = 0.obs;
+  Future customload() async {
+
+    islodin.value = true;
+
+    await Api_helper.api_helper.custom_Api().then((value) {
+
+      data = value;
+
+      current.value = Random().nextInt(data!.data!.length - 1);
+          
+      islodin.value = false;
+    });
+  }
+
+}
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:gallary_app/controller/custom_controller.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:sizer/sizer.dart';
+
+class Custom_Ads extends StatefulWidget {
+  const Custom_Ads({super.key});
+
+  @override
+  State<Custom_Ads> createState() => _Custom_AdsState();
+}
+
+class _Custom_AdsState extends State<Custom_Ads> {
+  Custom_Controller controller = Get.put(Custom_Controller());
+
+  @override
+  void initState() {
+    controller.customload();
+    super.initState();
+  }
+
+  Future<void> _launchUrl(BuildContext context) async {
+    final theme = Theme.of(context);
+    try {
+      await launchUrl(
+        Uri.parse(
+            '${controller.data!.data![controller.current.value].install}'),
+        customTabsOptions: CustomTabsOptions(
+          colorSchemes: CustomTabsColorSchemes.defaults(
+            toolbarColor: theme.colorScheme.surface,
+            navigationBarColor: theme.colorScheme.background,
+          ),
+          shareState: CustomTabsShareState.on,
+          urlBarHidingEnabled: true,
+          showTitle: true,
+        ),
+        safariVCOptions: SafariViewControllerOptions(
+          preferredBarTintColor: theme.colorScheme.surface,
+          preferredControlTintColor: theme.colorScheme.onSurface,
+          barCollapsingEnabled: true,
+          entersReaderIfAvailable: false,
+        ),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Obx(
+          () => controller.islodin.value
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    controller.data!.data![controller.current.value].enable == 1
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Spacer(),
+                              Container(
+                                height: 7.5.h,
+                                width: 20.w,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        "https://www.groworbit.in/dynamic_admin/images/AD_/${controller.data!.data![controller.current.value].icon}"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${controller.data!.data![controller.current.value].addTitle}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  SizedBox(
+                                    height: 4.h,
+                                    width: 55.w,
+                                    child: Text(
+                                      "${controller.data!.data![controller.current.value].addDesc}",
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Spacer(),
+                              Container(
+                                height: 4.h,
+                                width: 15.w,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: InkWell(
+                                  onTap: () async {
+                                    await _launchUrl(context);
+                                  },
+                                  child: Center(
+                                      child: Text(
+                                    "Install",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                ),
+                              ),
+                              Spacer(),
+                            ],
+                          )
+                        : Container(),
+                    SizedBox(
+                      height: 7.h,
+                    ),
+                    Container(
+                      height: 40.h,
+                      width: 90.w,
+                      decoration: BoxDecoration(color: Colors.black12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 20.h,
+                            width: 90.w,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      "https://www.groworbit.in/dynamic_admin/images/AD_/${controller.data!.data![controller.current.value].banner}"),
+                                  fit: BoxFit.cover),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 2.w,
+                              ),
+                              ClipOval(
+                                child: Image.network(
+                                  "https://www.groworbit.in/dynamic_admin/images/AD_/${controller.data!.data![controller.current.value].icon}",
+                                  fit: BoxFit.fill,
+                                  height: 7.h,
+                                  width: 15.w,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 4.w,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${controller.data!.data![controller.current.value].addTitle}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  SizedBox(
+                                    height: 4.h,
+                                    width: 55.w,
+                                    child: Text(
+                                      "${controller.data!.data![controller.current.value].addDesc}",
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 5.h,
+                                width: 80.w,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: InkWell(
+                                  onTap: () async {
+                                    await _launchUrl(context);
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      "Install",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Spacer()
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black),
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, 'inter');
+                        },
+                        child: Text(
+                          "Interstitial",
+                          style: TextStyle(color: Colors.white),
+                        )),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black),
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, 'open');
+                        },
+                        child: Text(
+                          "App Open",
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:sizer/sizer.dart';
+
+import '../../controller/custom_controller.dart';
+
+class OpenApp_Custom extends StatefulWidget {
+  const OpenApp_Custom({super.key});
+
+  @override
+  State<OpenApp_Custom> createState() => _OpenApp_CustomState();
+}
+
+class _OpenApp_CustomState extends State<OpenApp_Custom> {
+  Custom_Controller controller = Get.put(Custom_Controller());
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _launchUrl(BuildContext context) async {
+    final theme = Theme.of(context);
+    try {
+      await launchUrl(
+        Uri.parse(
+            '${controller.data!.data![controller.current.value].install}'),
+        customTabsOptions: CustomTabsOptions(
+          colorSchemes: CustomTabsColorSchemes.defaults(
+            toolbarColor: theme.colorScheme.surface,
+            navigationBarColor: theme.colorScheme.background,
+          ),
+          shareState: CustomTabsShareState.on,
+          urlBarHidingEnabled: true,
+          showTitle: true,
+        ),
+        safariVCOptions: SafariViewControllerOptions(
+          preferredBarTintColor: theme.colorScheme.surface,
+          preferredControlTintColor: theme.colorScheme.onSurface,
+          barCollapsingEnabled: true,
+          entersReaderIfAvailable: false,
+        ),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+      body: InkWell(
+        onTap: () {
+          _launchUrl(context);
+        },
+        child: Column(
+          children: [
+            SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  height: 4.h,
+                  width: 8.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Center(
+                      child: Icon(
+                        Icons.clear,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+              ],
+            ),
+            Spacer(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "${controller.data!.data![controller.current.value].addTitle}",
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 6.h,
+                ),
+                Container(
+                  height: 20.h,
+                  width: 50.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                          "https://www.groworbit.in/dynamic_admin/images/AD_/${controller.data!.data![controller.current.value].icon}"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                Text(
+                  "${controller.data!.data![controller.current.value].addDesc}",
+                  style: TextStyle(fontSize: 12),
+                ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                Container(
+                  height: 5.h,
+                  width: 80.w,
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: InkWell(
+                    onTap: () async {
+                      await _launchUrl(context);
+                    },
+                    child: Center(
+                      child: Text(
+                        "Install",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+          ],
+        ),
+      ),
+    ));
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:sizer/sizer.dart';
+
+import '../../controller/custom_controller.dart';
+
+class Intertital_Custom extends StatefulWidget {
+  const Intertital_Custom({super.key});
+
+  @override
+  State<Intertital_Custom> createState() => _Intertital_CustomState();
+}
+
+class _Intertital_CustomState extends State<Intertital_Custom> {
+  Custom_Controller controller = Get.put(Custom_Controller());
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _launchUrl(BuildContext context) async {
+    final theme = Theme.of(context);
+    try {
+      await launchUrl(
+        Uri.parse(
+            '${controller.data!.data![controller.current.value].install}'),
+        customTabsOptions: CustomTabsOptions(
+          colorSchemes: CustomTabsColorSchemes.defaults(
+            toolbarColor: theme.colorScheme.surface,
+            navigationBarColor: theme.colorScheme.background,
+          ),
+          shareState: CustomTabsShareState.on,
+          urlBarHidingEnabled: true,
+          showTitle: true,
+        ),
+        safariVCOptions: SafariViewControllerOptions(
+          preferredBarTintColor: theme.colorScheme.surface,
+          preferredControlTintColor: theme.colorScheme.onSurface,
+          barCollapsingEnabled: true,
+          entersReaderIfAvailable: false,
+        ),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+      body: InkWell(
+        onTap: () {
+          _launchUrl(context);
+        },
+        child: Column(
+          children: [
+            SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  height: 4.h,
+                  width: 8.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Center(
+                      child: Icon(
+                        Icons.clear,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+              ],
+            ),
+            Spacer(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 40.h,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(
+                            "https://www.groworbit.in/dynamic_admin/images/AD_/${controller.data!.data![controller.current.value].banner}"),
+                        fit: BoxFit.contain),
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+          ],
+        ),
+      ),
+    ));
+  }
+}
