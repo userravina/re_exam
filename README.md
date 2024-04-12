@@ -20,10 +20,1037 @@ samples, guidance on mobile development, and a full API reference.
   <img src="https://github.com/userravina/re_exam/assets/120082785/5c989356-429c-42cb-af53-b846c047d09f" height="50%" width="30%">
   <img src="https://github.com/userravina/re_exam/assets/120082785/f047ff5f-f02b-4762-9b23-c0c8345ea5d2"  height="50%" width="30%">
 </p>
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:gst_calculator/calculator/model/country_model.dart';
+import 'package:gst_calculator/calculator/model/flag_model.dart';
+import 'package:gst_calculator/calculator/model/layout_model.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:convert';
+import '../../class/language.dart';
+import '../model/histary_model.dart';
+import '../utils/api_helper/api_helper.dart';
+
+class Calculator_Controller extends GetxController {
+  RxBool dark = false.obs;
+  RxBool buttonEfact = false.obs;
+  RxString display = "".obs;
+  RxString updatevalue = "".obs;
+  RxString displayEnglish = "".obs;
+  RxString displayOprater = "".obs;
+  RxString prevOpertor = "".obs;
+  RxString prevOpertor2 = "".obs;
+  RxString m = "".obs;
+  RxList<String> value = <String>[].obs;
+  RxList operator = [].obs;
+  RxList grandTotal = [].obs;
+  RxDouble result = 0.0.obs;
+  RxDouble memory = 0.0.obs;
+  RxDouble currentValue = 0.0.obs;
+  RxDouble percentage = 0.0.obs;
+  RxDouble currentSliderValue = 2.0.obs;
+  RxDouble sipSliderValue = 14.0.obs;
+  RxDouble lumSliderValue = 14.0.obs;
+  RxDouble gstAmount = 0.0.obs;
+  RxList<String> histary = <String>[].obs;
+  RxString IGST = "".obs;
+  RxDouble SGST = 0.0.obs;
+  RxDouble CGST = 0.0.obs;
+  RxDouble lumtotalValue = 0.0.obs;
+  RxDouble lumestimatedReturn = 0.0.obs;
+  RxBool modetrue = false.obs;
+  String selectedValue = "Option 1";
+  late SharedPreferences _prefs;
+  RxBool isLoopingCurrentItem = false.obs;
+  RxBool isVibrationEnabled = false.obs;
+  RxInt indexsip = 0.obs;
+  RxString twonumber = "".obs;
+  RxString twonumber2 = "".obs;
+  RxBool showsiptotal = false.obs;
+  RxBool showlumtotal = false.obs;
+  RxBool ageresult = false.obs;
+  RxDouble totalValue = 0.0.obs;
+  RxDouble totalInvestedAmount = 0.0.obs;
+  RxDouble estimatedReturn = 0.0.obs;
+  RxString selectedCurrency = "INR - Indian Rupee".obs;
+  RxString selectedflag = "INR.png".obs;
+  RxString selectedCurrency2 = "USD - U.S. Dollar".obs;
+  RxString selectedflag2 = "USD.png".obs;
+  Rx<Color> backgroundColor = Colors.white.obs;
+
+  RxList<Tools_Model> mytools = <Tools_Model>[
+    Tools_Model(name: "SIP", img: "assets/images/tools/sip.png"),
+    Tools_Model(
+        name: "Currency Con..", img: "assets/images/tools/currency.png"),
+    Tools_Model(name: "Age Calc", img: "assets/images/tools/agecal.png"),
+    Tools_Model(name: "Money Cash C..", img: "assets/images/tools/moneyc.png"),
+  ].obs;
+
+  RxList<Tools_Model> unitols = <Tools_Model>[
+    Tools_Model(name: "Area", img: "assets/images/tools/area.png"),
+    Tools_Model(name: "Length", img: "assets/images/tools/length.png"),
+    Tools_Model(name: "Weigth", img: "assets/images/tools/weigth.png"),
+    Tools_Model(name: "Time", img: "assets/images/tools/time.png"),
+    Tools_Model(name: "Temperature", img: "assets/images/tools/tem.png"),
+    Tools_Model(name: "Speed", img: "assets/images/tools/speed.png"),
+    Tools_Model(name: "Volume", img: "assets/images/tools/volum.png"),
+    Tools_Model(name: "Energy", img: "assets/images/tools/energy.png"),
+    Tools_Model(name: "Fuel", img: "assets/images/tools/fuel.png"),
+    Tools_Model(name: "Pressure", img: "assets/images/tools/press.png"),
+    Tools_Model(name: "Storage", img: "assets/images/tools/store.png"),
+  ].obs;
+  final player = AudioPlayer();
+
+  List<Layout_Model> layoutList = [
+    Layout_Model(img: "assets/images/layout/theme1.png"),
+    Layout_Model(img: "assets/images/layout/theme2.png"),
+    Layout_Model(img: "assets/images/layout/theme3.png"),
+    Layout_Model(img: "assets/images/layout/theme4.png"),
+    Layout_Model(img: "assets/images/layout/theme5.png"),
+    Layout_Model(img: "assets/images/layout/theme6.png"),
+    Layout_Model(img: "assets/images/layout/theme7.png"),
+    Layout_Model(img: "assets/images/layout/theme8.png"),
+    Layout_Model(img: "assets/images/layout/theme9.png"),
+  ];
+
+
+  RxMap<int, int> notes = {
+    500: 0,
+    200: 0,
+    100: 0,
+    50: 0,
+    20: 0,
+    10: 0,
+    5: 0,
+    2: 0,
+    1: 0,
+  }.obs;
+
+  RxList<Language_Calss> lang = <Language_Calss>[].obs;
+
+  void toggleTheme(value) {
+    dark.value = value;
+    updateTheme();
+  }
+
+  void loadSound() async {
+    player.setAsset('assets/sounds/clickeffect.mp3');
+  }
+
+  void playSound() async {
+    if (player.playing) {
+      print("play sound ==============================");
+      player.stop();
+    }
+    player.setAsset('assets/sounds/clickeffect.mp3');
+    player.load();
+    player.play();
+    print("play sound ==============================");
+  }
+
+  void stopSound(value) {
+    isLoopingCurrentItem.value = value;
+    updateTheme();
+  }
+
+  void vibrate(value) async {
+    isVibrationEnabled.value = value;
+    updateTheme();
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+
+    lang.value = <Language_Calss>[
+      Language_Calss(
+          id: 1,
+          flag: "🇮🇳",
+          name: "ગુજરાતી",
+          languageCode: "gu",
+          isselect: false),
+      Language_Calss(
+          id: 2,
+          flag: "🇺🇸",
+          name: "English",
+          languageCode: "en",
+          isselect: false),
+      Language_Calss(
+          id: 3,
+          flag: "🇸🇦",
+          name: "اَلْعَرَبِيَّةُ",
+          languageCode: "ar",
+          isselect: false),
+      Language_Calss(
+          id: 4,
+          flag: "🇮🇳",
+          name: "हिंदी",
+          languageCode: "hi",
+          isselect: false)
+    ];
+  }
+
+  void updateTheme() {
+    Get.changeThemeMode(dark.value ? ThemeMode.dark : ThemeMode.light);
+  }
+
+  void buttonEfect() {
+    buttonEfact.value = true;
+    update();
+  }
+
+  // store histary value in sharedpreference
+
+  // Method to save the value list to shared preferences
+  saveValueListToPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> encodedList = value.map((item) => json.encode(item)).toList();
+    await prefs.setStringList('valueList', encodedList);
+  }
+
+  // Method to load the value list from shared preferences
+
+  Future<void> initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  Future<void> saveSelectedValue(String value) async {
+    await _prefs.setString('selectedValue', value);
+  }
+
+  RxString btn1 = "".obs;
+  RxString btn2 = "".obs;
+  RxString btn3 = "".obs;
+  RxString btn4 = "".obs;
+
+  RxInt selectedImageIndex = 0.obs;
+  Rx<Color> btnTextColor = Colors.black.obs;
+  SharedPreferences? save;
+
+  Future<void> savetheme() async {
+    save = await SharedPreferences.getInstance();
+    // Load selected image index from shared preferences
+    int? storedIndex = await save?.getInt('selected_theme_index');
+    if (storedIndex != null) {
+      print("====== not null ==========");
+      selectedImageIndex.value = storedIndex;
+    }
+  }
+
+  void saveSelectedImageIndex(int index) {
+    save?.setInt('selected_theme_index', index);
+  }
+  void changetheme()
+  {
+
+    switch(selectedImageIndex.value)
+    {
+      case 0:
+        {
+            btnTextColor.value  = Colors.black;
+            btn1.value = "assets/images/btn1.png";
+            btn2.value = "assets/images/btn2.png";
+            btn3.value = "assets/images/btn4.png";
+            btn4.value = "assets/images/btn3.png";
+        }
+      case 1:
+        {
+          btnTextColor.value  = Colors.white;
+          btn1.value = "assets/images/layout/theme2/th2b1.png";
+          btn2.value = "assets/images/layout/theme2/th2b3.png";
+          btn3.value = "assets/images/layout/theme2/th2b1.png";
+          btn4.value = "assets/images/layout/theme2/th2b4.png";
+        }
+      case 2:
+        {
+          btnTextColor.value  = Colors.white;
+          btn1.value = "assets/images/layout/theme4/th4b1.png";
+          btn2.value = "assets/images/layout/theme4/th4b3.png";
+          btn3.value = "assets/images/layout/theme4/th4b1.png";
+          btn4.value = "assets/images/layout/theme4/th4b4.png";
+        }
+      case 3:
+        {
+          btnTextColor.value  = Colors.white;
+          btn1.value = "assets/images/layout/theme5/th5b1.png";
+          btn2.value = "assets/images/layout/theme5/th5b3.png";
+          btn3.value = "assets/images/layout/theme5/th5b1.png";
+          btn4.value = "assets/images/layout/theme5/th5b4.png";
+        }
+      case 4:
+        {
+          btnTextColor.value  = Colors.white;
+          btn1.value = "assets/images/layout/theme6/th6b1.png";
+          btn2.value = "assets/images/layout/theme6/th6b3.png";
+          btn3.value = "assets/images/layout/theme6/th6b1.png";
+          btn4.value = "assets/images/layout/theme6/th6b4.png";
+        }
+      case 5:
+        {
+          btnTextColor.value  = Colors.white;
+          btn1.value = "assets/images/layout/theme7/th7b1.png";
+          btn2.value = "assets/images/layout/theme7/th7b3.png";
+          btn3.value = "assets/images/layout/theme7/th7b1.png";
+          btn4.value = "assets/images/layout/theme7/th7b4.png";
+        }
+      case 6:
+        {
+          btnTextColor.value  = Colors.white;
+          btn1.value = "assets/images/layout/theme8/th8b1.png";
+          btn2.value = "assets/images/layout/theme8/th8b3.png";
+          btn3.value = "assets/images/layout/theme8/th8b1.png";
+          btn4.value = "assets/images/layout/theme8/th8b4.png";
+        }
+      case 7:
+        {
+          btnTextColor.value  = Colors.white;
+          btn1.value = "assets/images/layout/theme9/th9b1.png";
+          btn2.value = "assets/images/layout/theme9/th9b3.png";
+          btn3.value = "assets/images/layout/theme9/th9b1.png";
+          btn4.value = "assets/images/layout/theme9/th9b4.png";
+        }
+      case 8:
+        {
+          btnTextColor.value  = Colors.white;
+          btn1.value = "assets/images/layout/theme10/th10b1.png";
+          btn2.value = "assets/images/layout/theme10/th10b3.png";
+          btn3.value = "assets/images/layout/theme10/th10b1.png";
+          btn4.value = "assets/images/layout/theme10/th10b4.png";
+        }
+        saveSelectedImageIndex(selectedImageIndex.value);
+    }
+  }
+
+  getAPiRate(value, CurrancyReta? currancyReta) {
+    double? rateValue;
+    switch (value.toString().toUpperCase()) {
+      case 'AED':
+        rateValue = currancyReta!.aED;
+        break;
+      case 'AFN':
+        rateValue = currancyReta!.aFN;
+        break;
+      case 'ALL':
+        rateValue = currancyReta!.aLL;
+        break;
+      case 'AMD':
+        rateValue = currancyReta!.aMD;
+        break;
+      case 'ANG':
+        rateValue = currancyReta!.aNG;
+        break;
+      case 'AOA':
+        rateValue = currancyReta!.aOA;
+        break;
+      case 'ARS':
+        rateValue = currancyReta!.aRS;
+        break;
+      case 'AUD':
+        rateValue = currancyReta!.aUD;
+        break;
+      case 'AWG':
+        rateValue = currancyReta!.aWG;
+        break;
+      case 'AZN':
+        rateValue = currancyReta!.aZN;
+        break;
+      case 'BAM':
+        rateValue = currancyReta!.bAM;
+        break;
+      case 'BBD':
+        rateValue = currancyReta!.bBD;
+        break;
+      case 'BDT':
+        rateValue = currancyReta!.bDT;
+        break;
+      case 'BGN':
+        rateValue = currancyReta!.bGN;
+        break;
+      case 'BHD':
+        rateValue = currancyReta!.bHD;
+        break;
+      case 'BIF':
+        rateValue = currancyReta!.bIF;
+        break;
+      case 'BMD':
+        rateValue = currancyReta!.aMD;
+        break;
+      case 'BND':
+        rateValue = currancyReta!.bND;
+        break;
+      case 'BOB':
+        rateValue = currancyReta!.bOB;
+        break;
+      case 'BRL':
+        rateValue = currancyReta!.bRL;
+        break;
+      case 'BTC':
+        rateValue = currancyReta!.bTN;
+        break;
+      case 'BTC':
+        rateValue = currancyReta!.bTN;
+        break;
+      case 'BSD':
+        rateValue = currancyReta!.bSD;
+        break;
+      case 'BYN':
+        rateValue = currancyReta!.bYN;
+        break;
+      case 'BZD':
+        rateValue = currancyReta!.bZD;
+        break;
+      case 'CAD':
+        rateValue = currancyReta!.cAD;
+        break;
+      case 'CDF':
+        rateValue = currancyReta!.cDF;
+        break;
+      case 'CHF':
+        rateValue = currancyReta!.cHF;
+        break;
+      case 'CLP':
+        rateValue = currancyReta!.cLP;
+        break;
+      case 'CNY':
+        rateValue = currancyReta!.cNY;
+        break;
+      case 'COP':
+        rateValue = currancyReta!.cOP;
+        break;
+      case 'CRC':
+        rateValue = currancyReta!.cRC;
+        break;
+      case 'CUP':
+        rateValue = currancyReta!.cUP;
+        break;
+      case 'CVE':
+        rateValue = currancyReta!.cVE;
+        break;
+      case 'CZK':
+        rateValue = currancyReta!.cZK;
+        break;
+      case 'DJF':
+        rateValue = currancyReta!.dJF;
+        break;
+      case 'DKK':
+        rateValue = currancyReta!.dKK;
+        break;
+      case 'DOP':
+        rateValue = currancyReta!.dOP;
+        break;
+      case 'DZD':
+        rateValue = currancyReta!.dZD;
+        break;
+      case 'EGP':
+        rateValue = currancyReta!.eGP;
+        break;
+      case 'ERN':
+        rateValue = currancyReta!.eRN;
+        break;
+      case 'ETB':
+        rateValue = currancyReta!.eTB;
+        break;
+      case 'EUR':
+        rateValue = currancyReta!.eUR;
+        break;
+      case 'FJD':
+        rateValue = currancyReta!.fJD;
+        break;
+      case 'FKP':
+        rateValue = currancyReta!.fKP;
+        break;
+      case 'GBP':
+        rateValue = currancyReta!.gBP;
+        break;
+      case 'GEL':
+        rateValue = currancyReta!.gEL;
+        break;
+      case 'GGL':
+        rateValue = currancyReta!.gGP;
+        break;
+      case 'GHS':
+        rateValue = currancyReta!.gHS;
+        break;
+      case 'GIP':
+        rateValue = currancyReta!.gIP;
+        break;
+      case 'GMD':
+        rateValue = currancyReta!.gMD;
+        break;
+      case 'GNF':
+        rateValue = currancyReta!.gNF;
+        break;
+      case 'GTQ':
+        rateValue = currancyReta!.gTQ;
+        break;
+      case 'GYD':
+        rateValue = currancyReta!.gYD;
+        break;
+      case 'HKD':
+        rateValue = currancyReta!.hKD;
+        break;
+      case 'HNL':
+        rateValue = currancyReta!.hNL;
+        break;
+      case 'HRK':
+        rateValue = currancyReta!.hRK;
+        break;
+      case 'HTG':
+        rateValue = currancyReta!.hTG;
+        break;
+      case 'HUF':
+        rateValue = currancyReta!.hUF;
+        break;
+      case 'IDR':
+        rateValue = currancyReta!.iDR;
+        break;
+      case 'ILS':
+        rateValue = currancyReta!.iLS;
+        break;
+      case 'IMP':
+        rateValue = currancyReta!.iMP;
+        break;
+      case 'INR':
+        rateValue = currancyReta!.iNR;
+        break;
+      case 'IQD':
+        rateValue = currancyReta!.iQD;
+        break;
+      case 'IRR':
+        rateValue = currancyReta!.iRR;
+        break;
+      case 'ISK':
+        rateValue = currancyReta!.iSK;
+        break;
+      case 'JEP':
+        rateValue = currancyReta!.jEP;
+        break;
+      case 'JMD':
+        rateValue = currancyReta!.jMD;
+        break;
+      case 'JOD':
+        rateValue = currancyReta!.jOD;
+        break;
+      case 'JPY':
+        rateValue = currancyReta!.jPY;
+        break;
+      case 'KES':
+        rateValue = currancyReta!.kES;
+        break;
+      case 'KGS':
+        rateValue = currancyReta!.kGS;
+        break;
+      case 'KHR':
+        rateValue = currancyReta!.kHR;
+        break;
+      case 'KMF':
+        rateValue = currancyReta!.kMF;
+        break;
+      case 'KRW':
+        rateValue = currancyReta!.kRW;
+        break;
+      case 'KWD':
+        rateValue = currancyReta!.kWD;
+        break;
+      case 'KYD':
+        rateValue = currancyReta!.kYD;
+        break;
+      case 'KZT':
+        rateValue = currancyReta!.kZT;
+        break;
+      case 'LAK':
+        rateValue = currancyReta!.lAK;
+        break;
+      case 'LBP':
+        rateValue = currancyReta!.lBP;
+        break;
+      case 'LKR':
+        rateValue = currancyReta!.lKR;
+        break;
+      case 'LRD':
+        rateValue = currancyReta!.lRD;
+        break;
+      case 'LSL':
+        rateValue = currancyReta!.lSL;
+        break;
+      case 'LYD':
+        rateValue = currancyReta!.lYD;
+        break;
+      case 'MAD':
+        rateValue = currancyReta!.mAD;
+        break;
+      case 'MDL':
+        rateValue = currancyReta!.mDL;
+        break;
+      case 'MGA':
+        rateValue = currancyReta!.mGA;
+        break;
+      case 'MKD':
+        rateValue = currancyReta!.mKD;
+        break;
+      case 'MMK':
+        rateValue = currancyReta!.mMK;
+        break;
+      case 'MNT':
+        rateValue = currancyReta!.mNT;
+        break;
+      case 'MOP':
+        rateValue = currancyReta!.mOP;
+        break;
+      case 'MUR':
+        rateValue = currancyReta!.mUR;
+        break;
+      case 'MVR':
+        rateValue = currancyReta!.mVR;
+        break;
+      case 'MWK':
+        rateValue = currancyReta!.mWK;
+        break;
+      case 'MXN':
+        rateValue = currancyReta!.mXN;
+        break;
+      case 'MYR':
+        rateValue = currancyReta!.mYR;
+        break;
+      case 'MZN':
+        rateValue = currancyReta!.mZN;
+        break;
+      case 'NAD':
+        rateValue = currancyReta!.nAD;
+        break;
+      case 'NGN':
+        rateValue = currancyReta!.nGN;
+        break;
+      case 'NIO':
+        rateValue = currancyReta!.nIO;
+        break;
+      case 'NOK':
+        rateValue = currancyReta!.nOK;
+        break;
+      case 'NPR':
+        rateValue = currancyReta!.nPR;
+        break;
+      case 'NZD':
+        rateValue = currancyReta!.nZD;
+        break;
+      case 'OMR':
+        rateValue = currancyReta!.oMR;
+        break;
+      case 'PAB':
+        rateValue = currancyReta!.pAB;
+        break;
+      case 'PEN':
+        rateValue = currancyReta!.pEN;
+        break;
+      case 'PGK':
+        rateValue = currancyReta!.pGK;
+        break;
+      case 'PHP':
+        rateValue = currancyReta!.pHP;
+        break;
+      case 'PKR':
+        rateValue = currancyReta!.pKR;
+        break;
+      case 'PLN':
+        rateValue = currancyReta!.pLN;
+        break;
+      case 'PYG':
+        rateValue = currancyReta!.pYG;
+        break;
+      case 'QAR':
+        rateValue = currancyReta!.qAR;
+        break;
+      case 'RON':
+        rateValue = currancyReta!.rON;
+        break;
+      case 'RSD':
+        rateValue = currancyReta!.rSD;
+        break;
+      case 'RUB':
+        rateValue = currancyReta!.rUB;
+        break;
+      case 'RWF':
+        rateValue = currancyReta!.rWF;
+        break;
+      case 'SAR':
+        rateValue = currancyReta!.sAR;
+        break;
+      case 'SBD':
+        rateValue = currancyReta!.sBD;
+        break;
+      case 'SCR':
+        rateValue = currancyReta!.sCR;
+        break;
+      case 'SDG':
+        rateValue = currancyReta!.sDG;
+        break;
+      case 'SEK':
+        rateValue = currancyReta!.sEK;
+        break;
+      case 'SGD':
+        rateValue = currancyReta!.sGD;
+        break;
+      case 'SHP':
+        rateValue = currancyReta!.sHP;
+        break;
+      case 'SLL':
+        rateValue = currancyReta!.sLL;
+        break;
+      case 'SOS':
+        rateValue = currancyReta!.sOS;
+        break;
+      case 'SRD':
+        rateValue = currancyReta!.sRD;
+        break;
+      case 'SYP':
+        rateValue = currancyReta!.sYP;
+        break;
+      case 'SZL':
+        rateValue = currancyReta!.sZL;
+        break;
+      case 'THB':
+        rateValue = currancyReta!.tHB;
+        break;
+      case 'TJS':
+        rateValue = currancyReta!.tJS;
+        break;
+      case 'TMT':
+        rateValue = currancyReta!.tMT;
+        break;
+      case 'TND':
+        rateValue = currancyReta!.tND;
+        break;
+      case 'TOP':
+        rateValue = currancyReta!.tOP;
+        break;
+      case 'TRY':
+        rateValue = currancyReta!.tRY;
+        break;
+      case 'TTD':
+        rateValue = currancyReta!.tTD;
+        break;
+      case 'TWD':
+        rateValue = currancyReta!.tWD;
+        break;
+      case 'TZS':
+        rateValue = currancyReta!.tZS;
+        break;
+      case 'UAH':
+        rateValue = currancyReta!.uAH;
+        break;
+      case 'UGX':
+        rateValue = currancyReta!.uGX;
+        break;
+      case 'USD':
+        rateValue = currancyReta!.uSD;
+        break;
+      case 'UYU':
+        rateValue = currancyReta!.uYU;
+        break;
+      case 'UZS':
+        rateValue = currancyReta!.uZS;
+        break;
+      case 'VND':
+        rateValue = currancyReta!.vND;
+        break;
+      case 'VUV':
+        rateValue = currancyReta!.vUV;
+        break;
+      case 'WST':
+        rateValue = currancyReta!.wST;
+        break;
+      case 'XAF':
+        rateValue = currancyReta!.xAF;
+        break;
+      case 'XCD':
+        rateValue = currancyReta!.xCD;
+        break;
+      case 'XDR':
+        rateValue = currancyReta!.xDR;
+        break;
+      case 'XOF':
+        rateValue = currancyReta!.xOF;
+        break;
+      case 'XPF':
+        rateValue = currancyReta!.xPF;
+        break;
+      case 'YER':
+        rateValue = currancyReta!.yER;
+        break;
+      case 'ZAR':
+        rateValue = currancyReta!.zAR;
+        break;
+      case 'ZMW':
+        rateValue = currancyReta!.zMW;
+        break;
+      case 'ZWL':
+        rateValue = currancyReta!.zWL;
+        break;
+      case 'BTN':
+        rateValue = currancyReta!.bTN;
+        break;
+      default:
+        rateValue = 0;
+        break;
+    }
+    if (rateValue == null) rateValue = 1;
+    print('Rate in API => $rateValue');
+    print('Rate in API => ${value.toString().toUpperCase()}');
+    return rateValue;
+  }
+
+  // country api called
+
+  RxBool iscalled = false.obs;
+  List<FlagModel>? flagJsonList;
+  CountryModel? data;
+  CurrancyReta? currancyReta;
+
+  Future apiLoad() async {
+    iscalled.value = false;
+
+    await Api_helper.api_helper.getApi().then((value) {
+      data = value;
+
+      if (data != null && data!.data != null) {
+        // Extract flag data and convert to FlagModel objects
+        List<FlagModel> flags =
+            data!.data!.map((datum) => FlagModel(flag: datum.flag)).toList();
+
+        // Convert each FlagModel object to JSON and encode
+        flagJsonList = flagModelFromJson(data!.data![0].flag!);
+
+        // Now you have a list of JSON strings representing the flag data
+        print("${flags}");
+        print(flagJsonList);
+        currancyReta =
+            CurrancyReta.fromJson(jsonDecode(data!.data![0].currency!));
+
+        iscalled.value = true;
+      }
+    });
+  }
+}
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:sizer/sizer.dart';
+
+import '../../controller/calculator_controller.dart';
+
+class Change_Layout_Scrren extends StatefulWidget {
+  const Change_Layout_Scrren({super.key});
+
+  @override
+  State<Change_Layout_Scrren> createState() => _Change_Layout_ScrrenState();
+}
+
+class _Change_Layout_ScrrenState extends State<Change_Layout_Scrren> {
+  Calculator_Controller controller = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: InkWell(
+              onTap: () {
+                Get.back();
+              },
+              child: Icon(Icons.arrow_back_ios_new)),
+          centerTitle: true,
+          title: Text(
+            "Choose Theme",
+            style: TextStyle(
+              color: controller.dark.value ? Colors.white : Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+            ),
+          ),
+        ),
+        body: Column(
+          children: [
+            SizedBox(height: 2.h,),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Obx(
+                    () => Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Image.asset(
+                        "${controller.layoutList[controller.selectedImageIndex.value].img}",
+                        height: 42.h,
+                        width: 45.w,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Expanded(
+              child: Container(
+                height: 23.h,
+                width: 90.w,
+                decoration: BoxDecoration(
+                    color: controller.dark.value
+                        ? Color(0xff202C35)
+                        : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 1.5.h,
+                    ),
+                    Text(
+                      "Basic Calculator",
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
+                    ),
+                    SizedBox(
+                      height: 1.5.h,
+                    ),
+                    Text(
+                      "Simple calculatore for daily life calculations.",
+                      style: TextStyle(color: Colors.grey.shade700),
+                    ),
+                    Text(
+                      "Not for memory and gst operation.",
+                      style: TextStyle(color: Colors.grey.shade700),
+                    ),
+                    SizedBox(
+                      height: 1.5.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 80.w,
+                            height: 12.h,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      controller.selectedImageIndex.value = index;
+                                    });
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 1.5.w,
+                                          ),
+                                          Container(
+                                              height: 12.h,
+                                              child: Image.asset(
+                                                  "${controller.layoutList[index].img}"
+                                              )
+                                          )
+                                        ],
+                                      ),
+                                      if (controller.selectedImageIndex.value == index)
+                                        Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 5.5.h,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: 5.5.w,
+                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      color: Colors.blue
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.done,
+                                                    color: Colors.white,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              itemCount: controller.layoutList.length,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 1.5.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            controller.saveSelectedImageIndex(controller.selectedImageIndex.value);
+                            Get.toNamed('/');
+                          },
+                          child: Container(
+                            height: 5.4.h,
+                            width: 70.w,
+                            decoration: BoxDecoration(
+                                color: Color(0xff4777E3),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                "FREE",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 3.h,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:gst_calculator/calculator/controller/calculator_controller.dart';
@@ -65,10 +1092,63 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
   @override
   void initState() {
-    controller.value.clear();
-    controller.initPrefs();
-    controller.loadSound();
+    Future.delayed(Duration.zero, () {
+      setState(() async {
+        // Update the state here
+        controller.initPrefs();
+       await controller.savetheme();
+        print("=== ${controller.selectedImageIndex.value}");
+        controller.saveSelectedImageIndex(controller.selectedImageIndex.value);
+        controller.changetheme();
+        controller.value.clear();
+        controller.loadSound();
+        print("============================");
+        colorchangebg();
+      });
+    });
     super.initState();
+  }
+
+  void colorchangebg() {
+    print("==controller.selectedImageIndex.value ${controller.selectedImageIndex.value}");
+    switch (controller.selectedImageIndex.value) {
+      case 0:
+        {
+          controller.backgroundColor.value = Colors.white;
+        }
+      case 1:
+        {
+          controller.backgroundColor.value = Color(0xfff5f6f7);
+        }
+      case 2:
+        {
+          controller.backgroundColor.value = Color(0xfff5eeeb);
+        }
+      case 3:
+        {
+          controller.backgroundColor.value = Color(0xffEEEEEE);
+        }
+      case 4:
+        {
+          controller.backgroundColor.value = Color(0xffFFFBEF);
+        }
+      case 5:
+        {
+          controller.backgroundColor.value = Color(0xfffaf1eb);
+        }
+      case 6:
+        {
+          controller.backgroundColor.value = Color(0xfff2fafc);
+        }
+      case 7:
+        {
+          controller.backgroundColor.value = Color(0xfff9f2fa);
+        }
+      case 8:
+        {
+          controller.backgroundColor.value = Color(0xfff9f2fa);
+        }
+    }
   }
 
   @override
@@ -2414,9 +3494,25 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController gst1 =
+        TextEditingController(text: "${context.loc.three}");
+    TextEditingController gst2 =
+        TextEditingController(text: "${context.loc.five}");
+    TextEditingController gst3 =
+        TextEditingController(text: "${context.loc.one}${context.loc.two}");
+    TextEditingController gst4 =
+        TextEditingController(text: "${context.loc.one}${context.loc.eight}");
+
+    TextEditingController gst5 =
+        TextEditingController(text: "${context.loc.three}");
+    TextEditingController gst6 =
+        TextEditingController(text: "${context.loc.five}");
+    TextEditingController gst7 =
+        TextEditingController(text: "${context.loc.one}${context.loc.two}");
+    TextEditingController gst8 =
+        TextEditingController(text: "${context.loc.one}${context.loc.eight}");
     return SafeArea(
       child: Scaffold(
-        backgroundColor: controller.dark.value ? Colors.white : Colors.white,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(7.6.h),
           child: AppBar(
@@ -2809,133 +3905,176 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 17),
                                             ),
-                                            SizedBox(height: 2.h,),
+                                            SizedBox(
+                                              height: 2.h,
+                                            ),
                                             Container(
-                                                height: 120, // Adjust height as needed
-                                                width: 300,
+                                              height: 120,
+                                              // Adjust height as needed
+                                              width: 300,
                                               decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          15),    color: controller.dark.value
-                                                  ? Color(0xff202C35)
-                                                  : Colors.grey.shade300,),
-                                              child: Column(children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    SizedBox(width: 2.w,),
-                                                    Container(
-                                                      child: Expanded(
-                                                        child: TextField(
-                                                          keyboardType: TextInputType.number,
-                                                          decoration: InputDecoration(
-                                                            hintText: '${context.loc.three}',
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: controller.dark.value
+                                                    ? Color(0xff202C35)
+                                                    : Colors.grey.shade300,
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 2.w,
+                                                      ),
+                                                      Container(
+                                                        child: Expanded(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(top: 10,bottom: 7,right: 2,left: 2),
+                                                            child: Container(
+                                                              child: TextField(
+                                                                textAlign: TextAlign.center,
+                                                                controller: gst1,
+                                                                keyboardType:
+                                                                    TextInputType
+                                                                        .number,
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  prefixText: "+",
+                                                                ),
+                                                                onChanged: (value) {
+                                                                  gst1.text = value;
+                                                                },
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: TextField(
-                                                        keyboardType: TextInputType.number,
-                                                        decoration: InputDecoration(
-                                                          hintText: '',
-
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: TextField(
-                                                        keyboardType: TextInputType.number,
-                                                        decoration: InputDecoration(
-                                                          hintText: '',
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: TextField(
-                                                        keyboardType: TextInputType.number,
-                                                        decoration: InputDecoration(
-                                                          hintText: '',
-
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: TextField(
-                                                        keyboardType: TextInputType.number,
-                                                        decoration: InputDecoration(
-                                                          hintText: '',
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 2.w,),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 0.h,),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    SizedBox(width: 2.w,),
-                                                    SizedBox(height: 2.h,),
-                                                    Container(
-                                                      child: Expanded(
+                                                      SizedBox(width: 8),
+                                                      Expanded(
                                                         child: TextField(
-                                                          keyboardType: TextInputType.number,
-                                                          decoration: InputDecoration(
-                                                            hintText: '',
-
+                                                          textAlign: TextAlign.center,
+                                                          controller: gst2,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            prefixText: "+",
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: TextField(
-                                                        decoration: InputDecoration(
-                                                          hintText: '',
-
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        child: TextField(
+                                                          textAlign: TextAlign.center,
+                                                          controller: gst3,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            prefixText: "+",
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: TextField(
-                                                        keyboardType: TextInputType.number,
-                                                        decoration: InputDecoration(
-                                                          hintText: '',
-
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        child: TextField(
+                                                          textAlign: TextAlign.center,
+                                                          controller: gst4,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            prefixText: "+",
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: TextField(
-                                                        keyboardType: TextInputType.number,
-                                                        decoration: InputDecoration(
-                                                          hintText: '',
-
+                                                      SizedBox(
+                                                        width: 2.w,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 0.h,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 2.w,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 2.h,
+                                                      ),
+                                                      Container(
+                                                        child: Expanded(
+                                                          child: TextField(
+                                                            textAlign: TextAlign.center,
+                                                            controller: gst5,
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .number,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              prefixText: "-",
+                                                                  prefixStyle: TextStyle(fontSize: 20)
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: TextField(
-                                                        keyboardType: TextInputType.number,
-                                                        decoration: InputDecoration(
-                                                          hintText: '',
-
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        child: TextField(
+                                                          textAlign: TextAlign.center,
+                                                          controller: gst6,
+                                                          decoration:
+                                                              InputDecoration(
+                                                                prefixText: "-",  prefixStyle: TextStyle(fontSize: 20)
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 2.w,),
-                                                  ],
-                                                ),
-
-                                              ],),
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        child: TextField(
+                                                          textAlign: TextAlign.center,
+                                                          controller: gst7,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            prefixText: "-",  prefixStyle: TextStyle(fontSize: 20)
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        child: TextField(
+                                                          textAlign: TextAlign.center,
+                                                          controller: gst8,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            prefixText: "-",  prefixStyle: TextStyle(fontSize: 20)
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 2.w,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             )
                                           ],
                                         ),
@@ -3019,7 +4158,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               SizedBox(
                                 height: 4.h,
                                 child: ClipRect(
-                                  child: Image.asset("assets/images/cTheme.png"),
+                                  child:
+                                      Image.asset("assets/images/cTheme.png"),
                                 ),
                               ),
                               SizedBox(
@@ -3619,102 +4759,119 @@ class _Calculator_HomeState extends State<Calculator_Home> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            SizedBox(
-              height: 7.h,
-            ),
             Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                controller: scrollcontroller,
-                physics: ClampingScrollPhysics(),
-                itemCount: controller.value.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == controller.value.length) {
-                    return Container(
-                      height: 8.h,
-                    );
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 10, bottom: 5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        gst == true
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: controller.value[index]
+              child: Container(
+                color: controller.backgroundColor.value,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 7.h,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        controller: scrollcontroller,
+                        physics: ClampingScrollPhysics(),
+                        itemCount: controller.value.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == controller.value.length) {
+                            return Container(
+                              height: 8.h,
+                            );
+                          }
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(right: 10, bottom: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                gst == true
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: controller
+                                                        .value[index]
+                                                        .contains("=")
+                                                    ? 10
+                                                    : 5,
+                                                vertical: controller
+                                                        .value[index]
+                                                        .contains("=")
+                                                    ? 3
+                                                    : 0),
+                                            decoration: controller.value[index]
+                                                    .contains("=")
+                                                ? BoxDecoration(
+                                                    color: Colors.grey.shade300,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20))
+                                                : BoxDecoration(),
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                "${controller.value[index]} ",
+                                                style: TextStyle(
+                                                    fontSize: controller
+                                                            .value[index]
+                                                            .contains("=")
+                                                        ? 16
+                                                        : 15,
+                                                    fontWeight: controller
+                                                            .value[index]
+                                                            .contains("=")
+                                                        ? FontWeight.w500
+                                                        : FontWeight.w400,
+                                                    color: controller.dark.value
+                                                        ? Colors.black
+                                                        : Colors.black),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: controller.value[index]
+                                                    .contains("=")
+                                                ? 7
+                                                : 0),
+                                        decoration: controller.value[index]
                                                 .contains("=")
-                                            ? 10
-                                            : 5,
-                                        vertical: controller.value[index]
-                                                .contains("=")
-                                            ? 3
-                                            : 0),
-                                    decoration:
-                                        controller.value[index].contains("=")
                                             ? BoxDecoration(
                                                 color: Colors.grey.shade300,
                                                 borderRadius:
-                                                    BorderRadius.circular(20))
+                                                    BorderRadius.circular(5))
                                             : BoxDecoration(),
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        "${controller.value[index]} ",
-                                        style: TextStyle(
-                                            fontSize: controller.value[index]
-                                                    .contains("=")
-                                                ? 16
-                                                : 15,
+                                        child: Text(
+                                          " ${controller.value[index]} ",
+                                          style: TextStyle(
+                                            color: controller.dark.value
+                                                ? Colors.black
+                                                : Colors.black,
+                                            fontSize: 18,
                                             fontWeight: controller.value[index]
                                                     .contains("=")
                                                 ? FontWeight.w500
                                                 : FontWeight.w400,
-                                            color: controller.dark.value
-                                                ? Colors.black
-                                                : Colors.black),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        controller.value[index].contains("=")
-                                            ? 7
-                                            : 0),
-                                decoration: controller.value[index]
-                                        .contains("=")
-                                    ? BoxDecoration(
-                                        color: Colors.grey.shade300,
-                                        borderRadius: BorderRadius.circular(5))
-                                    : BoxDecoration(),
-                                child: Text(
-                                  " ${controller.value[index]} ",
-                                  style: TextStyle(
-                                    color: controller.dark.value
-                                        ? Colors.black
-                                        : Colors.black,
-                                    fontSize: 18,
-                                    fontWeight:
-                                        controller.value[index].contains("=")
-                                            ? FontWeight.w500
-                                            : FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                      ],
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  );
-                },
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 2.h,
             ),
             Obx(
               () => controller.modetrue.value
@@ -3828,7 +4985,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -3843,7 +5000,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -3861,7 +5018,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         fontSize: 18),
                                     text:
                                         "+${context.loc.one}${context.loc.two}%",
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -3879,7 +5036,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -3894,7 +5051,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
                                     text: "+GST",
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                             ],
                           ),
@@ -3913,7 +5070,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -3928,7 +5085,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -3946,7 +5103,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -3964,7 +5121,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -3979,7 +5136,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                             ],
                           ),
@@ -3998,7 +5155,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4013,7 +5170,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 24),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4028,7 +5185,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 20),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4043,7 +5200,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 19),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4057,10 +5214,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "GT",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                             ],
                           ),
@@ -4076,10 +5233,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "MU",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4091,10 +5248,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "×",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 24),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4109,7 +5266,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4124,7 +5281,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4139,7 +5296,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                             ],
                           ),
@@ -4155,10 +5312,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "M-",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4170,10 +5327,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "-",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 25),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4188,7 +5345,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4203,7 +5360,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4218,7 +5375,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                             ],
                           ),
@@ -4237,10 +5394,11 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         height: 7.2.h,
                                         text: "M+",
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color:
+                                                controller.btnTextColor.value,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 15),
-                                        imagePath: "assets/images/btn2.png"),
+                                        imagePath: controller.btn2.value),
                                   ),
                                   Bouncing(
                                     onPress: () {
@@ -4255,7 +5413,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 20),
-                                        imagePath: "assets/images/btn4.png"),
+                                        imagePath: controller.btn3.value),
                                   ),
                                 ],
                               ),
@@ -4269,10 +5427,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 14.4.h,
                                     text: "+",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 25),
-                                    imagePath: "assets/images/btn3.png"),
+                                    imagePath: controller.btn4.value),
                               ),
                               Column(
                                 children: [
@@ -4289,7 +5447,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                   Bouncing(
                                     onPress: () {
@@ -4304,7 +5462,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                 ],
                               ),
@@ -4323,7 +5481,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                   Bouncing(
                                     onPress: () {
@@ -4338,7 +5496,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                 ],
                               ),
@@ -4357,7 +5515,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                   Bouncing(
                                     onPress: () {
@@ -4372,7 +5530,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                 ],
                               ),
@@ -4491,7 +5649,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4506,7 +5664,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4524,7 +5682,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         fontSize: 18),
                                     text:
                                         "+${context.loc.one}${context.loc.two}%",
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4542,7 +5700,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4557,7 +5715,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
                                     text: "+GST",
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                             ],
                           ),
@@ -4576,7 +5734,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4591,7 +5749,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4609,7 +5767,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4627,7 +5785,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4642,7 +5800,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                             ],
                           ),
@@ -4660,10 +5818,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "GT",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4675,10 +5833,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "√x",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 19),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4690,10 +5848,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "%",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 20),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4705,10 +5863,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "÷",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 24),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4720,10 +5878,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "MR",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                             ],
                           ),
@@ -4742,7 +5900,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4757,7 +5915,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4772,7 +5930,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4784,10 +5942,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "×",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 24),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4799,10 +5957,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "MU",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                             ],
                           ),
@@ -4821,7 +5979,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4836,7 +5994,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4851,7 +6009,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 23),
-                                    imagePath: "assets/images/btn1.png"),
+                                    imagePath: controller.btn1.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4863,10 +6021,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "-",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 25),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                               Bouncing(
                                 onPress: () {
@@ -4878,10 +6036,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 7.2.h,
                                     text: "M-",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15),
-                                    imagePath: "assets/images/btn2.png"),
+                                    imagePath: controller.btn2.value),
                               ),
                             ],
                           ),
@@ -4903,7 +6061,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                   Bouncing(
                                     onPress: () {
@@ -4918,7 +6076,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                 ],
                               ),
@@ -4937,7 +6095,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                   Bouncing(
                                     onPress: () {
@@ -4952,7 +6110,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                 ],
                               ),
@@ -4971,7 +6129,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                   Bouncing(
                                     onPress: () {
@@ -4986,7 +6144,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 23),
-                                        imagePath: "assets/images/btn1.png"),
+                                        imagePath: controller.btn1.value),
                                   ),
                                 ],
                               ),
@@ -5000,10 +6158,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                     height: 14.4.h,
                                     text: "+",
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        color: controller.btnTextColor.value,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 25),
-                                    imagePath: "assets/images/btn3.png"),
+                                    imagePath: controller.btn4.value),
                               ),
                               Column(
                                 children: [
@@ -5017,10 +6175,11 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                         height: 7.2.h,
                                         text: "M+",
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color:
+                                                controller.btnTextColor.value,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 15),
-                                        imagePath: "assets/images/btn2.png"),
+                                        imagePath: controller.btn2.value),
                                   ),
                                   Bouncing(
                                     onPress: () {
@@ -5035,7 +6194,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 20),
-                                        imagePath: "assets/images/btn4.png"),
+                                        imagePath: controller.btn3.value),
                                   ),
                                 ],
                               )
@@ -5044,7 +6203,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                         ],
                       ),
                     ),
-            ),
+            )
           ],
         ),
       ),
@@ -5380,2658 +6539,5 @@ class _Keypad_Model_ScreenState extends State<Keypad_Model_Screen> {
     );
   }
 }
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import 'package:units_converter/models/unit.dart';
-import 'package:units_converter/properties/mass.dart';
-import 'package:units_converter/properties/time.dart';
 
-import '../../controller/calculator_controller.dart';
-
-class Weight_Scrren extends StatefulWidget {
-  const Weight_Scrren({super.key});
-
-  @override
-  State<Weight_Scrren> createState() => _Weight_ScrrenState();
-}
-
-class _Weight_ScrrenState extends State<Weight_Scrren> {
-  Calculator_Controller controller = Get.find();
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  var TextEditingController1 = new TextEditingController();
-  var TextEditingController2 = new TextEditingController();
-  var TextEditingController3 = new TextEditingController();
-  var TextEditingController4 = new TextEditingController();
-  var TextEditingController5 = new TextEditingController();
-  var TextEditingController6 = new TextEditingController();
-  var TextEditingController7 = new TextEditingController();
-  var TextEditingController8 = new TextEditingController();
-  var TextEditingController9 = new TextEditingController();
-  var TextEditingController10 = new TextEditingController();
-  var TextEditingController11 = new TextEditingController();
-  var TextEditingController12 = new TextEditingController();
-  var TextEditingController13 = new TextEditingController();
-  var TextEditingController14 = new TextEditingController();
-  var TextEditingController15 = new TextEditingController();
-
-  int selected = 0;
-
-  calculation(List<Unit> unit) {
-    if (selected != 1)
-      TextEditingController1.text = "${unit[0].value}";
-    if (selected != 2)
-      TextEditingController2.text = "${unit[1].value}";
-    if (selected != 3)
-      TextEditingController3.text = "${unit[2].value}";
-    if (selected != 4)
-      TextEditingController4.text = "${unit[3].value}";
-    if (selected != 5)
-      TextEditingController5.text = "${unit[4].value}";
-    if (selected != 6)
-      TextEditingController6.text = "${unit[5].value}";
-    if (selected != 7)
-      TextEditingController7.text = "${unit[6].value}";
-    if (selected != 8)
-      TextEditingController8.text = "${unit[7].value}";
-    if (selected != 9)
-      TextEditingController9.text = "${unit[8].value}";
-    if (selected != 10)
-      TextEditingController10.text = "${unit[9].value}";
-    if (selected != 11)
-      TextEditingController11.text = "${unit[10].value}";
-    if (selected != 12)
-      TextEditingController12.text = "${unit[11].value}";
-    if (selected != 13)
-      TextEditingController13.text = "${unit[12].value}";
-    if (selected != 14)
-      TextEditingController14.text = "${unit[13].value}";
-    if (selected != 15)
-      TextEditingController15.text = "${unit[14].value}";
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: InkWell(
-              onTap: () {
-                Get.back();
-              },
-              child: Icon(Icons.arrow_back_ios_new)),
-          centerTitle: true,
-          title: Text(
-            "Weight",
-            style: TextStyle(
-              color: controller.dark.value ? Colors.white : Colors.black,
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-            ),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Grams",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController1,
-                    onChanged: (value) {
-                      selected = 1;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.grams, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Ettograms",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController2,
-                    onChanged: (value) {
-                      selected = 2;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.ettograms, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Kilograms",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-
-                    controller: TextEditingController3,
-                    onChanged: (value) {
-                      selected = 3;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.kilograms, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Quintals",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-
-                    controller: TextEditingController4,
-                    onChanged: (value) {
-                      selected = 4;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.quintals, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Tons",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-
-                    controller: TextEditingController5,
-                    onChanged: (value) {
-                      selected = 5;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.tons, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Centigrams",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-
-                    controller: TextEditingController6,
-                    onChanged: (value) {
-                      selected = 6;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.centigrams, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Milligrams",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController7,
-                    onChanged: (value) {
-                      selected = 7;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.milligrams, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Unifield atomic mass unit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController8,
-                    onChanged: (value) {
-                      selected = 8;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.uma, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Carats",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController9,
-                    onChanged: (value) {
-                      selected = 9;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.carats, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Pennyweights",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-
-                    controller: TextEditingController10,
-                    onChanged: (value) {
-                      selected = 10;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.pennyweights, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Femtograms",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController11,
-                    onChanged: (value) {
-                      selected = 11;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.femtograms, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Picograms",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController12,
-                    onChanged: (value) {
-                      selected = 12;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.picograms, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Nanograms",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController13,
-                    onChanged: (value) {
-                      selected = 13;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.nanograms, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Micrograms",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-
-                    controller: TextEditingController14,
-                    onChanged: (value) {
-                      selected = 14;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = Mass(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(MASS.micrograms, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import 'package:units_converter/models/unit.dart';
-import 'package:units_converter/properties/digital_data.dart';
-import '../../controller/calculator_controller.dart';
-
-class Storage_Screen extends StatefulWidget {
-  const Storage_Screen({super.key});
-
-  @override
-  State<Storage_Screen> createState() => _Storage_ScreenState();
-}
-
-class _Storage_ScreenState extends State<Storage_Screen> {
-  Calculator_Controller controller = Get.find();
-
-  @override
-  void initState() {
-
-    super.initState();
-  }
-
-  var TextEditingController1 = new TextEditingController();
-  var TextEditingController2 = new TextEditingController();
-  var TextEditingController3 = new TextEditingController();
-  var TextEditingController4 = new TextEditingController();
-  var TextEditingController5 = new TextEditingController();
-  var TextEditingController6 = new TextEditingController();
-  var TextEditingController7 = new TextEditingController();
-  var TextEditingController8 = new TextEditingController();
-  var TextEditingController9 = new TextEditingController();
-  var TextEditingController10 = new TextEditingController();
-  var TextEditingController11 = new TextEditingController();
-  var TextEditingController12 = new TextEditingController();
-  var TextEditingController13 = new TextEditingController();
-  var TextEditingController14 = new TextEditingController();
-  var TextEditingController15 = new TextEditingController();
-  var TextEditingController16 = new TextEditingController();
-  var TextEditingController17 = new TextEditingController();
-  var TextEditingController18 = new TextEditingController();
-  var TextEditingController19 = new TextEditingController();
-  var TextEditingController20 = new TextEditingController();
-  var TextEditingController21 = new TextEditingController();
-  var TextEditingController22 = new TextEditingController();
-  var TextEditingController23 = new TextEditingController();
-  var TextEditingController24 = new TextEditingController();
-  var TextEditingController25 = new TextEditingController();
-  var TextEditingController26 = new TextEditingController();
-  var TextEditingController27 = new TextEditingController();
-
-  int selected = 0;
-
-  calculation(List<Unit> unit) {
-    if (selected != 1)
-      TextEditingController1.text = "${unit[0].value}";
-    if (selected != 2)
-      TextEditingController2.text = "${unit[1].value}";
-    if (selected != 3)
-      TextEditingController3.text = "${unit[2].value}";
-    if (selected != 4)
-      TextEditingController4.text = "${unit[3].value}";
-    if (selected != 5)
-      TextEditingController5.text = "${unit[4].value}";
-    if (selected != 6)
-      TextEditingController6.text = "${unit[5].value}";
-    if (selected != 7)
-      TextEditingController7.text = "${unit[6].value}";
-    if (selected != 8)
-      TextEditingController8.text = "${unit[7].value}";
-    if (selected != 9)
-      TextEditingController9.text = "${unit[8].value}";
-    if (selected != 10)
-      TextEditingController10.text = "${unit[9].value}";
-    if (selected != 11)
-      TextEditingController11.text = "${unit[10].value}";
-    if (selected != 12)
-      TextEditingController12.text = "${unit[11].value}";
-    if (selected != 13)
-      TextEditingController13.text = "${unit[12].value}";
-    if (selected != 14)
-      TextEditingController14.text = "${unit[13].value}";
-    if (selected != 15)
-      TextEditingController15.text = "${unit[14].value}";
-    if (selected != 16)
-      TextEditingController16.text = "${unit[15].value}";
-    if (selected != 17)
-      TextEditingController17.text = "${unit[16].value}";
-    if (selected != 18)
-      TextEditingController18.text = "${unit[17].value}";
-    if (selected != 19)
-      TextEditingController19.text = "${unit[18].value}";
-    if (selected != 20)
-      TextEditingController20.text = "${unit[19].value}";
-    if (selected != 21)
-      TextEditingController21.text = "${unit[20].value}";
-    if (selected != 22)
-      TextEditingController22.text = "${unit[21].value}";
-    if (selected != 23)
-      TextEditingController23.text = "${unit[22].value}";
-    if (selected != 24)
-      TextEditingController24.text = "${unit[23].value}";
-    if (selected != 25)
-      TextEditingController25.text = "${unit[24].value}";
-    if (selected != 26)
-      TextEditingController26.text = "${unit[25].value}";
-    if (selected != 27)
-      TextEditingController27.text = "${unit[26].value}";
-
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: InkWell(
-              onTap: () {
-                Get.back();
-              },
-              child: Icon(Icons.arrow_back_ios_new)),
-          centerTitle: true,
-          title: Text(
-            "Storage",
-            style: TextStyle(
-              color: controller.dark.value ? Colors.white : Colors.black,
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-            ),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Bit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController1,
-                    onChanged: (value) {
-                      selected = 1;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: true); // conversion
-                      angle.convert(DIGITAL_DATA.bit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Nibble",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController2,
-                    onChanged: (value) {
-                      selected = 2;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.nibble, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "KiloBit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController3,
-                    onChanged: (value) {
-                      selected = 3;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(
-                          DIGITAL_DATA.kilobit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "MegaBit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController4,
-                    onChanged: (value) {
-                      selected = 4;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.megabit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "GigaBit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController5,
-                    onChanged: (value) {
-                      selected = 5;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.gigabit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "TeraBit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController6,
-                    onChanged: (value) {
-                      selected = 6;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(
-                          DIGITAL_DATA.terabit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "PetaBit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController7,
-                    onChanged: (value) {
-                      selected = 7;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.petabit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "ExaBit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController8,
-                    onChanged: (value) {
-                      selected = 8;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.exabit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Kibibite",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController9,
-                    onChanged: (value) {
-                      selected = 9;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.kibibit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Byte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController10,
-                    onChanged: (value) {
-                      selected = 10;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.byte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Mebibit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController11,
-                    onChanged: (value) {
-                      selected = 11;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.mebibit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Kilobyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController12,
-                    onChanged: (value) {
-                      selected = 12;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.kilobyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Megabyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController13,
-                    onChanged: (value) {
-                      selected = 13;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.megabyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Gigabyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController14,
-                    onChanged: (value) {
-                      selected = 14;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.gigabyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Terabyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController15,
-                    onChanged: (value) {
-                      selected = 15;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(
-                          DIGITAL_DATA.terabyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Petabyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController16,
-                    onChanged: (value) {
-                      selected = 16;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.petabyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Exabyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController17,
-                    onChanged: (value) {
-                      selected = 17;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(
-                          significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.exabyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Kibibyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController18,
-                    onChanged: (value) {
-                      selected = 18;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.kibibyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Gibibit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController19,
-                    onChanged: (value) {
-                      selected = 19;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.gibibit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Mebibyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController20,
-                    onChanged: (value) {
-                      selected = 20;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.mebibyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Tebibit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController21,
-                    onChanged: (value) {
-                      selected = 21;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.tebibit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Gibibyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController22,
-                    onChanged: (value) {
-                      selected = 22;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.gibibyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Pebibit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController23,
-                    onChanged: (value) {
-                      selected = 23;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.pebibit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Tebibyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController24,
-                    onChanged: (value) {
-                      selected = 24;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.tebibyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Exbibit",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController25,
-                    onChanged: (value) {
-                      selected = 25;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.exbibit, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Pebibyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController26,
-                    onChanged: (value) {
-                      selected = 26;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.pebibyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Exbibyte",
-                      style:
-                      TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-                Container(
-                  height: 6.5.h,
-                  child: TextField(
-                    controller: TextEditingController27,
-                    onChanged: (value) {
-                      selected = 27;
-                      if (value == "") {
-                        value = "0";
-                        return;
-                      }
-                      var angle = DigitalData(significantFigures: 7,
-                          removeTrailingZeros: false); // conversion
-                      angle.convert(DIGITAL_DATA.exbibyte, double.parse(value));
-                      var units = angle.getAll();
-                      calculation(units);
-                      for (var unit in units) {
-                        print(
-                            'name:${unit.name}, value:${unit.value}, stringValue:${unit.stringValue}, symbol:${unit.symbol}');
-                      }
-                      // FocusScope.of(context).requestFocus(_etYear.focusNode);
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
-                            color: controller.dark.value
-                                ? Colors.grey.shade200
-                                : Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 1.h,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-class Layout_Model
-{
-  String? img;
-  Layout_Model({this.img});
-}
-
-  List<Layout_Model> layoutList = [
-    Layout_Model(img: "assets/images/layout/theme1.png"),
-    Layout_Model(img: "assets/images/layout/theme2.png"),
-    Layout_Model(img: "assets/images/layout/theme3.png"),
-    Layout_Model(img: "assets/images/layout/theme4.png"),
-    Layout_Model(img: "assets/images/layout/theme5.png"),
-    Layout_Model(img: "assets/images/layout/theme6.png"),
-    Layout_Model(img: "assets/images/layout/theme7.png"),
-    Layout_Model(img: "assets/images/layout/theme8.png"),
-    Layout_Model(img: "assets/images/layout/theme9.png"),
-  ];
-  RxInt selectedImageIndex = 0.obs;
-  import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:sizer/sizer.dart';
-
-import '../../controller/calculator_controller.dart';
-
-class Change_Layout_Scrren extends StatefulWidget {
-  const Change_Layout_Scrren({super.key});
-
-  @override
-  State<Change_Layout_Scrren> createState() => _Change_Layout_ScrrenState();
-}
-
-class _Change_Layout_ScrrenState extends State<Change_Layout_Scrren> {
-  Calculator_Controller controller = Get.find();
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: InkWell(
-              onTap: () {
-                Get.back();
-              },
-              child: Icon(Icons.arrow_back_ios_new)),
-          centerTitle: true,
-          title: Text(
-            "Choose Theme",
-            style: TextStyle(
-              color: controller.dark.value ? Colors.white : Colors.black,
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-            ),
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Obx(() =>  Container(
-                    decoration: BoxDecoration(border: Border.all(color: Colors.black,width: 2),borderRadius: BorderRadius.circular(10)),
-                    child: Image.asset(
-                        "${controller.layoutList[controller.selectedImageIndex.value].img}",
-                        height: 30.h,
-                        width: 40.w,
-                        fit: BoxFit.fill,
-                      ),
-                  ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            Expanded(
-              child: Container(
-                height: 23.h,
-                width: 90.w,
-                decoration: BoxDecoration(
-                    color: controller.dark.value
-                        ? Color(0xff202C35)
-                        : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 1.5.h,
-                    ),
-                    Text(
-                      "Basic Calculator",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
-                    ),
-                    SizedBox(
-                      height: 1.5.h,
-                    ),
-                    Text(
-                      "Simple calculatore for daily life calculations.",
-                      style: TextStyle(color: Colors.grey.shade700),
-                    ),
-                    Text(
-                      "Not for memory and gst operation.",
-                      style: TextStyle(color: Colors.grey.shade700),
-                    ),
-                    SizedBox(height: 1.5.h,),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 80.w,
-                            height: 12.h,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      controller.selectedImageIndex.value = index;
-                                    });
-                                  },
-                                  child: Stack(
-                                    children: [
-                                      Row(children: [
-                                        SizedBox(width: 1.5.w,),
-                                        Container(height: 12.h,child: Image.asset("${controller.layoutList[index].img}"))
-                                      ],),
-                                      if (controller.selectedImageIndex.value == index)
-                                        Column(
-                                          children: [
-                                            SizedBox(height: 5.5.h,),
-                                            Row(mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(width: 5.5.w,),
-                                                Container(
-                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.blue),
-                                                  child: Icon(
-                                                    Icons.done,
-                                                    color: Colors.white,
-                                                    size: 20,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              itemCount: controller.layoutList.length,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 1.5.h,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Get.toNamed('/');
-                          },
-                          child: Container(
-                            height: 5.4.h,
-                            width: 70.w,
-                            decoration: BoxDecoration(
-                                color: Color(0xff4777E3),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Center(
-                              child: Text(
-                                "FREE",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 3.h,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
