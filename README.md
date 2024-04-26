@@ -20,9 +20,6 @@ samples, guidance on mobile development, and a full API reference.
   <img src="https://github.com/userravina/re_exam/assets/120082785/5c989356-429c-42cb-af53-b846c047d09f" height="50%" width="30%">
   <img src="https://github.com/userravina/re_exam/assets/120082785/f047ff5f-f02b-4762-9b23-c0c8345ea5d2"  height="50%" width="30%">
 </p>
-
-
-
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -66,7 +63,18 @@ class _Calculator_HomeState extends State<Calculator_Home> {
   Calculator_Controller controller = Get.find();
   Ads_Helper adsController = Get.find();
   ScrollController scrollcontroller = ScrollController();
-
+  String removeDecimalSuffix(String value) {
+    // Check if the value ends with '.00'
+    if (value.endsWith('.00')) {
+      // Remove '.00' and return the modified string
+      return value.substring(0, value.length - 3);
+    } else if (value.endsWith('.0')) {
+      return value.substring(0, value.length - 2);
+    } else {
+      // Return the original string if it doesn't end with '.00'
+      return value;
+    }
+  }
   bool onetime = false;
   bool onetime2 = false;
   bool onetime3 = false;
@@ -654,7 +662,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             } else if (controller.prevOpertor.value == "-") {
             } else if (controller.prevOpertor.value == "*") {
             } else if (controller.prevOpertor.value == "÷") {
-            } else {
+            }
+            else {
               int lastIndex = -1;
               for (int i = controller.value.length - 1; i >= 0; i--) {
                 if (controller.value[i].contains('=')) {
@@ -664,12 +673,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               }
               print("------- lastIndex ------ ${lastIndex}");
               if (controller.value[lastIndex].contains('=')) {
-                controller.displayEnglish.value =
-                    controller.value[lastIndex].replaceAll("=", '');
+                controller.displayEnglish.value = controller.value[lastIndex].replaceAll("=", '');
                 dotcheck = true;
               } else {
-                controller.currentValue.value =
-                    double.parse(controller.displayEnglish.value);
+                controller.currentValue.value = double.parse(controller.displayEnglish.value);
               }
             }
           } else {
@@ -739,7 +746,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             scrolle();
             dotAdded = false;
             controller.prevOpertor.value = "(+5%)";
-            controller.value.add(controller.display.value);
+            controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
             print("display ${controller.display.value}");
 
@@ -795,7 +802,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             scrolle();
             dotAdded = false;
             controller.prevOpertor.value = "(+12%)";
-            controller.value.add(controller.display.value);
+            controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
             controller.currentValue.value =
                 double.parse(controller.displayEnglish.value);
@@ -844,7 +851,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             scrolle();
             dotAdded = false;
             controller.prevOpertor.value = "(+18%)";
-            controller.value.add(controller.display.value);
+            controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
             controller.currentValue.value =
                 double.parse(controller.displayEnglish.value);
@@ -896,14 +903,17 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             controller.displayOprater.value = number;
             print("currentValue ${controller.currentValue}");
 
-            controller.value.add(controller.display.value);
+            controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
+            controller.currentValue.value = double.parse(controller.displayEnglish.value);
+            controller.prevOpertor.value = "+GST";
           }
 
           print(controller.currentValue.value);
           print(controller.result.value);
-          controller.prevOpertor.value = "+GST";
+          controller.displayEnglish.value = "";
           controller.display.value = "";
+          // controller.displayOprater.value = "";
           // controller.displayEnglish.value = controller.result.value.toString();
         }
 
@@ -986,7 +996,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             scrolle();
             dotAdded = false;
             controller.prevOpertor.value = "(-5%)";
-            controller.value.add(controller.display.value);
+            controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
             controller.currentValue.value =
                 double.parse(controller.displayEnglish.value);
@@ -1023,7 +1033,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             scrolle();
             dotAdded = false;
             controller.prevOpertor.value = "(-12%)";
-            controller.value.add(controller.display.value);
+            controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
             controller.currentValue.value =
                 double.parse(controller.displayEnglish.value);
@@ -1058,7 +1068,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             scrolle();
             dotAdded = false;
             controller.prevOpertor.value = "(-18%)";
-            controller.value.add(controller.display.value);
+            controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
             controller.currentValue.value =
                 double.parse(controller.displayEnglish.value);
@@ -1093,16 +1103,17 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             dotAdded = false;
             gst = true;
             controller.displayOprater.value = number;
-            print("currentValue ${controller.currentValue}");
-
-            controller.value.add(controller.display.value);
+            controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
+            controller.currentValue.value = double.parse(controller.displayEnglish.value);
+            print("currentValue ${controller.currentValue}");
 
             controller.prevOpertor.value = "-GST";
           }
 
           print(controller.currentValue.value);
           print(controller.result.value);
+          controller.displayEnglish.value = "";
           controller.display.value = "";
         }
         break;
@@ -1181,13 +1192,35 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              controller.value
-                  .add(controller.prevOpertor.value + controller.display.value);
+             update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
               print(controller.displayEnglish.value);
               print(controller.result.value);
+              if (update == true) {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
+                  }
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (lastIndex != -1 &&
+                    controller.value[lastIndex].contains('=')) {
+                  // If '=' is found and lastIndex is valid
+                  controller.currentValue.value = double.parse(
+                      convertHindiToEnglish(
+                          controller.value[lastIndex + 1])!);
+                  dotcheck = true;
+                } else {
+                  controller.result.value = double.parse(controller.value[0]);
+                }
+              } else {
+                controller.result.value = double.parse(controller.value[0]);
+              }
+
               controller.result.value +=
                   double.parse(controller.displayEnglish.value);
               twonumber = controller.result.value.toStringAsFixed(0);
@@ -1210,15 +1243,36 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              controller.value
-                  .add(controller.prevOpertor.value + controller.display.value);
+              update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
               print(controller.displayEnglish.value);
               print(controller.result.value);
+              if (update == true) {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
+                  }
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (lastIndex != -1 &&
+                    controller.value[lastIndex].contains('=')) {
+                  // If '=' is found and lastIndex is valid
+                  controller.currentValue.value = double.parse(
+                      convertHindiToEnglish(
+                          controller.value[lastIndex + 1])!);
+                  dotcheck = true;
+                } else {
+                  controller.result.value = double.parse(controller.value[0]);
+                }
+              } else {
+                controller.result.value = double.parse(controller.value[0]);
+              }
               controller.result.value -=
-                  double.parse(controller.displayEnglish.value);
+                  double.parse(controller.displayEnglish.value.replaceAll("-", ""));
               twonumber = controller.result.value.toStringAsFixed(0);
               m1 = false;
               m2 = true;
@@ -1239,15 +1293,35 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              controller.value
-                  .add(controller.prevOpertor.value + controller.display.value);
+              update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
               print(controller.displayEnglish.value);
               print(controller.result.value);
+              if (update == true) {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
+                  }
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (lastIndex != -1 && controller.value[lastIndex].contains('=')) {
+                  // If '=' is found and lastIndex is valid
+                  controller.currentValue.value = double.parse(
+                      convertHindiToEnglish(
+                          controller.value[lastIndex + 1])!);
+                  dotcheck = true;
+                } else {
+                  controller.result.value = double.parse(controller.value[0]);
+                }
+              } else {
+                controller.result.value = double.parse(controller.value[0]);
+              }
               controller.result.value *=
-                  double.parse(controller.displayEnglish.value);
+                  double.parse(controller.displayEnglish.value.replaceAll("*", ""));
               twonumber = controller.result.value.toStringAsFixed(0);
               m1 = false;
               m2 = true;
@@ -1268,15 +1342,36 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              controller.value
-                  .add(controller.prevOpertor.value + controller.display.value);
+              update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
               print(controller.displayEnglish.value);
               print(controller.result.value);
+              if (update == true) {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
+                  }
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (lastIndex != -1 &&
+                    controller.value[lastIndex].contains('=')) {
+                  // If '=' is found and lastIndex is valid
+                  controller.currentValue.value = double.parse(
+                      convertHindiToEnglish(
+                          controller.value[lastIndex + 1])!);
+                  dotcheck = true;
+                } else {
+                  controller.result.value = double.parse(controller.value[0]);
+                }
+              } else {
+                controller.result.value = double.parse(controller.value[0]);
+              }
               controller.result.value /=
-                  double.parse(controller.displayEnglish.value);
+                  double.parse(controller.displayEnglish.value.replaceAll("÷", ""));
               twonumber = controller.result.value.toStringAsFixed(1);
               m1 = false;
               m2 = true;
@@ -1296,7 +1391,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               if (mplus == true) {
                 print(
                     'MMMMMMMMMMMMMMM${controller.displayEnglish.value}++++++++++');
-                controller.memory.value -=
+                controller.memory.value =
                     double.parse(controller.displayEnglish.value);
                 print('MMMMMMMMMMMMMMM${controller.memory.value}++++++++++');
               } else {
@@ -1354,16 +1449,40 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               print('kkkkkkkkkkkkkkk');
 
               print(controller.prevOpertor.value);
-
-              controller.value
-                  .add(controller.prevOpertor.value + controller.display.value);
+              update == true
+                  ? controller.value.add(controller.display.value)
+                  : controller.value.add(
+                      controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
               print(controller.displayEnglish.value);
               print(controller.result.value);
-              controller.result.value +=
-                  double.parse(controller.displayEnglish.value);
+              if (update == true) {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
+                  }
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (lastIndex != -1 &&
+                    controller.value[lastIndex].contains('=')) {
+                  // If '=' is found and lastIndex is valid
+                  controller.currentValue.value = double.parse(
+                      convertHindiToEnglish(
+                          controller.value[lastIndex + 1])!);
+                  dotcheck = true;
+                } else {
+                  controller.result.value = double.parse(controller.value[0]);
+                }
+              } else {
+                controller.result.value = double.parse(controller.value[0]);
+              }
+
+              controller.result.value += double.parse(
+                  controller.displayEnglish.value.replaceAll("+", ""));
               twonumber = controller.result.value.toStringAsFixed(0);
               controller.value.add("= " + twonumber.toString());
               controller.saveValueListToPrefs();
@@ -1385,15 +1504,40 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              controller.value
-                  .add(controller.prevOpertor.value + controller.display.value);
+              update == true
+                  ? controller.value.add(controller.display.value)
+                  : controller.value.add(
+                  controller.prevOpertor.value + controller.display.value);
+
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
               print(controller.displayEnglish.value);
               print(controller.result.value);
+              if (update == true) {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
+                  }
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (lastIndex != -1 &&
+                    controller.value[lastIndex].contains('=')) {
+                  // If '=' is found and lastIndex is valid
+                  controller.currentValue.value = double.parse(
+                      convertHindiToEnglish(
+                          controller.value[lastIndex + 1])!);
+                  dotcheck = true;
+                } else {
+                  controller.result.value = double.parse(controller.value[0]);
+                }
+              } else {
+                controller.result.value = double.parse(controller.value[0]);
+              }
               controller.result.value -=
-                  double.parse(controller.displayEnglish.value);
+                  double.parse(controller.displayEnglish.value.replaceAll("-", ""));
               twonumber = controller.result.value.toStringAsFixed(0);
               m1 = false;
               m2 = true;
@@ -1414,16 +1558,39 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              controller.value
-                  .add(controller.prevOpertor.value + controller.display.value);
+              update == true
+                  ? controller.value.add(controller.display.value)
+                  : controller.value.add(
+                  controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
               print(controller.displayEnglish.value);
               print(controller.result.value);
-
+              if (update == true) {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
+                  }
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (lastIndex != -1 &&
+                    controller.value[lastIndex].contains('=')) {
+                  // If '=' is found and lastIndex is valid
+                  controller.currentValue.value = double.parse(
+                      convertHindiToEnglish(
+                          controller.value[lastIndex + 1])!);
+                  dotcheck = true;
+                } else {
+                  controller.result.value = double.parse(controller.value[0]);
+                }
+              } else {
+                controller.result.value = double.parse(controller.value[0]);
+              }
               controller.result.value *=
-                  double.parse(controller.displayEnglish.value);
+                  double.parse(controller.displayEnglish.value.replaceAll("*", ""));
               twonumber = controller.result.value.toStringAsFixed(0);
               m1 = false;
               m2 = true;
@@ -1444,16 +1611,41 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              controller.value
-                  .add(controller.prevOpertor.value + controller.display.value);
+              update == true
+                  ? controller.value.add(controller.display.value)
+                  : controller.value.add(
+                  controller.prevOpertor.value + controller.display.value);
+
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
               print(controller.displayEnglish.value);
               print(controller.result.value);
+              if (update == true) {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
+                  }
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (lastIndex != -1 &&
+                    controller.value[lastIndex].contains('=')) {
+                  // If '=' is found and lastIndex is valid
+                  controller.currentValue.value = double.parse(
+                      convertHindiToEnglish(
+                          controller.value[lastIndex + 1])!);
+                  dotcheck = true;
+                } else {
+                  controller.result.value = double.parse(controller.value[0]);
+                }
+              } else {
+                controller.result.value = double.parse(controller.value[0]);
+              }
 
               controller.result.value /=
-                  double.parse(controller.displayEnglish.value);
+                  double.parse(controller.displayEnglish.value.replaceAll("÷", ""));
               twonumber = controller.result.value.toStringAsFixed(1);
               m1 = false;
               m2 = true;
@@ -1532,18 +1724,39 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     controller.display.value + controller.displayOprater.value);
                 controller.saveValueListToPrefs();
               } else {
-                if (controller.prevOpertor.value == '+') {
+                if (controller.prevOpertor2.value == '+') {
                   print('kkkkkkkkkkkkkkk');
 
                   print(controller.prevOpertor.value);
 
-                  controller.value.add(
-                      controller.prevOpertor.value + controller.display.value);
+                  update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
 
                   controller.saveValueListToPrefs();
                   print("jjjjjjjj11rrrrrrrrr");
                   print(controller.displayEnglish.value);
                   print(controller.result.value);
+                  if (update == true) {
+                    int lastIndex = -1;
+                    for (int i = controller.value.length - 1; i >= 0; i--) {
+                      if (controller.value[i].contains('=')) {
+                        lastIndex = i;
+                        break;
+                      }
+                    }
+                    print("------- lastIndex ------ ${lastIndex}");
+                    if (lastIndex != -1 &&
+                        controller.value[lastIndex].contains('=')) {
+                      // If '=' is found and lastIndex is valid
+                      controller.currentValue.value = double.parse(
+                          convertHindiToEnglish(
+                              controller.value[lastIndex + 1])!);
+                      dotcheck = true;
+                    } else {
+                      controller.result.value = double.parse(controller.value[0]);
+                    }
+                  } else {
+                    controller.result.value = double.parse(controller.value[0]);
+                  }
                   controller.result.value +=
                       double.parse(controller.displayEnglish.value);
                   twonumber = controller.result.value.toStringAsFixed(0);
@@ -1558,20 +1771,41 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                       controller.displayOprater.value);
                   controller.saveValueListToPrefs();
                   controller.prevOpertor.value = '';
-                } else if (controller.prevOpertor.value == '-') {
+                } else if (controller.prevOpertor2.value == '-') {
                   print('kkkkkkkkkkkkkkk');
 
                   print(controller.prevOpertor.value);
 
-                  controller.value.add(
-                      controller.prevOpertor.value + controller.display.value);
+                  update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
 
                   controller.saveValueListToPrefs();
                   print("jjjjjjjj11rrrrrrrrr");
                   print(controller.displayEnglish.value);
                   print(controller.result.value);
+                  if (update == true) {
+                    int lastIndex = -1;
+                    for (int i = controller.value.length - 1; i >= 0; i--) {
+                      if (controller.value[i].contains('=')) {
+                        lastIndex = i;
+                        break;
+                      }
+                    }
+                    print("------- lastIndex ------ ${lastIndex}");
+                    if (lastIndex != -1 &&
+                        controller.value[lastIndex].contains('=')) {
+                      // If '=' is found and lastIndex is valid
+                      controller.currentValue.value = double.parse(
+                          convertHindiToEnglish(
+                              controller.value[lastIndex + 1])!);
+                      dotcheck = true;
+                    } else {
+                      controller.result.value = double.parse(controller.value[0]);
+                    }
+                  } else {
+                    controller.result.value = double.parse(controller.value[0]);
+                  }
                   controller.result.value -=
-                      double.parse(controller.displayEnglish.value);
+                      double.parse(controller.displayEnglish.value.replaceAll("-", ""));
                   twonumber = controller.result.value.toStringAsFixed(0);
 
                   controller.value.add("= " + twonumber.toString());
@@ -1582,20 +1816,41 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
                   controller.displayOprater.value = number;
                   controller.prevOpertor.value = '';
-                } else if (controller.prevOpertor.value == '*') {
+                } else if (controller.prevOpertor2.value == '*') {
                   print('kkkkkkkkkkkkkkk');
 
                   print(controller.prevOpertor.value);
 
-                  controller.value.add(
-                      controller.prevOpertor.value + controller.display.value);
+                  update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
 
                   controller.saveValueListToPrefs();
                   print("jjjjjjjj11rrrrrrrrr");
                   print(controller.displayEnglish.value);
                   print(controller.result.value);
+                  if (update == true) {
+                    int lastIndex = -1;
+                    for (int i = controller.value.length - 1; i >= 0; i--) {
+                      if (controller.value[i].contains('=')) {
+                        lastIndex = i;
+                        break;
+                      }
+                    }
+                    print("------- lastIndex ------ ${lastIndex}");
+                    if (lastIndex != -1 &&
+                        controller.value[lastIndex].contains('=')) {
+                      // If '=' is found and lastIndex is valid
+                      controller.currentValue.value = double.parse(
+                          convertHindiToEnglish(
+                              controller.value[lastIndex + 1])!);
+                      dotcheck = true;
+                    } else {
+                      controller.result.value = double.parse(controller.value[0]);
+                    }
+                  } else {
+                    controller.result.value = double.parse(controller.value[0]);
+                  }
                   controller.result.value *=
-                      double.parse(controller.displayEnglish.value);
+                      double.parse(controller.displayEnglish.value.replaceAll("*", ""));
                   twonumber = controller.result.value.toStringAsFixed(0);
 
                   controller.value.add("= " + twonumber.toString());
@@ -1606,20 +1861,41 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
                   controller.displayOprater.value = number;
                   controller.prevOpertor.value = '';
-                } else if (controller.prevOpertor.value == '÷') {
+                } else if (controller.prevOpertor2.value == '÷') {
                   print('kkkkkkkkkkkkkkk');
 
                   print(controller.prevOpertor.value);
 
-                  controller.value.add(
-                      controller.prevOpertor.value + controller.display.value);
+                  update == true?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
 
                   controller.saveValueListToPrefs();
                   print("jjjjjjjj11rrrrrrrrr");
                   print(controller.displayEnglish.value);
                   print(controller.result.value);
+                  if (update == true) {
+                    int lastIndex = -1;
+                    for (int i = controller.value.length - 1; i >= 0; i--) {
+                      if (controller.value[i].contains('=')) {
+                        lastIndex = i;
+                        break;
+                      }
+                    }
+                    print("------- lastIndex ------ ${lastIndex}");
+                    if (lastIndex != -1 &&
+                        controller.value[lastIndex].contains('=')) {
+                      // If '=' is found and lastIndex is valid
+                      controller.currentValue.value = double.parse(
+                          convertHindiToEnglish(
+                              controller.value[lastIndex + 1])!);
+                      dotcheck = true;
+                    } else {
+                      controller.result.value = double.parse(controller.value[0]);
+                    }
+                  } else {
+                    controller.result.value = double.parse(controller.value[0]);
+                  }
                   controller.result.value /=
-                      double.parse(controller.displayEnglish.value);
+                      double.parse(controller.displayEnglish.value.replaceAll("÷", ""));
                   twonumber = controller.result.value.toStringAsFixed(1);
 
                   controller.value.add("= " + twonumber.toString());
@@ -1634,6 +1910,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   print('MMMMMMMMMMMMMMMfffffffffff++++++++++');
                   onetime3 = false;
                   display = controller.display.value;
+                  print(controller.value[2]);
                   controller.display.value = controller.value[2];
                   controller.displayOprater.value = number;
                   controller.value.add(controller.displayEnglish.value +
@@ -1681,26 +1958,74 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               }
             } else {
               scrolle();
-              if (!controller.value[controller.value.length - 1]
-                  .contains("=")) {
-                String lastEntry = controller.value.removeLast();
+              print(" sssssssssssssss ${controller.prevOpertor.value}");
+              if (controller.prevOpertor.value == "%") {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
+                  }
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (controller.value[lastIndex].contains('=')) {
+                  controller.display.value =
+                      controller.value[lastIndex - 2].replaceAll("=", "");
+                  String lastEntry =
+                      controller.value.removeAt(controller.value.length - 3);
+                  controller.value.removeAt(controller.value.length - 2);
+                  controller.value.removeAt(controller.value.length - 1);
+                  controller.display.value = lastEntry;
+                  controller.displayEnglish.value = lastEntry;
+                  controller.prevOpertor.value = "";
+                } else {
+                  controller.display.value = controller.value[0];
+                }
+              } else if(controller.prevOpertor.value == "MU")
+                {
+                  int lastIndex = -1;
+                  for (int i = controller.value.length - 1; i >= 0; i--) {
+                    if (controller.value[i].contains('=')) {
+                      lastIndex = i;
+                      break;
+                    }
+                  }
+                  print("------- lastIndex ------ ${lastIndex}");
+                  if (controller.value[lastIndex].contains('=')) {
+                    controller.display.value =
+                        controller.value[lastIndex - 2].replaceAll("=", "");
+                    String lastEntry =
+                    controller.value.removeAt(controller.value.length - 3);
+                    controller.value.removeAt(controller.value.length - 2);
+                    controller.value.removeAt(controller.value.length - 1);
+                    controller.display.value = lastEntry;
+                    controller.displayEnglish.value = lastEntry;
+                    controller.prevOpertor.value = "";
+                  } else {
+                    controller.display.value = controller.value[0];
+                  }
+                }else {
+                if (!controller.value[controller.value.length - 1]
+                    .contains("=")) {
+                  String lastEntry = controller.value.removeLast();
 
-                controller.prevOpertor.value = lastEntry[
-                    0]; // Assuming the first character denotes the operator
+                  controller.prevOpertor.value = lastEntry[
+                      0]; // Assuming the first character denotes the operator
 
-                controller.display.value = lastEntry;
-                controller.displayEnglish.value = lastEntry;
-                print(
-                    "Updated the display to the last entry: ${controller.display.value}");
-              } else {
-                print("Cannot undo because the last entry contains '='.");
-                controller.value.removeAt(controller.value.length - 1);
-                String lastEntry = controller.value.removeLast();
-                controller.prevOpertor.value = lastEntry[0];
-                controller.display.value = lastEntry;
-                controller.displayEnglish.value = lastEntry;
-                print(
-                    "Updated the display to the last entry: ${controller.display.value}");
+                  controller.display.value = lastEntry;
+                  controller.displayEnglish.value = lastEntry;
+                  print(
+                      "Updated the display to the last entry: ${controller.display.value}");
+                } else {
+                  print("Cannot undo because the last entry contains '='.");
+                  controller.value.removeAt(controller.value.length - 1);
+                  String lastEntry = controller.value.removeLast();
+                  controller.prevOpertor.value = lastEntry[0];
+                  controller.display.value = lastEntry;
+                  controller.displayEnglish.value = lastEntry;
+                  print(
+                      "Updated the display to the last entry: ${controller.display.value}");
+                }
               }
             }
           }
@@ -1736,96 +2061,315 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     print("onetime");
                     String display = controller.display.value;
                     print(display);
-                    if (display.isEmpty) {
+                    if (update == true) {
+                      if (display.isEmpty) {
+                      } else {
+                        controller.value.add(controller.display.value);
+                        controller.saveValueListToPrefs();
+                        print(controller.value);
+                        print("controller.value[0] ${controller.value[0]}");
+
+                        if (controller.value.length == 1) {
+                          // If controller.value has exactly one element
+                          controller.currentValue.value = double.parse(
+                              convertHindiToEnglish(controller.value[0])!);
+                        } else {
+                          // If controller.value has more than one element
+                          int lastIndex = -1;
+                          for (int i = controller.value.length - 1;
+                              i >= 0;
+                              i--) {
+                            if (controller.value[i].contains('=')) {
+                              lastIndex = i;
+                              break;
+                            }
+                          }
+                          print("------- lastIndex ------ ${lastIndex}");
+                          if (lastIndex != -1 &&
+                              controller.value[lastIndex].contains('=')) {
+                            // If '=' is found and lastIndex is valid
+                            controller.currentValue.value = double.parse(
+                                convertHindiToEnglish(
+                                    controller.value[lastIndex + 1])!);
+                            dotcheck = true;
+                          } else {
+                            // If '=' is not found or lastIndex is invalid
+                            controller.currentValue.value = double.parse(
+                                convertHindiToEnglish(controller.value[0])!);
+                          }
+                        }
+                        print("display ${display}");
+                        print("display ${controller.displayEnglish.value}");
+
+                        double percentageValue = controller.currentValue.value *
+                            double.parse(controller.displayEnglish.value);
+
+                        print("percentageValue $percentageValue");
+                        percentageValue /= 100;
+                        print("percentageValue ${percentageValue}");
+                        double newValue =
+                            controller.currentValue.value + percentageValue;
+
+                        print("newValue1 $newValue");
+                        // Update the display with the new value
+                        controller.display.value = "";
+
+                        controller.displayEnglish.value =
+                            newValue.toStringAsFixed(0).toString();
+                        controller.displayOprater.value = "=";
+                        controller.prevOpertor.value = "%";
+                        arathmeticoperator = true;
+                        // print(controller.result);
+                        controller.displayEnglish.value.isEmpty
+                            ? ""
+                            : controller.value.add(
+                                controller.displayOprater.value +
+                                    controller.displayEnglish.value);
+                        controller.saveValueListToPrefs();
+                        controller.prevOpertor.value = "";
+                        controller.displayEnglish.value = "";
+                      }
                     } else {
-                      controller.value.add(controller.prevOpertor.value +
-                          controller.display.value);
-                      controller.saveValueListToPrefs();
-                      print(controller.value);
-                      print("controller.value[0] ${controller.value[0]}");
+                      if (display.isEmpty) {
+                      } else {
+                        controller.value.add(controller.prevOpertor.value +
+                            controller.display.value);
+                        controller.saveValueListToPrefs();
+                        print(controller.value);
+                        if (controller.value.length == 1) {
+                          // If controller.value has exactly one element
+                          controller.currentValue.value = double.parse(
+                              convertHindiToEnglish(controller.value[0])!);
+                        } else {
+                          // If controller.value has more than one element
+                          int lastIndex = -1;
+                          for (int i = controller.value.length - 1;
+                              i >= 0;
+                              i--) {
+                            if (controller.value[i].contains('=')) {
+                              lastIndex = i;
+                              break;
+                            }
+                          }
+                          print("------- lastIndex ------ ${lastIndex}");
+                          if (lastIndex != -1 &&
+                              controller.value[lastIndex].contains('=')) {
+                            // If '=' is found and lastIndex is valid
+                            controller.currentValue.value = double.parse(
+                                convertHindiToEnglish(
+                                    controller.value[lastIndex + 1])!);
+                            dotcheck = true;
+                          } else {
+                            // If '=' is not found or lastIndex is invalid
+                            controller.currentValue.value = double.parse(
+                                convertHindiToEnglish(controller.value[0])!);
+                          }
+                        }
 
-                      controller.currentValue.value = double.parse(
-                          convertHindiToEnglish(controller.value[0])!);
-                      print("currentValue ${controller.currentValue.value}");
-                      print("display ${display}");
-                      print("display ${controller.displayEnglish.value}");
+                        print("controller.value[0] ${controller.value[0]}");
 
-                      double percentageValue = controller.currentValue.value *
-                          double.parse(controller.displayEnglish.value);
+                        print("currentValue ${controller.currentValue.value}");
+                        print("display ${display}");
+                        print("display ${controller.displayEnglish.value}");
 
-                      print("percentageValue $percentageValue");
-                      percentageValue /= 100;
-                      print("percentageValue ${percentageValue}");
-                      double newValue =
-                          controller.currentValue.value + percentageValue;
+                        double percentageValue = controller.currentValue.value *
+                            double.parse(controller.displayEnglish.value);
 
-                      print("newValue1 $newValue");
-                      // Update the display with the new value
-                      controller.display.value = "";
+                        print("percentageValue $percentageValue");
+                        percentageValue /= 100;
+                        print("percentageValue ${percentageValue}");
+                        double newValue =
+                            controller.currentValue.value + percentageValue;
 
-                      controller.displayEnglish.value =
-                          newValue.toStringAsFixed(0).toString();
-                      controller.displayOprater.value = "=";
-                      controller.prevOpertor.value = "%";
-                      arathmeticoperator = true;
-                      // print(controller.result);
-                      controller.displayEnglish.value.isEmpty
-                          ? ""
-                          : controller.value.add(
-                              controller.displayOprater.value +
-                                  controller.displayEnglish.value);
-                      controller.saveValueListToPrefs();
-                      controller.prevOpertor.value = "";
+                        print("newValue1 $newValue");
+                        // Update the display with the new value
+                        controller.display.value = "";
+
+                        controller.displayEnglish.value =
+                            newValue.toStringAsFixed(0).toString();
+                        controller.displayOprater.value = "=";
+                        controller.prevOpertor.value = "%";
+                        arathmeticoperator = true;
+                        // print(controller.result);
+                        controller.displayEnglish.value.isEmpty
+                            ? ""
+                            : controller.value.add(
+                                controller.displayOprater.value +
+                                    controller.displayEnglish.value);
+                        controller.saveValueListToPrefs();
+                        controller.prevOpertor.value = "";
+                        controller.displayEnglish.value = "";
+                      }
                     }
                   } else if (controller.prevOpertor.value == "-") {
                     String display = controller.display.value;
-                    if (display.isEmpty) {
+                    if (update == true) {
+                      if (display.isEmpty) {
+                      } else {
+                        controller.value.add(controller.display.value);
+                        controller.saveValueListToPrefs();
+                        print(controller.value);
+                        print("currentValue ${controller.currentValue.value}");
+                        if (controller.value.length == 1) {
+                          // If controller.value has exactly one element
+                          controller.currentValue.value = double.parse(
+                              convertHindiToEnglish(controller.value[0])!);
+                        } else {
+                          // If controller.value has more than one element
+                          int lastIndex = -1;
+                          for (int i = controller.value.length - 1;
+                              i >= 0;
+                              i--) {
+                            if (controller.value[i].contains('=')) {
+                              lastIndex = i;
+                              break;
+                            }
+                          }
+                          print("------- lastIndex ------ ${lastIndex}");
+                          if (lastIndex != -1 &&
+                              controller.value[lastIndex].contains('=')) {
+                            // If '=' is found and lastIndex is valid
+                            controller.currentValue.value = double.parse(
+                                convertHindiToEnglish(
+                                    controller.value[lastIndex + 1])!);
+                            dotcheck = true;
+                          } else {
+                            // If '=' is not found or lastIndex is invalid
+                            controller.currentValue.value = double.parse(
+                                convertHindiToEnglish(controller.value[0])!);
+                          }
+                        }
+                        double percentageValue = controller.currentValue.value *
+                            double.parse(controller.displayEnglish.value
+                                .replaceAll("-", ""));
+                        print("percentageValue $percentageValue");
+                        percentageValue /= 100;
+                        print("percentageValue $percentageValue");
+                        double newValue =
+                            controller.currentValue.value - percentageValue;
+
+                        print("newValue2 $newValue");
+                        // Update the display with the new value
+                        controller.display.value = "";
+
+                        controller.displayEnglish.value =
+                            newValue.toStringAsFixed(1).toString();
+                        controller.displayOprater.value = "=";
+                        controller.prevOpertor.value = "%";
+                        print("nnnnnnnnnnn ${controller.result.value}");
+                        arathmeticoperator = true;
+                        // print(controller.result);
+                        controller.displayEnglish.value.isEmpty
+                            ? ""
+                            : controller.value.add(
+                                controller.displayOprater.value +
+                                    controller.displayEnglish.value);
+                        controller.saveValueListToPrefs();
+                        controller.displayEnglish.value = "";
+                      }
                     } else {
-                      controller.value.add(controller.prevOpertor.value +
-                          controller.display.value);
-                      controller.saveValueListToPrefs();
-                      print(controller.value);
-                      print("currentValue ${controller.currentValue.value}");
-                      controller.currentValue.value = double.parse(
-                          convertHindiToEnglish(controller.value[0])!);
-                      print("currentValue ${controller.currentValue.value}");
-                      double percentageValue = controller.currentValue.value *
-                          double.parse(controller.displayEnglish.value);
-                      print("percentageValue $percentageValue");
-                      percentageValue /= 100;
-                      print("percentageValue $percentageValue");
-                      double newValue =
-                          controller.currentValue.value - percentageValue;
+                      if (display.isEmpty) {
+                      } else {
+                        controller.value.add(controller.prevOpertor.value +
+                            controller.display.value);
+                        controller.saveValueListToPrefs();
+                        print(controller.value);
+                        if (controller.value.length == 1) {
+                          // If controller.value has exactly one element
+                          controller.currentValue.value = double.parse(
+                              convertHindiToEnglish(controller.value[0])!);
+                        } else {
+                          // If controller.value has more than one element
+                          int lastIndex = -1;
+                          for (int i = controller.value.length - 1;
+                              i >= 0;
+                              i--) {
+                            if (controller.value[i].contains('=')) {
+                              lastIndex = i;
+                              break;
+                            }
+                          }
+                          print("------- lastIndex ------ ${lastIndex}");
+                          if (lastIndex != -1 &&
+                              controller.value[lastIndex].contains('=')) {
+                            // If '=' is found and lastIndex is valid
+                            controller.currentValue.value = double.parse(
+                                convertHindiToEnglish(
+                                    controller.value[lastIndex + 1])!);
+                            dotcheck = true;
+                          } else {
+                            // If '=' is not found or lastIndex is invalid
+                            controller.currentValue.value = double.parse(
+                                convertHindiToEnglish(controller.value[0])!);
+                          }
+                        }
+                        print("currentValue ${controller.currentValue.value}");
+                        double percentageValue = controller.currentValue.value *
+                            double.parse(controller.displayEnglish.value);
+                        print("percentageValue $percentageValue");
+                        percentageValue /= 100;
+                        print("percentageValue $percentageValue");
+                        double newValue =
+                            controller.currentValue.value - percentageValue;
 
-                      print("newValue2 $newValue");
-                      // Update the display with the new value
-                      controller.display.value = "";
+                        print("newValue2 $newValue");
+                        // Update the display with the new value
+                        controller.display.value = "";
 
-                      controller.displayEnglish.value =
-                          newValue.toStringAsFixed(0).toString();
-                      controller.displayOprater.value = "=";
-                      controller.prevOpertor.value = "%";
-                      print("nnnnnnnnnnn ${controller.result.value}");
-                      arathmeticoperator = true;
-                      // print(controller.result);
-                      controller.displayEnglish.value.isEmpty
-                          ? ""
-                          : controller.value.add(
-                              controller.displayOprater.value +
-                                  controller.displayEnglish.value);
-                      controller.saveValueListToPrefs();
+                        controller.displayEnglish.value =
+                            newValue.toStringAsFixed(1).toString();
+                        controller.displayOprater.value = "=";
+                        controller.prevOpertor.value = "%";
+                        print("nnnnnnnnnnn ${controller.result.value}");
+                        arathmeticoperator = true;
+                        // print(controller.result);
+                        controller.displayEnglish.value.isEmpty
+                            ? ""
+                            : controller.value.add(
+                                controller.displayOprater.value +
+                                    controller.displayEnglish.value);
+                        controller.saveValueListToPrefs();
+                        controller.prevOpertor.value = "";
+                        controller.displayEnglish.value = "";
+                      }
                     }
                   } else if (controller.prevOpertor.value == "*") {
                     String display = controller.display.value;
                     if (display.isEmpty) {
                     } else {
-                      controller.value.add(controller.prevOpertor.value +
-                          controller.display.value);
+                      update == true
+                          ? controller.value.add(controller.display.value)
+                          : controller.value.add(controller.prevOpertor.value +
+                              controller.display.value);
                       controller.saveValueListToPrefs();
                       print(controller.value);
-                      print("currentValue ${controller.currentValue.value}");
-                      controller.currentValue.value = double.parse(
-                          convertHindiToEnglish(controller.value[0])!);
+                      if (controller.value.length == 1) {
+                        // If controller.value has exactly one element
+                        controller.currentValue.value = double.parse(
+                            convertHindiToEnglish(controller.value[0])!);
+                      } else {
+                        // If controller.value has more than one element
+                        int lastIndex = -1;
+                        for (int i = controller.value.length - 1; i >= 0; i--) {
+                          if (controller.value[i].contains('=')) {
+                            lastIndex = i;
+                            break;
+                          }
+                        }
+                        print("------- lastIndex ------ ${lastIndex}");
+                        if (lastIndex != -1 &&
+                            controller.value[lastIndex].contains('=')) {
+                          // If '=' is found and lastIndex is valid
+                          controller.currentValue.value = double.parse(
+                              convertHindiToEnglish(
+                                  controller.value[lastIndex + 1])!);
+                          dotcheck = true;
+                        } else {
+                          // If '=' is not found or lastIndex is invalid
+                          controller.currentValue.value = double.parse(
+                              convertHindiToEnglish(controller.value[0])!);
+                        }
+                      }
                       print("currentValue ${controller.currentValue.value}");
                       double percentageValue = controller.currentValue.value *
                           double.parse(controller.displayEnglish.value);
@@ -1841,9 +2385,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                       controller.display.value = "";
 
                       controller.displayEnglish.value =
-                          percentageValue.toStringAsFixed(0).toString();
+                          percentageValue.toStringAsFixed(1).toString();
                       controller.displayOprater.value = "=";
-                      controller.prevOpertor.value = "%";
+                      controller.prevOpertor.value = "*";
                       arathmeticoperator = true;
                       // print(controller.result);
                       controller.displayEnglish.value.isEmpty
@@ -1852,6 +2396,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               controller.displayOprater.value +
                                   controller.displayEnglish.value);
                       controller.saveValueListToPrefs();
+                      controller.prevOpertor.value = "";
+                      controller.displayEnglish.value = "";
                     }
                   } else if (controller.prevOpertor.value == "÷") {
                     String display = controller.display.value;
@@ -1861,9 +2407,33 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                           controller.display.value);
                       controller.saveValueListToPrefs();
                       print(controller.value);
-                      print("currentValue ${controller.currentValue.value}");
-                      controller.currentValue.value = double.parse(
-                          convertHindiToEnglish(controller.value[0])!);
+                      if (controller.value.length == 1) {
+                        // If controller.value has exactly one element
+                        controller.currentValue.value = double.parse(
+                            convertHindiToEnglish(controller.value[0])!);
+                      } else {
+                        // If controller.value has more than one element
+                        int lastIndex = -1;
+                        for (int i = controller.value.length - 1; i >= 0; i--) {
+                          if (controller.value[i].contains('=')) {
+                            lastIndex = i;
+                            break;
+                          }
+                        }
+                        print("------- lastIndex ------ ${lastIndex}");
+                        if (lastIndex != -1 &&
+                            controller.value[lastIndex].contains('=')) {
+                          // If '=' is found and lastIndex is valid
+                          controller.currentValue.value = double.parse(
+                              convertHindiToEnglish(
+                                  controller.value[lastIndex + 1])!);
+                          dotcheck = true;
+                        } else {
+                          // If '=' is not found or lastIndex is invalid
+                          controller.currentValue.value = double.parse(
+                              convertHindiToEnglish(controller.value[0])!);
+                        }
+                      }
                       print("currentValue ${controller.currentValue.value}");
                       double percentageValue = controller.currentValue.value *
                           double.parse(controller.displayEnglish.value);
@@ -1889,6 +2459,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               controller.displayOprater.value +
                                   controller.displayEnglish.value);
                       controller.saveValueListToPrefs();
+                      controller.prevOpertor.value = "";
+                      controller.displayEnglish.value = "";
                     }
                   } else {
                     print('1111111111111111111111');
@@ -2182,29 +2754,58 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             }
           } else {
             rootprint = true;
-            print('444444444444444333333333333333333333333344444444');
-            controller.value
-                .add("√" + controller.displayEnglish.value.toString());
-            controller.saveValueListToPrefs();
-            double currentValue = double.parse(controller.displayEnglish.value);
-
-            if (currentValue >= 0) {
-              print('currentValue ${currentValue}');
-
-              double squareRoot = sqrt(currentValue);
-
-              print('3333333333333333333333');
-              controller.display.value = squareRoot.toString();
-              double secoundvalue = double.parse(controller.display.value);
-              controller.prevOpertor.value = "=";
-              controller.value.add(controller.prevOpertor.value +
-                  secoundvalue.toStringAsFixed(3));
+            if (update == true) {
+              print('444444444444444222222222222222222222244444444');
+              controller.value.add(controller.displayEnglish.value.toString());
               controller.saveValueListToPrefs();
-              controller.display.value = "";
-              controller.displayEnglish.value = "";
+              String value =
+                  controller.displayEnglish.value.replaceAll("√", "");
+              double currentValue = double.parse(value);
+
+              if (currentValue >= 0) {
+                print('currentValue ${currentValue}');
+
+                double squareRoot = sqrt(currentValue);
+
+                print('3333333333333333333333');
+                controller.display.value = squareRoot.toString();
+                double secoundvalue = double.parse(controller.display.value);
+                controller.prevOpertor.value = "=";
+                controller.value.add(controller.prevOpertor.value +
+                    secoundvalue.toStringAsFixed(3));
+                controller.saveValueListToPrefs();
+                controller.display.value = "";
+                controller.displayEnglish.value = "";
+              } else {
+                controller.display.value = "Error";
+                controller.displayEnglish.value = "Error";
+              }
             } else {
-              controller.display.value = "Error";
-              controller.displayEnglish.value = "Error";
+              print('444444444444444333333333333333333333333344444444');
+              controller.value
+                  .add("√" + controller.displayEnglish.value.toString());
+              controller.saveValueListToPrefs();
+              double currentValue =
+                  double.parse(controller.displayEnglish.value);
+
+              if (currentValue >= 0) {
+                print('currentValue ${currentValue}');
+
+                double squareRoot = sqrt(currentValue);
+
+                print('3333333333333333333333');
+                controller.display.value = squareRoot.toString();
+                double secoundvalue = double.parse(controller.display.value);
+                controller.prevOpertor.value = "=";
+                controller.value.add(controller.prevOpertor.value +
+                    secoundvalue.toStringAsFixed(3));
+                controller.saveValueListToPrefs();
+                controller.display.value = "";
+                controller.displayEnglish.value = "";
+              } else {
+                controller.display.value = "Error";
+                controller.displayEnglish.value = "Error";
+              }
             }
           }
           break;
@@ -3369,6 +3970,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 .add(controller.prevOpertor.value + controller.display.value);
           } else if (controller.prevOpertor.value == "+GST") {
             scrolle();
+            scrolle();
             // controller.displayEnglish.value = controller.display.value;
             print(" 234345435 ${controller.displayEnglish.value}");
             double secoundvalue = double.parse(controller.displayEnglish.value);
@@ -3449,7 +4051,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 controller.currentValue.value - controller.gstAmount.value;
             twonumber = controller.result.value
                 .toStringAsFixed(controller.currentSliderValue.value.toInt());
-            controller.value.add("GST  = $twonumber");
+            controller.value.add("  = $twonumber");
             controller.saveValueListToPrefs();
             print(" ============= ${controller.result.value} ");
             print("currentValue ${controller.currentValue}");
@@ -5367,7 +5969,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                 style: TextStyle(
                                   color: controller.dark.value
                                       ? Colors.white
-                                      : Colors.black,
+                                      : Colors.black
                                 ),
                               ),
                             ],
@@ -5388,116 +5990,148 @@ class _Calculator_HomeState extends State<Calculator_Home> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
-              child: Container(
-                color: controller.backgroundColor.value,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 4.h,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        controller: scrollcontroller,
-                        physics: ClampingScrollPhysics(),
-                        itemCount: controller.value.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index == controller.value.length) {
-                            return Container(
-                              height: 8.h,
-                            );
-                          }
-                          return Padding(
-                            padding:
-                                const EdgeInsets.only(right: 10, bottom: 5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                gst == true
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: controller
-                                                        .value[index]
-                                                        .contains("=")
-                                                    ? 10
-                                                    : 5,
-                                                vertical: controller
-                                                        .value[index]
-                                                        .contains("=")
-                                                    ? 3
-                                                    : 0),
-                                            decoration: controller.value[index]
-                                                    .contains("=")
-                                                ? BoxDecoration(
-                                                    color: Colors.grey.shade300,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20))
-                                                : BoxDecoration(),
-                                            child: Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Text(
-                                                "${englishToHindi(controller.value[index])} ",
-                                                style: TextStyle(
-                                                    fontSize: controller
-                                                            .value[index]
-                                                            .contains("=")
-                                                        ? 16
-                                                        : 15,
-                                                    fontWeight: controller
-                                                            .value[index]
-                                                            .contains("=")
-                                                        ? FontWeight.w500
-                                                        : FontWeight.w400,
-                                                    color: controller.dark.value
-                                                        ? Colors.black
-                                                        : Colors.black),
+              child: Obx(() => Container(
+                  color: controller.backgroundColor.value,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 4.h,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          controller: scrollcontroller,
+                          physics: ClampingScrollPhysics(),
+                          itemCount: controller.value.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index == controller.value.length) {
+                              return Container(
+                                height: 8.h,
+                              );
+                            }
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 2, bottom: 5),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  gst == true
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: controller
+                                                          .value[index]
+                                                          .contains("=")
+                                                      ? 10
+                                                      : 5,
+                                                  vertical: controller
+                                                          .value[index]
+                                                          .contains("=")
+                                                      ? 3
+                                                      : 0),
+                                              decoration: controller.value[index]
+                                                      .contains("=")
+                                                  ? BoxDecoration(
+                                                      color: Colors.grey.shade300,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5))
+                                                  : BoxDecoration(),
+                                              child: Align(
+                                                alignment: Alignment.centerRight,
+                                                child: Text(
+                                                  "${englishToHindi(controller.value[index])} ",
+                                                  style: TextStyle(
+                                                      fontSize: controller
+                                                              .value[index]
+                                                              .contains("=")
+                                                          ? 16
+                                                          : 15,
+                                                      fontWeight: controller
+                                                              .value[index]
+                                                              .contains("=")
+                                                          ? FontWeight.w500
+                                                          : FontWeight.w400,
+                                                      color: controller.dark.value
+                                                          ? Colors.black
+                                                          : Colors.black),
+                                                ),
                                               ),
                                             ),
+                                          ],
+                                        )
+                                      : Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: controller.value[index].contains("=") ? 10.0 : 0.0,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        SizedBox(height: 1.h,),
+                                        controller.value[index].contains('=')?InkWell(onTap: () {
+                                          print(index);
+                                          String userInputString1 = '';
+                                          String userInputString = '';
+                                          List<String> data=[];
+                                          print('dddddddddddd ${index}');
+                                          for (int i = index-1; i >=  0 ; i--) {
+                                            print('dddddddddddd ${ controller.value[i]}');
+                                            if ( !controller.value[i].contains("=")) {
+                                              data.add(index+1==i?"${removeDecimalSuffix( controller.value[i])} \n":"${removeDecimalSuffix( controller.value[i])} \n");
+                                              userInputString1 += '${ controller.value[i]} ';
+                                            }else
+                                            {
+                                              print('ddddddd2222222');
+                                            break;
+                                            }
+                                          }
+
+                                          data=data.reversed.toList();
+                                          String concatenatedString =   data.join();
+                                          userInputString += '${ controller.value[index]} \n';
+                                          print(concatenatedString + userInputString);
+                                          Share.share("   "+concatenatedString + userInputString);
+                                        },child: Icon(Icons.share,size: 17,)):Text(''),
+                                        SizedBox(width: 2.w,),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: controller.value[index].contains("=") ? 7 : 0,
                                           ),
-                                        ],
-                                      )
-                                    : Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: controller.value[index]
-                                                    .contains("=")
-                                                ? 7
-                                                : 0),
-                                        decoration: controller.value[index]
-                                                .contains("=")
-                                            ? BoxDecoration(
-                                                color: Colors.grey.shade300,
-                                                borderRadius:
-                                                    BorderRadius.circular(5))
-                                            : BoxDecoration(),
-                                        child: Text(
-                                          " ${englishToHindi(controller.value[index])} ",
-                                          style: TextStyle(
-                                            color: controller.dark.value
-                                                ? Colors.black
-                                                : Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: controller.value[index]
-                                                    .contains("=")
-                                                ? FontWeight.w500
-                                                : FontWeight.w400,
+                                          decoration: controller.value[index].contains("=")
+                                              ? BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius: BorderRadius.circular(5),
+                                          )
+                                              : BoxDecoration(),
+                                          child: Text(
+                                            " ${englishToHindi(controller.value[index])} ",
+                                            style: TextStyle(
+                                              color: controller.dark.value ? Colors.black : Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: controller.value[index].contains("=")
+                                                  ? FontWeight.w500
+                                                  : FontWeight.w400,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                              ],
-                            ),
-                          );
-                        },
+
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                  ],
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -7051,6 +7685,7 @@ import 'package:gst_calculator/calculator/model/country_model.dart';
 import 'package:gst_calculator/calculator/model/flag_model.dart';
 import 'package:gst_calculator/calculator/model/layout_model.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../class/language.dart';
@@ -7140,6 +7775,11 @@ class Calculator_Controller extends GetxController {
     Layout_Model(img: "assets/images/layout/theme9.png"),
   ];
 
+  get sharedValues => null;
+
+  void shareValue(String value) {
+    Share.share(value);
+  }
 
   RxMap<int, int> notes = {
     500: 0,
@@ -7872,6 +8512,10 @@ class Calculator_Controller extends GetxController {
     });
   }
 }
+
+
+
+
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
