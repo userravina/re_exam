@@ -20,6 +20,134 @@ samples, guidance on mobile development, and a full API reference.
   <img src="https://github.com/userravina/re_exam/assets/120082785/5c989356-429c-42cb-af53-b846c047d09f" height="50%" width="30%">
   <img src="https://github.com/userravina/re_exam/assets/120082785/f047ff5f-f02b-4762-9b23-c0c8345ea5d2"  height="50%" width="30%">
 </p>
+
+
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:gst_calculator/calculator/view/calculator_home.dart';
+import 'package:gst_calculator/calculator/view/change_layout/change_layoute_screen.dart';
+import 'package:gst_calculator/calculator/view/gst_change_screen.dart';
+import 'package:gst_calculator/calculator/view/more_tools/age_calcu/age_calculator_screen.dart';
+import 'package:gst_calculator/calculator/view/more_tools/currency_convert/currency_convernt_screen.dart';
+import 'package:gst_calculator/calculator/view/more_tools/money_cash/money_cash_screen.dart';
+import 'package:gst_calculator/calculator/view/more_tools/more_tools_screen.dart';
+import 'package:gst_calculator/calculator/view/more_tools/sip_calculator/sip_cal_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/anergy_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/area_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/fuel_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/length_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/pressure_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/speed_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/storage_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/temperature.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/time_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/volume_screen.dart';
+import 'package:gst_calculator/calculator/view/unit_converter/weight_screen.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'calculator/controller/calculator_controller.dart';
+import 'calculator/utils/ads_helper/ads_helper.dart';
+import 'calculator/view/test.dart';
+import 'class/language_constants.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Get.put(Calculator_Controller());
+  Get.put(Ads_Helper());
+  MobileAds.instance.initialize();
+  await initPlatformState();
+  runApp(MyApp());
+
+}
+Future<void> initPlatformState() async {
+  await Purchases.setLogLevel(LogLevel.debug);
+
+  PurchasesConfiguration? configuration;
+
+  if (Platform.isAndroid) {
+
+    configuration = PurchasesConfiguration('goog_TVlEohewJGLwFcBuOlgSSYoJeis');
+
+  } else if (Platform.isIOS) {
+
+    configuration = PurchasesConfiguration('goog_TVlEohewJGLwFcBuOlgSSYoJeis');
+
+  }
+  await Purchases.configure(configuration!);
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+  static void setLocale(BuildContext context, Locale newLocale) {
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?.setLocale(newLocale);
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale? _locale;
+
+  setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    getLocale().then((locale) => {setLocale(locale)});
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    FocusManager.instance.primaryFocus?.unfocus();
+    return Sizer(
+      builder: (context, orientation, deviceType) => GetMaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light(
+          useMaterial3: true,
+        ),
+        darkTheme: ThemeData.dark(
+          useMaterial3: true,
+        ),
+        locale: _locale,
+        routes: {
+          '/': (p0) => Calculator_Home(),
+          'tools': (p0) => More_Tools_Screen(),
+          'sip': (p0) => SIP_Screen(),
+          'money': (p0) => MoneyCashCounter(),
+          'age': (p0) => Age_Calcu_Screen(),
+          'currency': (p0) => Currency_Convert_Screen(),
+          'area': (p0) => Area_Screen(),
+          'length': (p0) => Length_Screen(),
+          'time': (p0) => Time_Screen(),
+          'temp': (p0) => Temprature_Screen(),
+          'speed': (p0) => Speed_Screen(),
+          'volume': (p0) => Volume_Screen(),
+          'energy': (p0) => Energy_Screen(),
+          'fuel': (p0) => Fuel_Screen(),
+          'pre': (p0) => Pressure_Screen(),
+          'weight': (p0) => Weight_Scrren(),
+          'storage': (p0) => Storage_Screen(),
+          'layout': (p0) => Change_Layout_Scrren(),
+          'gst': (p0) => Change_GST_Screen(),
+        },
+      ),
+    );
+  }
+}
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -27,6 +155,8 @@ import 'package:get/get.dart';
 import 'package:gst_calculator/calculator/controller/calculator_controller.dart';
 import 'package:gst_calculator/calculator/view/bouncing_button.dart';
 import 'package:gst_calculator/main.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -63,6 +193,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
   Calculator_Controller controller = Get.find();
   Ads_Helper adsController = Get.find();
   ScrollController scrollcontroller = ScrollController();
+
   String removeDecimalSuffix(String value) {
     // Check if the value ends with '.00'
     if (value.endsWith('.00')) {
@@ -75,6 +206,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
       return value;
     }
   }
+
   bool onetime = false;
   bool onetime2 = false;
   bool onetime3 = false;
@@ -96,6 +228,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
   bool mrprint = false;
   bool rootprint = false;
 
+  Offerings? offerings;
   String? convertHindiToEnglish(String hindiNumber) {
     switch (controller.selectedIndexLanguage.value) {
       case 0:
@@ -376,8 +509,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
         controller.loadSound();
         colorchangebg();
         controller.loadSelectedLanguageIndex();
+        controller.buysubscribe.value = await controller.getBooleanFromPrefs();
         print(
-            "======controller.selectedIndexLanguage.value=======${controller.selectedIndexLanguage.value}===============");
+            "======controller.selectedIndexLanguage.value=======${controller
+                .selectedIndexLanguage.value}===============");
       });
     });
     super.initState();
@@ -389,7 +524,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
   void colorchangebg() {
     print(
-        "==controller.selectedImageIndex.value ${controller.selectedImageIndex.value}");
+        "==controller.selectedImageIndex.value ${controller.selectedImageIndex
+            .value}");
     switch (controller.selectedImageIndex.value) {
       case 0:
         {
@@ -447,12 +583,24 @@ class _Calculator_HomeState extends State<Calculator_Home> {
     double result = value1 - value2;
     print("===========$result==================");
     // Find the maximum number of decimal places in the input values
-    int maxDecimalPlaces = (value1.toString().split('.').length == 2 ||
-            value2.toString().split('.').length == 2)
-        ? (value1.toString().split('.').length >
-                value2.toString().split('.').length
-            ? value1.toString().split('.')[1].length
-            : value2.toString().split('.')[1].length)
+    int maxDecimalPlaces = (value1
+        .toString()
+        .split('.')
+        .length == 2 ||
+        value2
+            .toString()
+            .split('.')
+            .length == 2)
+        ? (value1
+        .toString()
+        .split('.')
+        .length >
+        value2
+            .toString()
+            .split('.')
+            .length
+        ? value1.toString().split('.')[1].length
+        : value2.toString().split('.')[1].length)
         : 0;
 
     return double.parse((result).toStringAsFixed(maxDecimalPlaces));
@@ -482,8 +630,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
       controller.playSound();
     }
 
-    if (controller.isVibrationEnabled.value == false) {
-    } else {
+    if (controller.isVibrationEnabled.value == false) {} else {
       bool hasVibrator = await Vibration.hasVibrator() ?? false;
 
       if (hasVibrator) {
@@ -519,7 +666,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
       case "8":
       case "9":
         if ((controller.display.value == "0" ||
-                controller.display.value == "00") &&
+            controller.display.value == "00") &&
             (number == "0" || number == "00")) {
           controller.display.value = "0";
 
@@ -655,14 +802,12 @@ class _Calculator_HomeState extends State<Calculator_Home> {
       case "+18%":
       case "+GST":
         if (controller.displayEnglish.value.isEmpty &&
-            controller.value.isEmpty) {
-        } else {
+            controller.value.isEmpty) {} else {
           if (controller.displayEnglish.value == "") {
-            if (controller.prevOpertor.value == "+") {
-            } else if (controller.prevOpertor.value == "-") {
-            } else if (controller.prevOpertor.value == "*") {
-            } else if (controller.prevOpertor.value == "÷") {
-            }
+            if (controller.prevOpertor.value == "+") {} else
+            if (controller.prevOpertor.value == "-") {} else
+            if (controller.prevOpertor.value == "*") {} else
+            if (controller.prevOpertor.value == "÷") {}
             else {
               int lastIndex = -1;
               for (int i = controller.value.length - 1; i >= 0; i--) {
@@ -673,10 +818,12 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               }
               print("------- lastIndex ------ ${lastIndex}");
               if (controller.value[lastIndex].contains('=')) {
-                controller.displayEnglish.value = controller.value[lastIndex].replaceAll("=", '');
+                controller.displayEnglish.value =
+                    controller.value[lastIndex].replaceAll("=", '');
                 dotcheck = true;
               } else {
-                controller.currentValue.value = double.parse(controller.displayEnglish.value);
+                controller.currentValue.value =
+                    double.parse(controller.displayEnglish.value);
               }
             }
           } else {
@@ -696,7 +843,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             print("percentage ${controller.percentage.value}");
             twonumber = "0.0" + double.parse('$str').toStringAsFixed(0);
             print(
-                " --------------- ${"0.0" + double.parse('$str').toStringAsFixed(0)} ------------------------ ");
+                " --------------- ${"0.0" +
+                    double.parse('$str').toStringAsFixed(
+                        0)} ------------------------ ");
             controller.percentage.value =
                 controller.currentValue.value * double.parse('$twonumber');
             print("percentage ${controller.percentage.value}");
@@ -711,7 +860,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             twonumber = controller.percentage.value
                 .toStringAsFixed(controller.currentSliderValue.value.toInt());
             controller.value.add(
-                "IGST ${double.parse('${str}').toStringAsFixed(0)}%  ${twonumber}");
+                "IGST ${double.parse('${str}').toStringAsFixed(
+                    0)}%  ${twonumber}");
             controller.saveValueListToPrefs();
 
             controller.CGST.value = controller.percentage.value / 2;
@@ -756,7 +906,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             print("percentage ${controller.percentage.value}");
             twonumber = "0.0" + double.parse('$str1').toStringAsFixed(0);
             print(
-                " --------------- ${"0.0" + double.parse('$str1').toStringAsFixed(0)} ------------------------ ");
+                " --------------- ${"0.0" +
+                    double.parse('$str1').toStringAsFixed(
+                        0)} ------------------------ ");
             controller.percentage.value =
                 controller.currentValue.value * double.parse('$twonumber');
             print("percentage ${controller.percentage.value}");
@@ -771,7 +923,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             twonumber = controller.percentage.value
                 .toStringAsFixed(controller.currentSliderValue.value.toInt());
             controller.value.add(
-                "IGST ${double.parse('$str1').toStringAsFixed(0)}%   ${twonumber}");
+                "IGST ${double.parse('$str1').toStringAsFixed(
+                    0)}%   ${twonumber}");
             controller.saveValueListToPrefs();
 
             controller.CGST.value = controller.percentage.value / 2;
@@ -810,7 +963,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             print("percentage ${controller.percentage.value}");
             twonumber = "0.0" + double.parse('$str2').toStringAsFixed(0);
             print(
-                " --------------- ${"0.0" + double.parse('$str2').toStringAsFixed(0)} ------------------------ ");
+                " --------------- ${"0.0" +
+                    double.parse('$str2').toStringAsFixed(
+                        0)} ------------------------ ");
             controller.percentage.value =
                 controller.currentValue.value * double.parse('$twonumber');
             print("percentage ${controller.percentage.value}");
@@ -825,7 +980,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             twonumber = controller.percentage.value
                 .toStringAsFixed(controller.currentSliderValue.value.toInt());
             controller.value.add(
-                "IGST ${double.parse('$str2').toStringAsFixed(0)}%   ${twonumber}");
+                "IGST ${double.parse('$str2').toStringAsFixed(
+                    0)}%   ${twonumber}");
             controller.saveValueListToPrefs();
 
             controller.CGST.value = controller.percentage.value / 2;
@@ -859,7 +1015,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             print("percentage ${controller.percentage.value}");
             twonumber = "0.0" + double.parse('$str3').toStringAsFixed(0);
             print(
-                " --------------- ${"0.0" + double.parse('$str3').toStringAsFixed(0)} ------------------------ ");
+                " --------------- ${"0.0" +
+                    double.parse('$str3').toStringAsFixed(
+                        0)} ------------------------ ");
             controller.percentage.value =
                 controller.currentValue.value * double.parse('$twonumber');
             print("percentage ${controller.percentage.value}");
@@ -874,7 +1032,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             twonumber = controller.percentage.value
                 .toStringAsFixed(controller.currentSliderValue.value.toInt());
             controller.value.add(
-                "IGST ${double.parse('$str3').toStringAsFixed(0)}%   ${twonumber}");
+                "IGST ${double.parse('$str3').toStringAsFixed(
+                    0)}%   ${twonumber}");
             controller.saveValueListToPrefs();
 
             controller.CGST.value = controller.percentage.value / 2;
@@ -905,7 +1064,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
             controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
-            controller.currentValue.value = double.parse(controller.displayEnglish.value);
+            controller.currentValue.value =
+                double.parse(controller.displayEnglish.value);
             controller.prevOpertor.value = "+GST";
           }
 
@@ -925,14 +1085,12 @@ class _Calculator_HomeState extends State<Calculator_Home> {
       case "-18%":
       case "-GST":
         if (controller.displayEnglish.value.isEmpty &&
-            controller.value.isEmpty) {
-        } else {
+            controller.value.isEmpty) {} else {
           if (controller.displayEnglish.value == "") {
-            if (controller.prevOpertor.value == "+") {
-            } else if (controller.prevOpertor.value == "-") {
-            } else if (controller.prevOpertor.value == "*") {
-            } else if (controller.prevOpertor.value == "÷") {
-            } else {
+            if (controller.prevOpertor.value == "+") {} else
+            if (controller.prevOpertor.value == "-") {} else
+            if (controller.prevOpertor.value == "*") {} else
+            if (controller.prevOpertor.value == "÷") {} else {
               int lastIndex = -1;
               for (int i = controller.value.length - 1; i >= 0; i--) {
                 if (controller.value[i].contains('=')) {
@@ -982,11 +1140,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             String formattedTotalAmount = totalAmount.toStringAsFixed(2);
             gst = true;
             controller.value.add(
-                "IGST ${discountPercentage.toStringAsFixed(0)}%   $formattedIGST");
+                "IGST ${discountPercentage.toStringAsFixed(
+                    0)}%   $formattedIGST");
             controller.value.add(
-                "CGST ${double.parse(discountPercentage.toStringAsFixed(0)) / 2}%    ${controller.CGST.value}");
+                "CGST ${double.parse(discountPercentage.toStringAsFixed(0)) /
+                    2}%    ${controller.CGST.value}");
             controller.value.add(
-                "SGST ${double.parse(discountPercentage.toStringAsFixed(0)) / 2}%    ${controller.SGST.value}");
+                "SGST ${double.parse(discountPercentage.toStringAsFixed(0)) /
+                    2}%    ${controller.SGST.value}");
             controller.value.add("  = $formattedTotalAmount");
 
             controller.saveValueListToPrefs();
@@ -1018,11 +1179,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             String formattedTotalAmount = totalAmount.toStringAsFixed(2);
             gst = true;
             controller.value.add(
-                "IGST ${discountPercentage.toStringAsFixed(0)}%   $formattedIGST");
+                "IGST ${discountPercentage.toStringAsFixed(
+                    0)}%   $formattedIGST");
             controller.value.add(
-                "CGST ${double.parse(discountPercentage.toStringAsFixed(0)) / 2}%    ${controller.CGST.value}");
+                "CGST ${double.parse(discountPercentage.toStringAsFixed(0)) /
+                    2}%    ${controller.CGST.value}");
             controller.value.add(
-                "SGST ${double.parse(discountPercentage.toStringAsFixed(0)) / 2}%    ${controller.SGST.value}");
+                "SGST ${double.parse(discountPercentage.toStringAsFixed(0)) /
+                    2}%    ${controller.SGST.value}");
             controller.value.add("  = $formattedTotalAmount");
 
             controller.saveValueListToPrefs();
@@ -1055,11 +1219,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             String formattedTotalAmount = totalAmount.toStringAsFixed(2);
             gst = true;
             controller.value.add(
-                "IGST ${discountPercentage.toStringAsFixed(0)}%   $formattedIGST");
+                "IGST ${discountPercentage.toStringAsFixed(
+                    0)}%   $formattedIGST");
             controller.value.add(
-                "CGST ${double.parse(discountPercentage.toStringAsFixed(0)) / 2}%    ${controller.CGST.value}");
+                "CGST ${double.parse(discountPercentage.toStringAsFixed(0)) /
+                    2}%    ${controller.CGST.value}");
             controller.value.add(
-                "SGST ${double.parse(discountPercentage.toStringAsFixed(0)) / 2}%    ${controller.SGST.value}");
+                "SGST ${double.parse(discountPercentage.toStringAsFixed(0)) /
+                    2}%    ${controller.SGST.value}");
             controller.value.add("  = $formattedTotalAmount");
 
             controller.saveValueListToPrefs();
@@ -1090,11 +1257,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             String formattedTotalAmount = totalAmount.toStringAsFixed(2);
             gst = true;
             controller.value.add(
-                "IGST ${discountPercentage.toStringAsFixed(0)}%   $formattedIGST");
+                "IGST ${discountPercentage.toStringAsFixed(
+                    0)}%   $formattedIGST");
             controller.value.add(
-                "CGST ${double.parse(discountPercentage.toStringAsFixed(0)) / 2}%    ${controller.CGST.value}");
+                "CGST ${double.parse(discountPercentage.toStringAsFixed(0)) /
+                    2}%    ${controller.CGST.value}");
             controller.value.add(
-                "SGST ${double.parse(discountPercentage.toStringAsFixed(0)) / 2}%    ${controller.SGST.value}");
+                "SGST ${double.parse(discountPercentage.toStringAsFixed(0)) /
+                    2}%    ${controller.SGST.value}");
             controller.value.add("  = $formattedTotalAmount");
 
             controller.saveValueListToPrefs();
@@ -1105,7 +1275,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             controller.displayOprater.value = number;
             controller.value.add(controller.displayEnglish.value);
             controller.saveValueListToPrefs();
-            controller.currentValue.value = double.parse(controller.displayEnglish.value);
+            controller.currentValue.value =
+                double.parse(controller.displayEnglish.value);
             print("currentValue ${controller.currentValue}");
 
             controller.prevOpertor.value = "-GST";
@@ -1132,8 +1303,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   .replaceAll("MR÷", "");
               print("iiiiii");
             } else {
-              if (controller.memory.value == 0.0) {
-              } else {
+              if (controller.memory.value == 0.0) {} else {
                 print('vvvvvvvvvvvvvvv ${controller.memory.value}');
                 controller.display.value = controller.memory.value.toString();
               }
@@ -1160,19 +1330,20 @@ class _Calculator_HomeState extends State<Calculator_Home> {
           if (controller.displayEnglish.value.isEmpty) {
             print('dtfsdtgfstdgfsgdfy');
 
-            if (controller.value.isEmpty) {
-            } else {
+            if (controller.value.isEmpty) {} else {
               controller.display.value =
                   controller.value.last.replaceAll("=", "");
               print(" controller.display.value${controller.display.value}");
               print(
-                  'MMMMMMMMMMMMMMMxxxxxxxx${controller.memory.value}++++++++++');
+                  'MMMMMMMMMMMMMMMxxxxxxxx${controller.memory
+                      .value}++++++++++');
               controller.display.value.isEmpty
                   ? ""
                   : controller.memory.value -=
-                      double.parse(controller.display.value);
+                  double.parse(controller.display.value);
               print(
-                  'MMMMMMMMMMMMMMMxxxxxxxxx${controller.memory.value}++++++++++');
+                  'MMMMMMMMMMMMMMMxxxxxxxxx${controller.memory
+                      .value}++++++++++');
               mplus = true;
               print('ddddddd----${controller.prevOpertor2.value}');
               if (controller.prevOpertor2.value == '+') {
@@ -1192,7 +1363,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-             update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
+              update == true
+                  ? controller.value.add(controller.display.value)
+                  : controller.value.add(
+                  controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
@@ -1243,7 +1417,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
+              update == true
+                  ? controller.value.add(controller.display.value)
+                  : controller.value.add(
+                  controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
@@ -1272,7 +1449,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 controller.result.value = double.parse(controller.value[0]);
               }
               controller.result.value -=
-                  double.parse(controller.displayEnglish.value.replaceAll("-", ""));
+                  double.parse(
+                      controller.displayEnglish.value.replaceAll("-", ""));
               twonumber = controller.result.value.toStringAsFixed(0);
               m1 = false;
               m2 = true;
@@ -1293,7 +1471,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
+              update == true
+                  ? controller.value.add(controller.display.value)
+                  : controller.value.add(
+                  controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
@@ -1308,7 +1489,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   }
                 }
                 print("------- lastIndex ------ ${lastIndex}");
-                if (lastIndex != -1 && controller.value[lastIndex].contains('=')) {
+                if (lastIndex != -1 &&
+                    controller.value[lastIndex].contains('=')) {
                   // If '=' is found and lastIndex is valid
                   controller.currentValue.value = double.parse(
                       convertHindiToEnglish(
@@ -1321,7 +1503,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 controller.result.value = double.parse(controller.value[0]);
               }
               controller.result.value *=
-                  double.parse(controller.displayEnglish.value.replaceAll("*", ""));
+                  double.parse(
+                      controller.displayEnglish.value.replaceAll("*", ""));
               twonumber = controller.result.value.toStringAsFixed(0);
               m1 = false;
               m2 = true;
@@ -1342,7 +1525,10 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               print(controller.prevOpertor.value);
 
-              update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
+              update == true
+                  ? controller.value.add(controller.display.value)
+                  : controller.value.add(
+                  controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
@@ -1371,7 +1557,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 controller.result.value = double.parse(controller.value[0]);
               }
               controller.result.value /=
-                  double.parse(controller.displayEnglish.value.replaceAll("÷", ""));
+                  double.parse(
+                      controller.displayEnglish.value.replaceAll("÷", ""));
               twonumber = controller.result.value.toStringAsFixed(1);
               m1 = false;
               m2 = true;
@@ -1390,14 +1577,16 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             } else {
               if (mplus == true) {
                 print(
-                    'MMMMMMMMMMMMMMM${controller.displayEnglish.value}++++++++++');
+                    'MMMMMMMMMMMMMMM${controller.displayEnglish
+                        .value}++++++++++');
                 controller.memory.value =
                     double.parse(controller.displayEnglish.value);
                 print('MMMMMMMMMMMMMMM${controller.memory.value}++++++++++');
               } else {
                 print('MMMMMMMMMMMMMMM++++++++++');
                 print(
-                    'MMMMMMMMMMMMMMM${controller.displayEnglish.value}++++++++++');
+                    'MMMMMMMMMMMMMMM${controller.displayEnglish
+                        .value}++++++++++');
                 controller.memory.value -=
                     double.parse(controller.displayEnglish.value);
                 print('MMMMMMMMMMMMMMM${controller.memory.value}++++++++++');
@@ -1418,19 +1607,20 @@ class _Calculator_HomeState extends State<Calculator_Home> {
           if (controller.displayEnglish.value.isEmpty) {
             print('dtfsdtgfstdgfsgdfy');
 
-            if (controller.value.isEmpty) {
-            } else {
+            if (controller.value.isEmpty) {} else {
               controller.display.value =
                   controller.value.last.replaceAll("=", "");
               print(" controller.display.value${controller.display.value}");
               print(
-                  'MMMMMMMMMMMMMMMxxxxxxxx${controller.memory.value}++++++++++');
+                  'MMMMMMMMMMMMMMMxxxxxxxx${controller.memory
+                      .value}++++++++++');
               controller.display.value.isEmpty
                   ? ""
                   : controller.memory.value +=
-                      double.parse(controller.display.value);
+                  double.parse(controller.display.value);
               print(
-                  'MMMMMMMMMMMMMMMxxxxxxxxx${controller.memory.value}++++++++++');
+                  'MMMMMMMMMMMMMMMxxxxxxxxx${controller.memory
+                      .value}++++++++++');
               mplus = true;
               print('ddddddd----${controller.prevOpertor2.value}');
               if (controller.prevOpertor2.value == '+') {
@@ -1452,7 +1642,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               update == true
                   ? controller.value.add(controller.display.value)
                   : controller.value.add(
-                      controller.prevOpertor.value + controller.display.value);
+                  controller.prevOpertor.value + controller.display.value);
 
               controller.saveValueListToPrefs();
               print("jjjjjjjj11rrrrrrrrr");
@@ -1537,7 +1727,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 controller.result.value = double.parse(controller.value[0]);
               }
               controller.result.value -=
-                  double.parse(controller.displayEnglish.value.replaceAll("-", ""));
+                  double.parse(
+                      controller.displayEnglish.value.replaceAll("-", ""));
               twonumber = controller.result.value.toStringAsFixed(0);
               m1 = false;
               m2 = true;
@@ -1590,7 +1781,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 controller.result.value = double.parse(controller.value[0]);
               }
               controller.result.value *=
-                  double.parse(controller.displayEnglish.value.replaceAll("*", ""));
+                  double.parse(
+                      controller.displayEnglish.value.replaceAll("*", ""));
               twonumber = controller.result.value.toStringAsFixed(0);
               m1 = false;
               m2 = true;
@@ -1645,7 +1837,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               }
 
               controller.result.value /=
-                  double.parse(controller.displayEnglish.value.replaceAll("÷", ""));
+                  double.parse(
+                      controller.displayEnglish.value.replaceAll("÷", ""));
               twonumber = controller.result.value.toStringAsFixed(1);
               m1 = false;
               m2 = true;
@@ -1664,14 +1857,16 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             } else {
               if (mplus == true) {
                 print(
-                    'MMMMMMMMMMMMMMM${controller.displayEnglish.value}++++++++++');
+                    'MMMMMMMMMMMMMMM${controller.displayEnglish
+                        .value}++++++++++');
                 controller.memory.value +=
                     double.parse(controller.displayEnglish.value);
                 print('MMMMMMMMMMMMMMM${controller.memory.value}++++++++++');
               } else {
                 print('MMMMMMMMMMMMMMM++++++++++');
                 print(
-                    'MMMMMMMMMMMMMMM${controller.displayEnglish.value}++++++++++');
+                    'MMMMMMMMMMMMMMM${controller.displayEnglish
+                        .value}++++++++++');
                 controller.memory.value +=
                     double.parse(controller.displayEnglish.value);
                 print('MMMMMMMMMMMMMMM${controller.memory.value}++++++++++');
@@ -1704,8 +1899,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             if (controller.display.value.isEmpty) {
               if (controller.displayOprater.value.isNotEmpty) {
                 onetime2 = true;
-                if (controller.value.isEmpty) {
-                } else {
+                if (controller.value.isEmpty) {} else {
                   print('ccccccccccccccccccccc');
                   controller.display.value =
                       controller.value.last.replaceAll("=", "");
@@ -1729,7 +1923,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
                   print(controller.prevOpertor.value);
 
-                  update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
+                  update == true ? controller.value.add(
+                      controller.display.value) : controller.value.add(
+                      controller.prevOpertor.value + controller.display.value);
 
                   controller.saveValueListToPrefs();
                   print("jjjjjjjj11rrrrrrrrr");
@@ -1752,7 +1948,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               controller.value[lastIndex + 1])!);
                       dotcheck = true;
                     } else {
-                      controller.result.value = double.parse(controller.value[0]);
+                      controller.result.value =
+                          double.parse(controller.value[0]);
                     }
                   } else {
                     controller.result.value = double.parse(controller.value[0]);
@@ -1776,7 +1973,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
                   print(controller.prevOpertor.value);
 
-                  update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
+                  update == true ? controller.value.add(
+                      controller.display.value) : controller.value.add(
+                      controller.prevOpertor.value + controller.display.value);
 
                   controller.saveValueListToPrefs();
                   print("jjjjjjjj11rrrrrrrrr");
@@ -1799,13 +1998,15 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               controller.value[lastIndex + 1])!);
                       dotcheck = true;
                     } else {
-                      controller.result.value = double.parse(controller.value[0]);
+                      controller.result.value =
+                          double.parse(controller.value[0]);
                     }
                   } else {
                     controller.result.value = double.parse(controller.value[0]);
                   }
                   controller.result.value -=
-                      double.parse(controller.displayEnglish.value.replaceAll("-", ""));
+                      double.parse(
+                          controller.displayEnglish.value.replaceAll("-", ""));
                   twonumber = controller.result.value.toStringAsFixed(0);
 
                   controller.value.add("= " + twonumber.toString());
@@ -1821,7 +2022,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
                   print(controller.prevOpertor.value);
 
-                  update == true ?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
+                  update == true ? controller.value.add(
+                      controller.display.value) : controller.value.add(
+                      controller.prevOpertor.value + controller.display.value);
 
                   controller.saveValueListToPrefs();
                   print("jjjjjjjj11rrrrrrrrr");
@@ -1844,13 +2047,15 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               controller.value[lastIndex + 1])!);
                       dotcheck = true;
                     } else {
-                      controller.result.value = double.parse(controller.value[0]);
+                      controller.result.value =
+                          double.parse(controller.value[0]);
                     }
                   } else {
                     controller.result.value = double.parse(controller.value[0]);
                   }
                   controller.result.value *=
-                      double.parse(controller.displayEnglish.value.replaceAll("*", ""));
+                      double.parse(
+                          controller.displayEnglish.value.replaceAll("*", ""));
                   twonumber = controller.result.value.toStringAsFixed(0);
 
                   controller.value.add("= " + twonumber.toString());
@@ -1866,7 +2071,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
                   print(controller.prevOpertor.value);
 
-                  update == true?controller.value.add(controller.display.value):controller.value.add(controller.prevOpertor.value + controller.display.value);
+                  update == true ? controller.value.add(
+                      controller.display.value) : controller.value.add(
+                      controller.prevOpertor.value + controller.display.value);
 
                   controller.saveValueListToPrefs();
                   print("jjjjjjjj11rrrrrrrrr");
@@ -1889,13 +2096,15 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               controller.value[lastIndex + 1])!);
                       dotcheck = true;
                     } else {
-                      controller.result.value = double.parse(controller.value[0]);
+                      controller.result.value =
+                          double.parse(controller.value[0]);
                     }
                   } else {
                     controller.result.value = double.parse(controller.value[0]);
                   }
                   controller.result.value /=
-                      double.parse(controller.displayEnglish.value.replaceAll("÷", ""));
+                      double.parse(
+                          controller.displayEnglish.value.replaceAll("÷", ""));
                   twonumber = controller.result.value.toStringAsFixed(1);
 
                   controller.value.add("= " + twonumber.toString());
@@ -1972,7 +2181,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   controller.display.value =
                       controller.value[lastIndex - 2].replaceAll("=", "");
                   String lastEntry =
-                      controller.value.removeAt(controller.value.length - 3);
+                  controller.value.removeAt(controller.value.length - 3);
                   controller.value.removeAt(controller.value.length - 2);
                   controller.value.removeAt(controller.value.length - 1);
                   controller.display.value = lastEntry;
@@ -1981,41 +2190,41 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 } else {
                   controller.display.value = controller.value[0];
                 }
-              } else if(controller.prevOpertor.value == "MU")
-                {
-                  int lastIndex = -1;
-                  for (int i = controller.value.length - 1; i >= 0; i--) {
-                    if (controller.value[i].contains('=')) {
-                      lastIndex = i;
-                      break;
-                    }
+              } else if (controller.prevOpertor.value == "MU") {
+                int lastIndex = -1;
+                for (int i = controller.value.length - 1; i >= 0; i--) {
+                  if (controller.value[i].contains('=')) {
+                    lastIndex = i;
+                    break;
                   }
-                  print("------- lastIndex ------ ${lastIndex}");
-                  if (controller.value[lastIndex].contains('=')) {
-                    controller.display.value =
-                        controller.value[lastIndex - 2].replaceAll("=", "");
-                    String lastEntry =
-                    controller.value.removeAt(controller.value.length - 3);
-                    controller.value.removeAt(controller.value.length - 2);
-                    controller.value.removeAt(controller.value.length - 1);
-                    controller.display.value = lastEntry;
-                    controller.displayEnglish.value = lastEntry;
-                    controller.prevOpertor.value = "";
-                  } else {
-                    controller.display.value = controller.value[0];
-                  }
-                }else {
+                }
+                print("------- lastIndex ------ ${lastIndex}");
+                if (controller.value[lastIndex].contains('=')) {
+                  controller.display.value =
+                      controller.value[lastIndex - 2].replaceAll("=", "");
+                  String lastEntry =
+                  controller.value.removeAt(controller.value.length - 3);
+                  controller.value.removeAt(controller.value.length - 2);
+                  controller.value.removeAt(controller.value.length - 1);
+                  controller.display.value = lastEntry;
+                  controller.displayEnglish.value = lastEntry;
+                  controller.prevOpertor.value = "";
+                } else {
+                  controller.display.value = controller.value[0];
+                }
+              } else {
                 if (!controller.value[controller.value.length - 1]
                     .contains("=")) {
                   String lastEntry = controller.value.removeLast();
 
                   controller.prevOpertor.value = lastEntry[
-                      0]; // Assuming the first character denotes the operator
+                  0]; // Assuming the first character denotes the operator
 
                   controller.display.value = lastEntry;
                   controller.displayEnglish.value = lastEntry;
                   print(
-                      "Updated the display to the last entry: ${controller.display.value}");
+                      "Updated the display to the last entry: ${controller
+                          .display.value}");
                 } else {
                   print("Cannot undo because the last entry contains '='.");
                   controller.value.removeAt(controller.value.length - 1);
@@ -2024,7 +2233,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   controller.display.value = lastEntry;
                   controller.displayEnglish.value = lastEntry;
                   print(
-                      "Updated the display to the last entry: ${controller.display.value}");
+                      "Updated the display to the last entry: ${controller
+                          .display.value}");
                 }
               }
             }
@@ -2035,8 +2245,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
         {
           scrolle();
           dotAdded = false;
-          if (number == "0.0") {
-          } else {
+          if (number == "0.0") {} else {
             controller.value.add("= " + number.toString() + " GT");
             controller.saveValueListToPrefs();
           }
@@ -2062,8 +2271,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     String display = controller.display.value;
                     print(display);
                     if (update == true) {
-                      if (display.isEmpty) {
-                      } else {
+                      if (display.isEmpty) {} else {
                         controller.value.add(controller.display.value);
                         controller.saveValueListToPrefs();
                         print(controller.value);
@@ -2077,8 +2285,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                           // If controller.value has more than one element
                           int lastIndex = -1;
                           for (int i = controller.value.length - 1;
-                              i >= 0;
-                              i--) {
+                          i >= 0;
+                          i--) {
                             if (controller.value[i].contains('=')) {
                               lastIndex = i;
                               break;
@@ -2123,15 +2331,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                         controller.displayEnglish.value.isEmpty
                             ? ""
                             : controller.value.add(
-                                controller.displayOprater.value +
-                                    controller.displayEnglish.value);
+                            controller.displayOprater.value +
+                                controller.displayEnglish.value);
                         controller.saveValueListToPrefs();
                         controller.prevOpertor.value = "";
                         controller.displayEnglish.value = "";
                       }
                     } else {
-                      if (display.isEmpty) {
-                      } else {
+                      if (display.isEmpty) {} else {
                         controller.value.add(controller.prevOpertor.value +
                             controller.display.value);
                         controller.saveValueListToPrefs();
@@ -2144,8 +2351,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                           // If controller.value has more than one element
                           int lastIndex = -1;
                           for (int i = controller.value.length - 1;
-                              i >= 0;
-                              i--) {
+                          i >= 0;
+                          i--) {
                             if (controller.value[i].contains('=')) {
                               lastIndex = i;
                               break;
@@ -2194,8 +2401,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                         controller.displayEnglish.value.isEmpty
                             ? ""
                             : controller.value.add(
-                                controller.displayOprater.value +
-                                    controller.displayEnglish.value);
+                            controller.displayOprater.value +
+                                controller.displayEnglish.value);
                         controller.saveValueListToPrefs();
                         controller.prevOpertor.value = "";
                         controller.displayEnglish.value = "";
@@ -2204,8 +2411,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   } else if (controller.prevOpertor.value == "-") {
                     String display = controller.display.value;
                     if (update == true) {
-                      if (display.isEmpty) {
-                      } else {
+                      if (display.isEmpty) {} else {
                         controller.value.add(controller.display.value);
                         controller.saveValueListToPrefs();
                         print(controller.value);
@@ -2218,8 +2424,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                           // If controller.value has more than one element
                           int lastIndex = -1;
                           for (int i = controller.value.length - 1;
-                              i >= 0;
-                              i--) {
+                          i >= 0;
+                          i--) {
                             if (controller.value[i].contains('=')) {
                               lastIndex = i;
                               break;
@@ -2262,14 +2468,13 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                         controller.displayEnglish.value.isEmpty
                             ? ""
                             : controller.value.add(
-                                controller.displayOprater.value +
-                                    controller.displayEnglish.value);
+                            controller.displayOprater.value +
+                                controller.displayEnglish.value);
                         controller.saveValueListToPrefs();
                         controller.displayEnglish.value = "";
                       }
                     } else {
-                      if (display.isEmpty) {
-                      } else {
+                      if (display.isEmpty) {} else {
                         controller.value.add(controller.prevOpertor.value +
                             controller.display.value);
                         controller.saveValueListToPrefs();
@@ -2282,8 +2487,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                           // If controller.value has more than one element
                           int lastIndex = -1;
                           for (int i = controller.value.length - 1;
-                              i >= 0;
-                              i--) {
+                          i >= 0;
+                          i--) {
                             if (controller.value[i].contains('=')) {
                               lastIndex = i;
                               break;
@@ -2326,8 +2531,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                         controller.displayEnglish.value.isEmpty
                             ? ""
                             : controller.value.add(
-                                controller.displayOprater.value +
-                                    controller.displayEnglish.value);
+                            controller.displayOprater.value +
+                                controller.displayEnglish.value);
                         controller.saveValueListToPrefs();
                         controller.prevOpertor.value = "";
                         controller.displayEnglish.value = "";
@@ -2335,12 +2540,11 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     }
                   } else if (controller.prevOpertor.value == "*") {
                     String display = controller.display.value;
-                    if (display.isEmpty) {
-                    } else {
+                    if (display.isEmpty) {} else {
                       update == true
                           ? controller.value.add(controller.display.value)
                           : controller.value.add(controller.prevOpertor.value +
-                              controller.display.value);
+                          controller.display.value);
                       controller.saveValueListToPrefs();
                       print(controller.value);
                       if (controller.value.length == 1) {
@@ -2393,16 +2597,15 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                       controller.displayEnglish.value.isEmpty
                           ? ""
                           : controller.value.add(
-                              controller.displayOprater.value +
-                                  controller.displayEnglish.value);
+                          controller.displayOprater.value +
+                              controller.displayEnglish.value);
                       controller.saveValueListToPrefs();
                       controller.prevOpertor.value = "";
                       controller.displayEnglish.value = "";
                     }
                   } else if (controller.prevOpertor.value == "÷") {
                     String display = controller.display.value;
-                    if (display.isEmpty) {
-                    } else {
+                    if (display.isEmpty) {} else {
                       controller.value.add(controller.prevOpertor.value +
                           controller.display.value);
                       controller.saveValueListToPrefs();
@@ -2456,8 +2659,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                       controller.displayEnglish.value.isEmpty
                           ? ""
                           : controller.value.add(
-                              controller.displayOprater.value +
-                                  controller.displayEnglish.value);
+                          controller.displayOprater.value +
+                              controller.displayEnglish.value);
                       controller.saveValueListToPrefs();
                       controller.prevOpertor.value = "";
                       controller.displayEnglish.value = "";
@@ -2478,7 +2681,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
                     print(controller.value);
                     double percentageValue =
-                        double.parse(controller.display.value);
+                    double.parse(controller.display.value);
 
                     print("percentageValue $percentageValue");
                     percentageValue /= 100;
@@ -2502,7 +2705,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     controller.displayEnglish.value.isEmpty
                         ? ""
                         : controller.value.add(controller.displayOprater.value +
-                            controller.displayEnglish.value);
+                        controller.displayEnglish.value);
                     controller.saveValueListToPrefs();
                     controller.displayEnglish.value = "";
                   }
@@ -2561,7 +2764,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                         controller.currentValue.value * 100;
                     print("percentageValue $percentageValue");
                     print(
-                        "percentageValue1111111111111111 ${controller.display.value}");
+                        "percentageValue1111111111111111 ${controller.display
+                            .value}");
                     double r = 100 -
                         double.parse(
                             convertHindiToEnglish(controller.display.value)!);
@@ -2719,8 +2923,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
           scrolle();
           dotAdded = false;
           if (controller.displayEnglish.value.isEmpty) {
-            if (controller.value[0].isEmpty) {
-            } else {
+            if (controller.value[0].isEmpty) {} else {
               int lastIndex = -1;
               for (int i = controller.value.length - 1; i >= 0; i--) {
                 if (controller.value[i].contains('=')) {
@@ -2738,7 +2941,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     .add("√" + controller.displayEnglish.value.toString());
                 controller.saveValueListToPrefs();
                 double squareRoot =
-                    sqrt(double.parse(controller.displayEnglish.value));
+                sqrt(double.parse(controller.displayEnglish.value));
 
                 controller.display.value = squareRoot.toString();
                 double secoundvalue = double.parse(controller.display.value);
@@ -2759,7 +2962,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               controller.value.add(controller.displayEnglish.value.toString());
               controller.saveValueListToPrefs();
               String value =
-                  controller.displayEnglish.value.replaceAll("√", "");
+              controller.displayEnglish.value.replaceAll("√", "");
               double currentValue = double.parse(value);
 
               if (currentValue >= 0) {
@@ -2786,7 +2989,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   .add("√" + controller.displayEnglish.value.toString());
               controller.saveValueListToPrefs();
               double currentValue =
-                  double.parse(controller.displayEnglish.value);
+              double.parse(controller.displayEnglish.value);
 
               if (currentValue >= 0) {
                 print('currentValue ${currentValue}');
@@ -2822,24 +3025,21 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             if (controller.value.isEmpty) {
               print("MMMMMMMMMMMMMRRRRRRRRRRRRRRRRR");
               print(
-                  "MMMMMMMMMMMMMRRRRRRRRRRRRRRRRR${controller.displayEnglish.value}");
-              if (controller.value.isEmpty) {
-              } else {
-                if (controller.value[0].contains("M+")) {
-                } else {
+                  "MMMMMMMMMMMMMRRRRRRRRRRRRRRRRR${controller.displayEnglish
+                      .value}");
+              if (controller.value.isEmpty) {} else {
+                if (controller.value[0].contains("M+")) {} else {
                   controller.value.add(
                       controller.prevOpertor.value + controller.display.value);
                   controller.saveValueListToPrefs();
                 }
               }
             } else {
-              if (controller.value[0].isEmpty) {
-              } else {
-                if (controller.prevOpertor.value == "+") {
-                } else if (controller.prevOpertor.value == "-") {
-                } else if (controller.prevOpertor.value == "*") {
-                } else if (controller.prevOpertor.value == "÷") {
-                } else {
+              if (controller.value[0].isEmpty) {} else {
+                if (controller.prevOpertor.value == "+") {} else
+                if (controller.prevOpertor.value == "-") {} else
+                if (controller.prevOpertor.value == "*") {} else
+                if (controller.prevOpertor.value == "÷") {} else {
                   int lastIndex = -1;
                   for (int i = controller.value.length - 1; i >= 0; i--) {
                     if (controller.value[i].contains('=')) {
@@ -2894,7 +3094,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               }
               if (controller.prevOpertor.value == "=") {
                 print(
-                    "controller.displayEnglish.value1 ${controller.displayEnglish.value}");
+                    "controller.displayEnglish.value1 ${controller
+                        .displayEnglish.value}");
                 controller.result.value +=
                     double.parse(controller.displayEnglish.value);
               }
@@ -2954,9 +3155,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 display.isEmpty
                     ? ""
                     : controller.memory.value = double.parse(
-                        convertHindiToEnglish(display)!
-                            .replaceAll("M+", "")
-                            .replaceAll("M-", ""));
+                    convertHindiToEnglish(display)!
+                        .replaceAll("M+", "")
+                        .replaceAll("M-", ""));
               }
               controller.display.value = "";
               controller.displayEnglish.value = "";
@@ -2979,24 +3180,21 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             if (controller.value.isEmpty) {
               print("MMMMMMMMMMMMMRRRRRRRRRRRRRRRRR");
               print(
-                  "MMMMMMMMMMMMMRRRRRRRRRRRRRRRRR${controller.displayEnglish.value}");
-              if (controller.value.isEmpty) {
-              } else {
-                if (controller.value[0].contains("M+")) {
-                } else {
+                  "MMMMMMMMMMMMMRRRRRRRRRRRRRRRRR${controller.displayEnglish
+                      .value}");
+              if (controller.value.isEmpty) {} else {
+                if (controller.value[0].contains("M+")) {} else {
                   controller.value.add(
                       controller.prevOpertor.value + controller.display.value);
                   controller.saveValueListToPrefs();
                 }
               }
             } else {
-              if (controller.value[0].isEmpty) {
-              } else {
-                if (controller.prevOpertor.value == "+") {
-                } else if (controller.prevOpertor.value == "-") {
-                } else if (controller.prevOpertor.value == "*") {
-                } else if (controller.prevOpertor.value == "÷") {
-                } else {
+              if (controller.value[0].isEmpty) {} else {
+                if (controller.prevOpertor.value == "+") {} else
+                if (controller.prevOpertor.value == "-") {} else
+                if (controller.prevOpertor.value == "*") {} else
+                if (controller.prevOpertor.value == "÷") {} else {
                   int lastIndex = -1;
                   for (int i = controller.value.length - 1; i >= 0; i--) {
                     if (controller.value[i].contains('=')) {
@@ -3051,7 +3249,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               }
               if (controller.prevOpertor.value == "=") {
                 print(
-                    "controller.displayEnglish.value1 ${controller.displayEnglish.value}");
+                    "controller.displayEnglish.value1 ${controller
+                        .displayEnglish.value}");
                 controller.result.value +=
                     double.parse(controller.displayEnglish.value);
               }
@@ -3111,9 +3310,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 display.isEmpty
                     ? ""
                     : controller.memory.value = double.parse(
-                        convertHindiToEnglish(display)!
-                            .replaceAll("M+", "")
-                            .replaceAll("M-", ""));
+                    convertHindiToEnglish(display)!
+                        .replaceAll("M+", "")
+                        .replaceAll("M-", ""));
               }
               controller.display.value = "";
               controller.displayEnglish.value = "";
@@ -3135,15 +3334,12 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             print(
                 "controller.displayEnglish.value1 ${controller.display.value}");
             print("==+== ${controller.display.value}");
-            if (controller.value.isEmpty) {
-            } else {
-              if (controller.value[0].isEmpty) {
-              } else {
-                if (controller.prevOpertor.value == "+") {
-                } else if (controller.prevOpertor.value == "-") {
-                } else if (controller.prevOpertor.value == "*") {
-                } else if (controller.prevOpertor.value == "÷") {
-                } else {
+            if (controller.value.isEmpty) {} else {
+              if (controller.value[0].isEmpty) {} else {
+                if (controller.prevOpertor.value == "+") {} else
+                if (controller.prevOpertor.value == "-") {} else
+                if (controller.prevOpertor.value == "*") {} else
+                if (controller.prevOpertor.value == "÷") {} else {
                   int lastIndex = -1;
                   for (int i = controller.value.length - 1; i >= 0; i--) {
                     if (controller.value[i].contains('=')) {
@@ -3179,14 +3375,16 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               print("cjhj ${controller.prevOpertor.value}");
               if (controller.prevOpertor.value == "+") {
                 print(
-                    "controller.displayEnglish.value1 ${controller.displayEnglish.value}");
+                    "controller.displayEnglish.value1 ${controller
+                        .displayEnglish.value}");
                 controller.result.value +=
                     double.parse(controller.displayEnglish.value);
               }
               if (controller.prevOpertor.value == "-") {
                 print('bbbbbbbbbbbbbbbbbbbbbb');
                 print(
-                    'nnnnnnnnnnn3333333333111111111 ${controller.result.value}');
+                    'nnnnnnnnnnn3333333333111111111 ${controller.result
+                        .value}');
                 controller.result.value -=
                     double.parse(controller.displayEnglish.value);
               }
@@ -3204,7 +3402,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               }
               if (controller.prevOpertor.value == "=") {
                 print(
-                    "controller.displayEnglish.value1 ${controller.displayEnglish.value}");
+                    "controller.displayEnglish.value1 ${controller
+                        .displayEnglish.value}");
                 controller.result.value +=
                     double.parse(controller.displayEnglish.value);
               }
@@ -3269,9 +3468,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 display.isEmpty
                     ? ""
                     : controller.memory.value = double.parse(
-                        convertHindiToEnglish(display)!
-                            .replaceAll("M+", "")
-                            .replaceAll("M-", ""));
+                    convertHindiToEnglish(display)!
+                        .replaceAll("M+", "")
+                        .replaceAll("M-", ""));
 
                 print('cccccc33333333${controller.memory.value}');
               }
@@ -3297,18 +3496,16 @@ class _Calculator_HomeState extends State<Calculator_Home> {
             print(
                 "controller.displayEnglish.value1 ${controller.display.value}");
             print("==+==22 ${controller.display.value}");
-            if (controller.value.isEmpty) {
-            } else {
+            if (controller.value.isEmpty) {} else {
               if (controller.value[0].isEmpty) {
                 print("vvvvvvvvv");
               } else {
-                if (controller.prevOpertor.value == "+") {
-                } else if (controller.prevOpertor.value == "-") {
-                } else if (controller.prevOpertor.value == "*") {
-                } else if (controller.prevOpertor.value == "÷") {
-                } else if (controller.prevOpertor.value == "+GST") {
-                } else if (controller.prevOpertor.value == "-GST") {
-                } else {
+                if (controller.prevOpertor.value == "+") {} else
+                if (controller.prevOpertor.value == "-") {} else
+                if (controller.prevOpertor.value == "*") {} else
+                if (controller.prevOpertor.value == "÷") {} else
+                if (controller.prevOpertor.value == "+GST") {} else
+                if (controller.prevOpertor.value == "-GST") {} else {
                   int lastIndex = -1;
                   for (int i = controller.value.length - 1; i >= 0; i--) {
                     if (controller.value[i].contains('=')) {
@@ -3345,7 +3542,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               if (controller.prevOpertor.value == "+") {
                 print("++++++GT");
                 print(
-                    "controller.displayEnglish.value1 ${controller.displayEnglish.value}");
+                    "controller.displayEnglish.value1 ${controller
+                        .displayEnglish.value}");
 
                 controller.result.value +=
                     double.parse(controller.displayEnglish.value);
@@ -3369,7 +3567,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               if (controller.prevOpertor.value == "=") {
                 print("++++++===");
                 print(
-                    "controller.displayEnglish.value1 ${controller.displayEnglish.value}");
+                    "controller.displayEnglish.value1 ${controller
+                        .displayEnglish.value}");
                 controller.result.value +=
                     double.parse(controller.displayEnglish.value);
               }
@@ -3380,7 +3579,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 print(controller.displayEnglish.value =
                     controller.value.last.replaceAll("=", ""));
                 print(
-                    "controller.displayEnglish.value1 ${controller.displayEnglish.value}");
+                    "controller.displayEnglish.value1 ${controller
+                        .displayEnglish.value}");
                 controller.result.value +=
                     double.parse(controller.displayEnglish.value);
               }
@@ -3429,7 +3629,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     arathmeticoperator == true
                         ? controller.value.add(controller.display.value)
                         : controller.value.add(controller.prevOpertor.value +
-                            controller.display.value);
+                        controller.display.value);
                     controller.saveValueListToPrefs();
                   }
                 }
@@ -3445,9 +3645,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 display.isEmpty
                     ? ""
                     : controller.memory.value = double.parse(
-                        convertHindiToEnglish(display)!
-                            .replaceAll("M+", "")
-                            .replaceAll("M-", ""));
+                    convertHindiToEnglish(display)!
+                        .replaceAll("M+", "")
+                        .replaceAll("M-", ""));
 
                 print('cccccc33333333${controller.memory.value}');
               }
@@ -3468,8 +3668,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
           if (controller.prevOpertor.value == "+") {
             scrolle();
             if (update == true) {
-              print(
-                  "========= update ${controller.prevOpertor.value}+++++++++++");
+              print("========= update ${controller.prevOpertor
+                  .value}+++++++++++");
               controller.value.add(controller.display.value);
               controller.saveValueListToPrefs();
 
@@ -3479,19 +3679,43 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   controller.displayEnglish.value.substring(1);
               print(controller.display.value);
               print("jhdjkh${controller.updatevalue.value}");
+              print("jhdjkh111${controller.value[controller.value.length - 3] !=
+                  "+"}");
+              print(
+                  "jhdjkh111${controller.value[controller.value.length - 3]}");
+              print("jhdjkh111${controller.value.length == 5 &&
+                  controller.value[controller.value.length - 3] != "+"}");
               if (controller.value.length == 2) {
-                print(
-                    "length${double.parse(convertHindiToEnglish(controller.value[controller.value.length - 2])!)}");
+                print("length${double.parse(convertHindiToEnglish(
+                    controller.value[controller.value.length - 2])!)}");
                 controller.result.value = double.parse(convertHindiToEnglish(
-                        controller.value[controller.value.length - 2])!) +
+                    controller.value[controller.value.length - 2])!) +
+                    double.parse(
+                        convertHindiToEnglish(controller.updatevalue.value)!);
+              } else if (controller.value.length == 5 &&
+                  controller.value[controller.value.length - 3] != "+") {
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
+                controller.result.value = double.parse(convertHindiToEnglish(
+                    controller.value[controller.value.length - 2])!) +
+                    double.parse(
+                        convertHindiToEnglish(controller.updatevalue.value)!);
+              } else if (controller.value.length == 8 &&
+                  controller.value[controller.value.length - 3] != "+") {
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
+                controller.result.value = double.parse(convertHindiToEnglish(
+                    controller.value[controller.value.length - 2])!) +
                     double.parse(
                         convertHindiToEnglish(controller.updatevalue.value)!);
               } else {
                 double total = 0.0;
-
+                print('gggggggggggggggggggggggggggggg');
                 for (int i = 0; i < controller.value.length; i++) {
                   double elementValue =
-                      double.parse(convertHindiToEnglish(controller.value[i])!);
+                  double.parse(convertHindiToEnglish(controller.value[i])!);
                   total += elementValue;
                 }
 
@@ -3601,20 +3825,44 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               if (controller.value.length == 2) {
                 print(
-                    "length${double.parse(convertHindiToEnglish(controller.value[controller.value.length - 2])!)}");
+                    "length${double.parse(convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
                 controller.result.value = double.parse(convertHindiToEnglish(
-                        controller.value[controller.value.length - 2])!) -
+                    controller.value[controller.value.length - 2])!) -
+                    double.parse(
+                        convertHindiToEnglish(controller.updatevalue.value)!);
+              } else if (controller.value.length == 5 &&
+                  controller.value[controller.value.length - 3] != "-") {
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(controller.updatevalue.value)!)}");
+
+                controller.result.value = double.parse(convertHindiToEnglish(
+                    controller.value[controller.value.length - 2])!) -
+                    double.parse(
+                        convertHindiToEnglish(controller.updatevalue.value)!);
+              } else if (controller.value.length == 8 &&
+                  controller.value[controller.value.length - 3] != "-") {
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(controller.updatevalue.value)!)}");
+
+                controller.result.value = double.parse(convertHindiToEnglish(
+                    controller.value[controller.value.length - 2])!) -
                     double.parse(
                         convertHindiToEnglish(controller.updatevalue.value)!);
               } else {
                 double total = 0.0;
                 for (int i = 0; i < controller.value.length; i++) {
                   double elementValue =
-                      double.parse(convertHindiToEnglish(controller.value[i])!);
+                  double.parse(convertHindiToEnglish(controller.value[i])!);
                   print("elementValue: $elementValue");
                   total -= elementValue;
                 }
-
                 controller.result.value = total;
               }
               print(controller.result.value);
@@ -3710,9 +3958,34 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               if (controller.value.length == 2) {
                 print(
-                    "length${double.parse(convertHindiToEnglish(controller.value[controller.value.length - 2])!)}");
+                    "length${double.parse(convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
                 controller.result.value = double.parse(convertHindiToEnglish(
-                        controller.value[controller.value.length - 2])!) *
+                    controller.value[controller.value.length - 2])!) *
+                    double.parse(
+                        convertHindiToEnglish(controller.updatevalue.value)!);
+              } else if (controller.value.length == 5 &&
+                  controller.value[controller.value.length - 3] != "*") {
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(controller.updatevalue.value)!)}");
+
+                controller.result.value = double.parse(convertHindiToEnglish(
+                    controller.value[controller.value.length - 2])!) *
+                    double.parse(
+                        convertHindiToEnglish(controller.updatevalue.value)!);
+              } else if (controller.value.length == 8 &&
+                  controller.value[controller.value.length - 3] != "*") {
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(controller.updatevalue.value)!)}");
+
+                controller.result.value = double.parse(convertHindiToEnglish(
+                    controller.value[controller.value.length - 2])!) *
                     double.parse(
                         convertHindiToEnglish(controller.updatevalue.value)!);
               } else {
@@ -3838,9 +4111,34 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
               if (controller.value.length == 2) {
                 print(
-                    "length${double.parse(convertHindiToEnglish(controller.value[controller.value.length - 2])!)}");
+                    "length${double.parse(convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
                 controller.result.value = double.parse(convertHindiToEnglish(
-                        controller.value[controller.value.length - 2])!) /
+                    controller.value[controller.value.length - 2])!) /
+                    double.parse(
+                        convertHindiToEnglish(controller.updatevalue.value)!);
+              } else if (controller.value.length == 5 &&
+                  controller.value[controller.value.length - 3] != "÷") {
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(controller.updatevalue.value)!)}");
+
+                controller.result.value = double.parse(convertHindiToEnglish(
+                    controller.value[controller.value.length - 2])!) /
+                    double.parse(
+                        convertHindiToEnglish(controller.updatevalue.value)!);
+              } else if (controller.value.length == 8 &&
+                  controller.value[controller.value.length - 3] != "÷") {
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(
+                        controller.value[controller.value.length - 2])!)}");
+                print("lengthdddddddddddddddddddd22222${double.parse(
+                    convertHindiToEnglish(controller.updatevalue.value)!)}");
+
+                controller.result.value = double.parse(convertHindiToEnglish(
+                    controller.value[controller.value.length - 2])!) /
                     double.parse(
                         convertHindiToEnglish(controller.updatevalue.value)!);
               } else {
@@ -3888,7 +4186,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               controller.value.add(controller.displayOprater.value +
                   controller.result.value.toStringAsFixed(2).toString());
               print(
-                  " dshjgsyftg dgbdbfuhsyd ${controller.result.value.toStringAsFixed(2).toString()}");
+                  " dshjgsyftg dgbdbfuhsyd ${controller.result.value
+                      .toStringAsFixed(2).toString()}");
               controller.saveValueListToPrefs();
               scrolle();
             } else {
@@ -3993,11 +4292,13 @@ class _Calculator_HomeState extends State<Calculator_Home> {
 
             controller.CGST.value = controller.gstAmount.value / 2;
             controller.value.add(
-                "CGST ${controller.percentage.value / 2}%   ${controller.CGST.value}");
+                "CGST ${controller.percentage.value / 2}%   ${controller.CGST
+                    .value}");
             controller.saveValueListToPrefs();
             controller.SGST.value = controller.gstAmount.value / 2;
             controller.value.add(
-                "SGST ${controller.percentage.value / 2}%   ${controller.SGST.value}");
+                "SGST ${controller.percentage.value / 2}%   ${controller.SGST
+                    .value}");
             controller.saveValueListToPrefs();
             controller.result.value =
                 controller.currentValue.value + controller.gstAmount.value;
@@ -4076,7 +4377,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
               print(controller.display.value);
               print("jhdjkh${controller.updatevalue.value}");
               print(
-                  "jhdjkh1111111111111111${convertHindiToEnglish(controller.value[0])}");
+                  "jhdjkh1111111111111111${convertHindiToEnglish(
+                      controller.value[0])}");
               display = convertHindiToEnglish(controller.value[0])!
                   .replaceAll("M+", "")
                   .replaceAll("M-", " ");
@@ -4171,7 +4473,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                       print(
                           'mmm1111111111111111111111111111111111mmmmmmmmmmmmm');
                       controller.result.value = double.parse(
-                              convertHindiToEnglish(controller.value[3])!) +
+                          convertHindiToEnglish(controller.value[3])!) +
                           double.parse(convertHindiToEnglish(display)!
                               .replaceAll("M+", "")
                               .replaceAll("M-", ""));
@@ -4179,7 +4481,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     } else if (m2 == true) {
                       print('mmm2222222222222222222mmmmmmmmmmmmm');
                       controller.result.value = double.parse(
-                              convertHindiToEnglish(controller.value[3])!) +
+                          convertHindiToEnglish(controller.value[3])!) +
                           double.parse(convertHindiToEnglish(display)!
                               .replaceAll("M+", "")
                               .replaceAll("M-", ""));
@@ -4187,7 +4489,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     }
                   } else {
                     controller.result.value = double.parse(
-                            convertHindiToEnglish(controller.value[0])!) +
+                        convertHindiToEnglish(controller.value[0])!) +
                         double.parse(convertHindiToEnglish(display)!
                             .replaceAll("M+", "")
                             .replaceAll("M-", ""));
@@ -4202,14 +4504,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   if (mplus == true) {
                     if (m1 == true) {
                       controller.result.value = double.parse(
-                              convertHindiToEnglish(controller.value[3])!) -
+                          convertHindiToEnglish(controller.value[3])!) -
                           double.parse(convertHindiToEnglish(display)!
                               .replaceAll("M+", "")
                               .replaceAll("M-", ""));
                       display = '';
                     } else if (m2 == true) {
                       controller.result.value = double.parse(
-                              convertHindiToEnglish(controller.value[3])!) -
+                          convertHindiToEnglish(controller.value[3])!) -
                           double.parse(convertHindiToEnglish(display)!
                               .replaceAll("M+", "")
                               .replaceAll("M-", ""));
@@ -4217,7 +4519,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     }
                   } else {
                     controller.result.value = double.parse(
-                            convertHindiToEnglish(controller.value[0])!) -
+                        convertHindiToEnglish(controller.value[0])!) -
                         double.parse(convertHindiToEnglish(display)!
                             .replaceAll("M+", "")
                             .replaceAll("M-", ""));
@@ -4227,14 +4529,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 }
                 if (controller.prevOpertor2.value == "*") {
                   controller.result.value = double.parse(
-                          convertHindiToEnglish(controller.value[0])!) *
+                      convertHindiToEnglish(controller.value[0])!) *
                       double.parse(convertHindiToEnglish(display)!
                           .replaceAll("M+", "")
                           .replaceAll("M-", ""));
                 }
                 if (controller.prevOpertor2.value == "÷") {
                   controller.result.value = double.parse(
-                          convertHindiToEnglish(controller.value[0])!) /
+                      convertHindiToEnglish(controller.value[0])!) /
                       double.parse(convertHindiToEnglish(display)!
                           .replaceAll("M+", "")
                           .replaceAll("M-", ""));
@@ -4259,7 +4561,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                       print(
                           'mmm1111111111111111111111111111111111mmmmmmmmmmmmm');
                       controller.result.value = double.parse(
-                              convertHindiToEnglish(controller.value[3])!) +
+                          convertHindiToEnglish(controller.value[3])!) +
                           double.parse(convertHindiToEnglish(display)!
                               .replaceAll("M+", "")
                               .replaceAll("M-", ""));
@@ -4267,7 +4569,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     } else if (m2 == true) {
                       print('mmm2222222222222222222mmmmmmmmmmmmm');
                       controller.result.value = double.parse(
-                              convertHindiToEnglish(controller.value[3])!) +
+                          convertHindiToEnglish(controller.value[3])!) +
                           double.parse(convertHindiToEnglish(display)!
                               .replaceAll("M+", "")
                               .replaceAll("M-", ""));
@@ -4275,7 +4577,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     }
                   } else {
                     controller.result.value = double.parse(
-                            convertHindiToEnglish(controller.value[0])!) +
+                        convertHindiToEnglish(controller.value[0])!) +
                         double.parse(convertHindiToEnglish(display)!
                             .replaceAll("M+", "")
                             .replaceAll("M-", ""));
@@ -4290,14 +4592,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   if (mplus == true) {
                     if (m1 == true) {
                       controller.result.value = double.parse(
-                              convertHindiToEnglish(controller.value[3])!) +
+                          convertHindiToEnglish(controller.value[3])!) +
                           double.parse(convertHindiToEnglish(display)!
                               .replaceAll("M+", "")
                               .replaceAll("M-", ""));
                       display = '';
                     } else if (m2 == true) {
                       controller.result.value = double.parse(
-                              convertHindiToEnglish(controller.value[3])!) -
+                          convertHindiToEnglish(controller.value[3])!) -
                           double.parse(convertHindiToEnglish(display)!
                               .replaceAll("M+", "")
                               .replaceAll("M-", ""));
@@ -4305,7 +4607,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                     }
                   } else {
                     controller.result.value = double.parse(
-                            convertHindiToEnglish(controller.value[0])!) -
+                        convertHindiToEnglish(controller.value[0])!) -
                         double.parse(convertHindiToEnglish(display)!
                             .replaceAll("M+", "")
                             .replaceAll("M-", ""));
@@ -4315,14 +4617,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                 }
                 if (controller.prevOpertor2.value == "*") {
                   controller.result.value = double.parse(
-                          convertHindiToEnglish(controller.value[0])!) *
+                      convertHindiToEnglish(controller.value[0])!) *
                       double.parse(convertHindiToEnglish(display)!
                           .replaceAll("M+", "")
                           .replaceAll("M-", ""));
                 }
                 if (controller.prevOpertor2.value == "÷") {
                   controller.result.value = double.parse(
-                          convertHindiToEnglish(controller.value[0])!) /
+                      convertHindiToEnglish(controller.value[0])!) /
                       double.parse(convertHindiToEnglish(display)!
                           .replaceAll("M+", "")
                           .replaceAll("M-", ""));
@@ -4361,7 +4663,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
         str5 == null ||
         str6 == null ||
         str7 == null) {
-      // callAdmob();
+
+      controller.buysubscribe.value == true?(): callAdmob();
+
       print("hsghjgsghjgjgjg");
       str = context.loc.three;
       str1 = context.loc.five;
@@ -4389,7 +4693,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
           preferredSize: Size.fromHeight(7.6.h),
           child: AppBar(
             backgroundColor:
-                controller.dark.value ? Colors.black : Color(0xffE7E7E7),
+            controller.dark.value ? Colors.black : Color(0xffE7E7E7),
             leading: Builder(
               builder: (context) {
                 return IconButton(
@@ -4397,101 +4701,126 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                       Scaffold.of(context).openDrawer();
                     },
                     tooltip:
-                        MaterialLocalizations.of(context).openAppDrawerTooltip,
+                    MaterialLocalizations
+                        .of(context)
+                        .openAppDrawerTooltip,
                     icon: Icon(Icons.menu));
               },
             ),
             centerTitle: true,
             title: controller.dark.value
                 ? InkWell(
-                    onTap: () {
-                      Get.toNamed('tools');
-                    },
-                    child: Container(
-                      height: 5.2.h,
-                      width: 35.w,
-                      color: Colors.black,
-                      child: Row(
-                        children: [
-                          Spacer(),
-                          Image.asset(
-                            "assets/images/more.png",
-                            height: 3.h,
-                            width: 10.w,
-                          ),
-                          Spacer(),
-                          Text(
-                            "More Tools",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.5),
-                          ),
-                        ],
-                      ),
+              onTap: () {
+                Get.toNamed('tools');
+              },
+              child: Container(
+                height: 5.2.h,
+                width: 35.w,
+                color: Colors.black,
+                child: Row(
+                  children: [
+                    Spacer(),
+                    Image.asset(
+                      "assets/images/more.png",
+                      height: 3.h,
+                      width: 10.w,
                     ),
-                  )
+                    Spacer(),
+                    Text(
+                      "More Tools",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5),
+                    ),
+                  ],
+                ),
+              ),
+            )
                 : GestureDetector(
-                    onTap: () {
-                      Get.toNamed('tools');
-                    },
-                    child: Container(
-                      height: 5.2.h,
-                      width: 35.w,
+              onTap: () {
+                Get.toNamed('tools');
+              },
+              child: Container(
+                height: 5.2.h,
+                width: 35.w,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  children: [
+                    Spacer(),
+                    Container(
+                      height: 3.5.h,
+                      width: 7.w,
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        children: [
-                          Spacer(),
-                          Container(
-                            height: 3.5.h,
-                            width: 7.w,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.white,
-                                border: Border.all(color: Colors.blueAccent)),
-                            child: Icon(
-                              Icons.add,
-                              size: 18,
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            "More Tools",
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.5),
-                          ),
-                          Spacer(),
-                        ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white,
+                          border: Border.all(color: Colors.blueAccent)),
+                      child: Icon(
+                        Icons.add,
+                        size: 18,
                       ),
                     ),
-                  ),
+                    Spacer(),
+                    Text(
+                      "More Tools",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5),
+                    ),
+                    Spacer(),
+                  ],
+                ),
+              ),
+            ),
             actions: [
               controller.dark.value
                   ? Text("")
                   : InkWell(
-                      onTap: () {
-                        launchUrl(Uri.parse('https://poki.com/'));
-                      },
-                      child: Image.asset(
-                        "assets/images/game_icon.png",
-                        height: 4.h,
-                      ),
-                    ),
-              InkWell(
                 onTap: () {
-                  launchUrl(Uri.parse(''));
+                  launchUrl(Uri.parse('https://poki.com/'));
                 },
                 child: Image.asset(
-                  "assets/images/queen.png",
-                  height: 7.h,
+                  "assets/images/game_icon.png",
+                  height: 4.h,
                 ),
-              )
+              ),
+             Obx(() => controller.buysubscribe.value == true? SizedBox(width: 3.w,):  InkWell(
+               onTap: () async {
+                 print('reeeeeeeeeeeeeeeeeeeeeeeee');
+
+                 await RevenueCatUI.presentPaywall(displayCloseButton: true).then((value) async {
+                   print("value ========== value == ${value}");
+
+                   if(PaywallResult.purchased == value)
+                   {
+                     print('=========  PaywallResult.purchased =======');
+                     controller.buysubscribe.value = true;
+                     controller.saveBooleanToPrefs(controller.buysubscribe.value);
+                     controller.buysubscribe.value = await controller.getBooleanFromPrefs();
+                     setState(() {
+
+                     });
+                   }
+                   else
+                     {
+                       controller.buysubscribe.value = false;
+                       controller.saveBooleanToPrefs(controller.buysubscribe.value);
+                       controller.buysubscribe.value = await controller.getBooleanFromPrefs();
+                     }
+
+                 });
+
+               },
+               child: Image.asset(
+                 "assets/images/queen.png",
+                 height: 7.h,
+               ),
+             ),)
             ],
           ),
         ),
@@ -4507,7 +4836,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                   SizedBox(
                     height: 7,
                   ),
-                  Container(
+              Obx(() => controller.buysubscribe.value == true?  Row(children: [],):  Container(
                     height: 23.h,
                     width: 75.w,
                     decoration: BoxDecoration(
@@ -4520,7 +4849,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                         SizedBox(
                           height: 2.h,
                         ),
-                        Row(
+                    Row(
                           children: [
                             SizedBox(
                               width: 3.w,
@@ -4620,7 +4949,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                         )
                       ],
                     ),
-                  ),
+                  ),),
                   SizedBox(
                     height: 2.h,
                   ),
@@ -4772,7 +5101,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               builder: (BuildContext context) {
                                 return BottomSheet(
                                   backgroundColor:
-                                      Colors.black.withOpacity(0.8),
+                                  Colors.black.withOpacity(0.8),
                                   builder: (BuildContext context) {
                                     return BackdropFilter(
                                         filter: ImageFilter.blur(
@@ -4781,7 +5110,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                           height: 52.h,
                                           decoration: BoxDecoration(
                                             color:
-                                                Colors.black.withOpacity(0.5),
+                                            Colors.black.withOpacity(0.5),
                                             borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(20),
                                               topRight: Radius.circular(20),
@@ -4789,7 +5118,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                           ),
                                           child: Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.end,
+                                            CrossAxisAlignment.end,
                                             children: [
                                               Padding(
                                                 padding: EdgeInsets.only(
@@ -4807,8 +5136,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                       color: Colors.black
                                                           .withOpacity(0.2),
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
+                                                      BorderRadius.circular(
+                                                          20),
                                                     ),
                                                     child: Icon(
                                                       Icons.close,
@@ -4819,115 +5148,127 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                               ),
                                               Expanded(
                                                 child: Obx(
-                                                  () => GridView.builder(
-                                                    itemCount:
+                                                      () =>
+                                                      GridView.builder(
+                                                        itemCount:
                                                         controller.lang.length,
-                                                    gridDelegate:
+                                                        gridDelegate:
                                                         SliverGridDelegateWithFixedCrossAxisCount(
                                                             crossAxisCount: 4,
                                                             childAspectRatio:
-                                                                1.0),
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      print(
-                                                          "================= onCLOSING =====================");
-                                                      return Container(
-                                                        margin: EdgeInsets
-                                                            .symmetric(
+                                                            1.0),
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          print(
+                                                              "================= onCLOSING =====================");
+                                                          return Container(
+                                                            margin: EdgeInsets
+                                                                .symmetric(
                                                                 vertical: 5,
                                                                 horizontal: 5),
-                                                        decoration: BoxDecoration(
-                                                            border: controller
-                                                                        .lang[
-                                                                            index]
-                                                                        .isselect ==
+                                                            decoration: BoxDecoration(
+                                                                border: controller
+                                                                    .lang[
+                                                                index]
+                                                                    .isselect ==
                                                                     true
-                                                                ? Border.all(
+                                                                    ? Border
+                                                                    .all(
                                                                     color: Colors
                                                                         .white)
-                                                                : Border.all(
+                                                                    : Border
+                                                                    .all(
                                                                     color: Colors
                                                                         .black),
-                                                            borderRadius:
+                                                                borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10),
-                                                            color: Colors.white
-                                                                .withOpacity(
+                                                                    10),
+                                                                color: Colors
+                                                                    .white
+                                                                    .withOpacity(
                                                                     0.1)),
-                                                        child: Column(
-                                                          mainAxisAlignment:
+                                                            child: Column(
+                                                              mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .center,
-                                                          children: [
-                                                            InkWell(
-                                                              onTap: () async {
-                                                                for (int i = 0;
+                                                              children: [
+                                                                InkWell(
+                                                                  onTap: () async {
+                                                                    for (int i = 0;
                                                                     i <
                                                                         controller
                                                                             .lang
                                                                             .length;
                                                                     i++) {
-                                                                  controller
+                                                                      controller
                                                                           .lang[i]
                                                                           .isselect =
                                                                       false;
-                                                                }
-                                                                controller
-                                                                    .lang[index]
-                                                                    .isselect = true;
-                                                                setState(() {});
+                                                                    }
+                                                                    controller
+                                                                        .lang[index]
+                                                                        .isselect =
+                                                                    true;
+                                                                    setState(() {});
 
-                                                                controller
-                                                                    .saveSelectedLaunguageIndex(
+                                                                    controller
+                                                                        .saveSelectedLaunguageIndex(
                                                                         index);
-                                                                await controller
-                                                                    .loadSelectedLanguageIndex();
-                                                                Locale locale =
-                                                                    await setLocale(controller
-                                                                        .lang[
-                                                                            index]
-                                                                        .languageCode!);
-                                                                MyApp.setLocale(
-                                                                    context,
-                                                                    locale);
-                                                                controller.value
-                                                                    .clear();
-                                                                Get.back();
-                                                              },
-                                                              child: Container(
-                                                                height: 40,
-                                                                width: 60,
-                                                                child: Center(
-                                                                  child: Text(
-                                                                    "${controller.lang[index].flag}",
-                                                                    style: TextStyle(
-                                                                        fontSize:
+                                                                    await controller
+                                                                        .loadSelectedLanguageIndex();
+                                                                    Locale locale =
+                                                                    await setLocale(
+                                                                        controller
+                                                                            .lang[
+                                                                        index]
+                                                                            .languageCode!);
+                                                                    MyApp
+                                                                        .setLocale(
+                                                                        context,
+                                                                        locale);
+                                                                    controller
+                                                                        .value
+                                                                        .clear();
+                                                                    Get.back();
+                                                                  },
+                                                                  child: Container(
+                                                                    height: 40,
+                                                                    width: 60,
+                                                                    child: Center(
+                                                                      child: Text(
+                                                                        "${controller
+                                                                            .lang[index]
+                                                                            .flag}",
+                                                                        style: TextStyle(
+                                                                            fontSize:
                                                                             20),
+                                                                      ),
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ),
-                                                            Row(
-                                                              mainAxisAlignment:
+                                                                Row(
+                                                                  mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .center,
-                                                              children: [
-                                                                Text(
-                                                                  "${controller.lang[index].name}",
-                                                                  style:
+                                                                  children: [
+                                                                    Text(
+                                                                      "${controller
+                                                                          .lang[index]
+                                                                          .name}",
+                                                                      style:
                                                                       TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                  ),
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               ],
                                                             ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
+                                                          );
+                                                        },
+                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -4991,19 +5332,19 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                 child: Container(
                                   constraints: BoxConstraints(
                                     minWidth:
-                                        300, // Minimum width of the dialog
+                                    300, // Minimum width of the dialog
                                   ),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Padding(
                                         padding:
-                                            EdgeInsets.fromLTRB(0, 40, 0, 0),
+                                        EdgeInsets.fromLTRB(0, 40, 0, 0),
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: <Widget>[
                                             Text(
                                               "Calculate GST %",
@@ -5020,7 +5361,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                               width: 300,
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(15),
+                                                BorderRadius.circular(15),
                                                 color: controller.dark.value
                                                     ? Color(0xff202C35)
                                                     : Colors.grey.shade300,
@@ -5029,8 +5370,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                 children: [
                                                   Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                     children: [
                                                       SizedBox(
                                                         width: 2.w,
@@ -5039,26 +5380,26 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                         child: Expanded(
                                                           child: Padding(
                                                             padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    top: 10,
-                                                                    bottom: 7,
-                                                                    right: 2,
-                                                                    left: 2),
+                                                            const EdgeInsets
+                                                                .only(
+                                                                top: 10,
+                                                                bottom: 7,
+                                                                right: 2,
+                                                                left: 2),
                                                             child: Container(
                                                               child: TextField(
                                                                 textAlign:
-                                                                    TextAlign
-                                                                        .center,
+                                                                TextAlign
+                                                                    .center,
                                                                 controller:
-                                                                    gst1,
+                                                                gst1,
                                                                 keyboardType:
-                                                                    TextInputType
-                                                                        .number,
+                                                                TextInputType
+                                                                    .number,
                                                                 decoration:
-                                                                    InputDecoration(
+                                                                InputDecoration(
                                                                   prefixText:
-                                                                      "+",
+                                                                  "+",
                                                                 ),
                                                                 onChanged:
                                                                     (value) {
@@ -5074,13 +5415,13 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                       Expanded(
                                                         child: TextField(
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           controller: gst2,
                                                           keyboardType:
-                                                              TextInputType
-                                                                  .number,
+                                                          TextInputType
+                                                              .number,
                                                           decoration:
-                                                              InputDecoration(
+                                                          InputDecoration(
                                                             prefixText: "+",
                                                           ),
                                                           onChanged: (value) {
@@ -5092,13 +5433,13 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                       Expanded(
                                                         child: TextField(
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           controller: gst3,
                                                           keyboardType:
-                                                              TextInputType
-                                                                  .number,
+                                                          TextInputType
+                                                              .number,
                                                           decoration:
-                                                              InputDecoration(
+                                                          InputDecoration(
                                                             prefixText: "+",
                                                           ),
                                                           onChanged: (value) {
@@ -5110,13 +5451,13 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                       Expanded(
                                                         child: TextField(
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           controller: gst4,
                                                           keyboardType:
-                                                              TextInputType
-                                                                  .number,
+                                                          TextInputType
+                                                              .number,
                                                           decoration:
-                                                              InputDecoration(
+                                                          InputDecoration(
                                                             prefixText: "+",
                                                           ),
                                                           onChanged: (value) {
@@ -5134,8 +5475,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                   ),
                                                   Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                     children: [
                                                       SizedBox(
                                                         width: 2.w,
@@ -5150,14 +5491,14 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                                 .center,
                                                             controller: gst5,
                                                             keyboardType:
-                                                                TextInputType
-                                                                    .number,
+                                                            TextInputType
+                                                                .number,
                                                             decoration: InputDecoration(
                                                                 prefixText: "-",
                                                                 prefixStyle:
-                                                                    TextStyle(
-                                                                        fontSize:
-                                                                            20)),
+                                                                TextStyle(
+                                                                    fontSize:
+                                                                    20)),
                                                             onChanged: (value) {
                                                               gst5.text = value;
                                                             },
@@ -5168,17 +5509,17 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                       Expanded(
                                                         child: TextField(
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           controller: gst6,
                                                           keyboardType:
-                                                              TextInputType
-                                                                  .number,
+                                                          TextInputType
+                                                              .number,
                                                           decoration: InputDecoration(
                                                               prefixText: "-",
                                                               prefixStyle:
-                                                                  TextStyle(
-                                                                      fontSize:
-                                                                          20)),
+                                                              TextStyle(
+                                                                  fontSize:
+                                                                  20)),
                                                           onChanged: (value) {
                                                             gst6.text = value;
                                                           },
@@ -5188,17 +5529,17 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                       Expanded(
                                                         child: TextField(
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           controller: gst7,
                                                           keyboardType:
-                                                              TextInputType
-                                                                  .number,
+                                                          TextInputType
+                                                              .number,
                                                           decoration: InputDecoration(
                                                               prefixText: "-",
                                                               prefixStyle:
-                                                                  TextStyle(
-                                                                      fontSize:
-                                                                          20)),
+                                                              TextStyle(
+                                                                  fontSize:
+                                                                  20)),
                                                           onChanged: (value) {
                                                             gst7.text = value;
                                                           },
@@ -5208,17 +5549,17 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                       Expanded(
                                                         child: TextField(
                                                           textAlign:
-                                                              TextAlign.center,
+                                                          TextAlign.center,
                                                           controller: gst8,
                                                           keyboardType:
-                                                              TextInputType
-                                                                  .number,
+                                                          TextInputType
+                                                              .number,
                                                           decoration: InputDecoration(
                                                               prefixText: "-",
                                                               prefixStyle:
-                                                                  TextStyle(
-                                                                      fontSize:
-                                                                          20)),
+                                                              TextStyle(
+                                                                  fontSize:
+                                                                  20)),
                                                           onChanged: (value) {
                                                             gst8.text = value;
                                                           },
@@ -5255,100 +5596,108 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        "value is all ready Enter ${gst1.text}"),
+                                                        "value is all ready Enter ${gst1
+                                                            .text}"),
                                                     duration:
-                                                        Duration(seconds: 2),
+                                                    Duration(seconds: 2),
                                                   ),
                                                 );
                                               } else if (gst2.text ==
-                                                      gst1.text ||
+                                                  gst1.text ||
                                                   gst2.text == gst3.text ||
                                                   gst2.text == gst4.text) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        "value is all ready Enter ${gst2.text}"),
+                                                        "value is all ready Enter ${gst2
+                                                            .text}"),
                                                     duration:
-                                                        Duration(seconds: 2),
+                                                    Duration(seconds: 2),
                                                   ),
                                                 );
                                               } else if (gst3.text ==
-                                                      gst1.text ||
+                                                  gst1.text ||
                                                   gst3.text == gst2.text ||
                                                   gst3.text == gst4.text) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        "value is all ready Enter ${gst3.text}"),
+                                                        "value is all ready Enter ${gst3
+                                                            .text}"),
                                                     duration:
-                                                        Duration(seconds: 2),
+                                                    Duration(seconds: 2),
                                                   ),
                                                 );
                                               } else if (gst4.text ==
-                                                      gst1.text ||
+                                                  gst1.text ||
                                                   gst4.text == gst2.text ||
                                                   gst4.text == gst3.text) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        "value is all ready Enter ${gst4.text}"),
+                                                        "value is all ready Enter ${gst4
+                                                            .text}"),
                                                     duration:
-                                                        Duration(seconds: 2),
+                                                    Duration(seconds: 2),
                                                   ),
                                                 );
                                               } else if (gst5.text ==
-                                                      gst6.text ||
+                                                  gst6.text ||
                                                   gst5.text == gst7.text ||
                                                   gst5.text == gst8.text) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        "value is all ready Enter ${gst5.text}"),
+                                                        "value is all ready Enter ${gst5
+                                                            .text}"),
                                                     duration:
-                                                        Duration(seconds: 2),
+                                                    Duration(seconds: 2),
                                                   ),
                                                 );
                                               } else if (gst6.text ==
-                                                      gst5.text ||
+                                                  gst5.text ||
                                                   gst6.text == gst7.text ||
                                                   gst6.text == gst8.text) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        "value is all ready Enter ${gst6.text}"),
+                                                        "value is all ready Enter ${gst6
+                                                            .text}"),
                                                     duration:
-                                                        Duration(seconds: 2),
+                                                    Duration(seconds: 2),
                                                   ),
                                                 );
                                               } else if (gst7.text ==
-                                                      gst5.text ||
+                                                  gst5.text ||
                                                   gst7.text == gst6.text ||
                                                   gst7.text == gst8.text) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        "value is all ready Enter ${gst7.text}"),
+                                                        "value is all ready Enter ${gst7
+                                                            .text}"),
                                                     duration:
-                                                        Duration(seconds: 2),
+                                                    Duration(seconds: 2),
                                                   ),
                                                 );
                                               } else if (gst8.text ==
-                                                      gst5.text ||
+                                                  gst5.text ||
                                                   gst8.text == gst6.text ||
                                                   gst8.text == gst7.text) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        "value is all ready Enter ${gst8.text}"),
+                                                        "value is all ready Enter ${gst8
+                                                            .text}"),
                                                     duration:
-                                                        Duration(seconds: 2),
+                                                    Duration(seconds: 2),
                                                   ),
                                                 );
                                               } else {
@@ -5458,7 +5807,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                 height: 4.h,
                                 child: ClipRect(
                                   child:
-                                      Image.asset("assets/images/cTheme.png"),
+                                  Image.asset("assets/images/cTheme.png"),
                                 ),
                               ),
                               SizedBox(
@@ -5505,60 +5854,68 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                   child: Container(
                                     constraints: BoxConstraints(
                                       minWidth:
-                                          300, // Minimum width of the dialog
+                                      300, // Minimum width of the dialog
                                     ),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Padding(
                                           padding:
-                                              EdgeInsets.fromLTRB(0, 40, 0, 0),
+                                          EdgeInsets.fromLTRB(0, 40, 0, 0),
                                           child: Column(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                             children: <Widget>[
                                               Text(
                                                 "GST ROUNDER SELECT",
                                                 style: TextStyle(),
                                               ),
                                               Obx(
-                                                () => Slider(
-                                                  value: controller
-                                                      .currentSliderValue.value,
-                                                  min: 0,
-                                                  max: 5,
-                                                  divisions: 50,
-                                                  label: controller
-                                                      .currentSliderValue.value
-                                                      .toInt()
-                                                      .toString(),
-                                                  onChanged: (double value) {
-                                                    setState(() {
-                                                      controller
+                                                    () =>
+                                                    Slider(
+                                                      value: controller
                                                           .currentSliderValue
-                                                          .value = value;
-                                                      print(controller
-                                                          .currentSliderValue
-                                                          .value);
-                                                      twonumber = controller
+                                                          .value,
+                                                      min: 0,
+                                                      max: 5,
+                                                      divisions: 50,
+                                                      label: controller
                                                           .currentSliderValue
                                                           .value
-                                                          .toStringAsFixed(0);
-                                                      print(twonumber);
-                                                      controller
+                                                          .toInt()
+                                                          .toString(),
+                                                      onChanged: (
+                                                          double value) {
+                                                        setState(() {
+                                                          controller
+                                                              .currentSliderValue
+                                                              .value = value;
+                                                          print(controller
+                                                              .currentSliderValue
+                                                              .value);
+                                                          twonumber = controller
+                                                              .currentSliderValue
+                                                              .value
+                                                              .toStringAsFixed(
+                                                              0);
+                                                          print(twonumber);
+                                                          controller
                                                               .currentSliderValue
                                                               .value =
-                                                          double.parse(
-                                                              twonumber);
-                                                      controller.value;
-                                                    });
-                                                  },
-                                                ),
+                                                              double.parse(
+                                                                  twonumber);
+                                                          controller.value;
+                                                        });
+                                                      },
+                                                    ),
                                               ),
-                                              Obx(() => Text(
-                                                  'Value: ${controller.currentSliderValue.value}'))
+                                              Obx(() =>
+                                                  Text(
+                                                      'Value: ${controller
+                                                          .currentSliderValue
+                                                          .value}'))
                                             ],
                                           ),
                                         ),
@@ -5586,7 +5943,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                 height: 4.h,
                                 child: ClipRect(
                                   child:
-                                      Image.asset("assets/images/rounder.png"),
+                                  Image.asset("assets/images/rounder.png"),
                                 ),
                               ),
                               SizedBox(
@@ -5629,7 +5986,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               builder: (BuildContext context) {
                                 return BottomSheet(
                                   backgroundColor:
-                                      Colors.black.withOpacity(0.8),
+                                  Colors.black.withOpacity(0.8),
                                   builder: (BuildContext context) {
                                     return BackdropFilter(
                                         filter: ImageFilter.blur(
@@ -5715,7 +6072,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               onChanged: (value) {
                                 controller.stopSound(value);
                                 print(
-                                    "======stopsound==${controller.isLoopingCurrentItem.value}");
+                                    "======stopsound==${controller
+                                        .isLoopingCurrentItem.value}");
                               },
                             ),
                             SizedBox(
@@ -5770,7 +6128,8 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               onChanged: (value) {
                                 controller.vibrate(value);
                                 print(
-                                    "========${controller.isVibrationEnabled.value}");
+                                    "========${controller.isVibrationEnabled
+                                        .value}");
                               },
                             ),
                             SizedBox(
@@ -5958,7 +6317,7 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                                 height: 4.h,
                                 child: ClipRect(
                                   child:
-                                      Image.asset("assets/images/shareapp.png"),
+                                  Image.asset("assets/images/shareapp.png"),
                                 ),
                               ),
                               SizedBox(
@@ -5967,9 +6326,9 @@ class _Calculator_HomeState extends State<Calculator_Home> {
                               Text(
                                 "Share This App",
                                 style: TextStyle(
-                                  color: controller.dark.value
-                                      ? Colors.white
-                                      : Colors.black
+                                    color: controller.dark.value
+                                        ? Colors.white
+                                        : Colors.black
                                 ),
                               ),
                             ],
@@ -5990,1460 +6349,1547 @@ class _Calculator_HomeState extends State<Calculator_Home> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
-              child: Obx(() => Container(
-                  color: controller.backgroundColor.value,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 4.h,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          controller: scrollcontroller,
-                          physics: ClampingScrollPhysics(),
-                          itemCount: controller.value.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index == controller.value.length) {
-                              return Container(
-                                height: 8.h,
-                              );
-                            }
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.only(right: 2, bottom: 5),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  gst == true
-                                      ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: controller
-                                                          .value[index]
-                                                          .contains("=")
-                                                      ? 10
-                                                      : 5,
-                                                  vertical: controller
-                                                          .value[index]
-                                                          .contains("=")
-                                                      ? 3
-                                                      : 0),
-                                              decoration: controller.value[index]
-                                                      .contains("=")
-                                                  ? BoxDecoration(
-                                                      color: Colors.grey.shade300,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5))
-                                                  : BoxDecoration(),
-                                              child: Align(
-                                                alignment: Alignment.centerRight,
-                                                child: Text(
-                                                  "${englishToHindi(controller.value[index])} ",
-                                                  style: TextStyle(
-                                                      fontSize: controller
-                                                              .value[index]
-                                                              .contains("=")
-                                                          ? 16
-                                                          : 15,
-                                                      fontWeight: controller
-                                                              .value[index]
-                                                              .contains("=")
-                                                          ? FontWeight.w500
-                                                          : FontWeight.w400,
-                                                      color: controller.dark.value
-                                                          ? Colors.black
-                                                          : Colors.black),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : Padding(
-                                    padding: EdgeInsets.only(
-                                      bottom: controller.value[index].contains("=") ? 10.0 : 0.0,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
+              child: Obx(() =>
+                  Container(
+                    color: controller.backgroundColor.value,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            controller: scrollcontroller,
+                            physics: ClampingScrollPhysics(),
+                            itemCount: controller.value.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == controller.value.length) {
+                                return Container(
+                                  height: 8.h,
+                                );
+                              }
+                              return Padding(
+                                padding:
+                                const EdgeInsets.only(right: 2, bottom: 5),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    gst == true
+                                        ? Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.end,
                                       children: [
-                                        SizedBox(height: 1.h,),
-                                        controller.value[index].contains('=')?InkWell(onTap: () {
+                                        controller.value[index].contains('=')
+                                            ? InkWell(onTap: () {
                                           print(index);
                                           String userInputString1 = '';
                                           String userInputString = '';
-                                          List<String> data=[];
+                                          List<String> data = [];
                                           print('dddddddddddd ${index}');
-                                          for (int i = index-1; i >=  0 ; i--) {
-                                            print('dddddddddddd ${ controller.value[i]}');
-                                            if ( !controller.value[i].contains("=")) {
-                                              data.add(index+1==i?"${removeDecimalSuffix( controller.value[i])} \n":"${removeDecimalSuffix( controller.value[i])} \n");
-                                              userInputString1 += '${ controller.value[i]} ';
-                                            }else
-                                            {
+
+                                          for (int i = index - 1; i >= 0; i--) {
+                                            print('dddddddddddd ${ controller
+                                                .value[i]}');
+                                            if (!controller.value[i].contains(
+                                                "=")) {
+                                              data.add(index + 1 == i
+                                                  ? "${removeDecimalSuffix(
+                                                  controller.value[i])} \n"
+                                                  : "${removeDecimalSuffix(
+                                                  controller.value[i])} \n");
+                                              userInputString1 +=
+                                              '${ controller.value[i]} ';
+                                            } else {
                                               print('ddddddd2222222');
-                                            break;
+                                              break;
                                             }
                                           }
 
-                                          data=data.reversed.toList();
-                                          String concatenatedString =   data.join();
-                                          userInputString += '${ controller.value[index]} \n';
-                                          print(concatenatedString + userInputString);
-                                          Share.share("   "+concatenatedString + userInputString);
-                                        },child: Icon(Icons.share,size: 17,)):Text(''),
+                                          data = data.reversed.toList();
+                                          String concatenatedString = data
+                                              .join();
+                                          userInputString +=
+                                          '${ controller.value[index]} \n';
+                                          print(concatenatedString +
+                                              userInputString);
+                                          Share.share(
+                                              "   " + concatenatedString +
+                                                  userInputString);
+                                        },
+                                            child: Icon(Icons.share, size: 17,
+                                              color: controller.dark.value
+                                                  ? Colors.black
+                                                  : Colors.black,))
+                                            : Text(''),
                                         SizedBox(width: 2.w,),
                                         Container(
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: controller.value[index].contains("=") ? 7 : 0,
-                                          ),
-                                          decoration: controller.value[index].contains("=")
+                                              horizontal: controller
+                                                  .value[index]
+                                                  .contains("=")
+                                                  ? 10
+                                                  : 5,
+                                              vertical: controller
+                                                  .value[index]
+                                                  .contains("=")
+                                                  ? 3
+                                                  : 0),
+                                          decoration: controller.value[index]
+                                              .contains("=")
                                               ? BoxDecoration(
-                                            color: Colors.grey.shade300,
-                                            borderRadius: BorderRadius.circular(5),
-                                          )
+                                              color: Colors.grey.shade300,
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  5))
                                               : BoxDecoration(),
-                                          child: Text(
-                                            " ${englishToHindi(controller.value[index])} ",
-                                            style: TextStyle(
-                                              color: controller.dark.value ? Colors.black : Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: controller.value[index].contains("=")
-                                                  ? FontWeight.w500
-                                                  : FontWeight.w400,
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "${englishToHindi(
+                                                  controller.value[index])} ",
+                                              style: TextStyle(
+                                                  fontSize: controller
+                                                      .value[index]
+                                                      .contains("=")
+                                                      ? 16
+                                                      : 15,
+                                                  fontWeight: controller
+                                                      .value[index]
+                                                      .contains("=")
+                                                      ? FontWeight.w500
+                                                      : FontWeight.w400,
+                                                  color: controller.dark.value
+                                                      ? Colors.black
+                                                      : Colors.black),
                                             ),
                                           ),
                                         ),
 
                                       ],
+                                    )
+                                        : Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: controller.value[index]
+                                            .contains("=") ? 10.0 : 0.0,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .end,
+                                        children: [
+                                          SizedBox(height: 1.h,),
+                                          controller.value[index].contains('=')
+                                              ? InkWell(onTap: () {
+                                            print(index);
+                                            String userInputString1 = '';
+                                            String userInputString = '';
+                                            List<String> data = [];
+                                            print('dddddddddddd ${index}');
+
+                                            for (int i = index - 1; i >=
+                                                0; i--) {
+                                              print('dddddddddddd ${ controller
+                                                  .value[i]}');
+                                              if (!controller.value[i].contains(
+                                                  "=")) {
+                                                data.add(index + 1 == i
+                                                    ? "${removeDecimalSuffix(
+                                                    controller.value[i])} \n"
+                                                    : "${removeDecimalSuffix(
+                                                    controller.value[i])} \n");
+                                                userInputString1 +=
+                                                '${ controller.value[i]} ';
+                                              } else {
+                                                print('ddddddd2222222');
+                                                break;
+                                              }
+                                            }
+
+                                            data = data.reversed.toList();
+                                            String concatenatedString = data
+                                                .join();
+                                            userInputString +=
+                                            '${ controller.value[index]} \n';
+                                            print(concatenatedString +
+                                                userInputString);
+                                            Share.share(
+                                                "   " + concatenatedString +
+                                                    userInputString);
+                                          },
+                                              child: Icon(Icons.share, size: 17,
+                                                color: controller.dark.value
+                                                    ? Colors.black
+                                                    : Colors.black,))
+                                              : Text(''),
+                                          SizedBox(width: 2.w,),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: controller
+                                                  .value[index].contains("=")
+                                                  ? 7
+                                                  : 0,
+                                            ),
+                                            decoration: controller.value[index]
+                                                .contains("=")
+                                                ? BoxDecoration(
+                                              color: Colors.grey.shade300,
+                                              borderRadius: BorderRadius
+                                                  .circular(5),
+                                            )
+                                                : BoxDecoration(),
+                                            child: Text(
+                                              " ${englishToHindi(
+                                                  controller.value[index])} ",
+                                              style: TextStyle(
+                                                color: controller.dark.value
+                                                    ? Colors.black
+                                                    : Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: controller
+                                                    .value[index].contains("=")
+                                                    ? FontWeight.w500
+                                                    : FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 2.h,
-                      ),
-                    ],
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ),
             ),
             Obx(
-              () => controller.modetrue.value
+                  () =>
+              controller.modetrue.value
                   ? Container(
-                      color: Colors.black,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Stack(
-                            children: [
-                              Row(
+                color: Colors.black,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Stack(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              height: 7.h,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
+                              decoration: BoxDecoration(
+                                color: Color(0xffE7E7E7),
+                              ),
+                              child: Row(
                                 children: [
-                                  Container(
-                                    height: 7.h,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffE7E7E7),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            onclick("", "AC");
-                                            print("dwfwddeded");
-                                          },
-                                          child: Image.asset(
-                                            "assets/images/ac.png",
-                                            height: 5.h,
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            onclick("", "undo");
-                                          },
-                                          child: Image.asset(
-                                            "assets/images/undo.png",
-                                            height: 4.h,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              maxLines: 1,
-                                              "${englishToHindi(controller.display.value)}",
-                                              style: TextStyle(
-                                                  fontSize: 20.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: controller.dark.value
-                                                      ? Colors.black
-                                                      : Colors.black),
-                                            ),
-                                          ),
-                                        ),
-                                        Obx(
-                                          () => Text(
-                                            controller.displayOprater.value ==
-                                                    "="
-                                                ? ""
-                                                : controller
-                                                    .displayOprater.value,
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                color: controller.dark.value
-                                                    ? Colors.black
-                                                    : Colors.black,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 1.w,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            onclick("", "DE");
-                                          },
-                                          child: Image.asset(
-                                              "assets/images/delet.png",
-                                              height: 5.h),
-                                        )
-                                      ],
+                                  GestureDetector(
+                                    onTap: () {
+                                      onclick("", "AC");
+                                      print("dwfwddeded");
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/ac.png",
+                                      height: 5.h,
                                     ),
                                   ),
-                                ],
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 43, left: 145),
-                                child: Container(
-                                  height: 1.h,
-                                  width: 20.w,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.grey.shade700),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+${englishToHindi(str!)}%", "+3%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "+${englishToHindi(str!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+${englishToHindi(str1!)}%", "+5%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "+${englishToHindi(str1!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+${englishToHindi(str2!)}%", "+12%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    text: "+${englishToHindi(str2!)}%",
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+${englishToHindi(str3!)}%", "+18%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "+${englishToHindi(str3!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+GST", "+GST");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    text: "+GST",
-                                    imagePath: controller.btn1.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-${englishToHindi(str4!)}%", "-3%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-${englishToHindi(str4!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-${englishToHindi(str5!)}%", "-5%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-${englishToHindi(str5!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-${englishToHindi(str6!)}%", "-12%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-${englishToHindi(str6!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-${englishToHindi(str7!)}%", "-18%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-${englishToHindi(str7!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-GST", "-GST");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-GST",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  onclick("MR", "MR");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "MR",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("÷", "÷");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "÷",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 24),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("%", "%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "%",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 20),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("√x", "root");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "√x",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 19),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  double total =
-                                      calculateTotal(controller.value);
-                                  onclick("${total}", "GT");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "GT",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16),
-                                    imagePath: controller.btn2.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  onclick("MU", "MU");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "MU",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("×", "*");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "×",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 24),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.seven, "7");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text:
-                                        "${englishToHindi(context.loc.seven)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.eight, "8");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text:
-                                        "${englishToHindi(context.loc.eight)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.nine, "9");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "${englishToHindi(context.loc.nine)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  onclick("M-", "M-");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "M-",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-", "-");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 25),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.four, "4");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "${englishToHindi(context.loc.four)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.five, "5");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "${englishToHindi(context.loc.five)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.six, "6");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "${englishToHindi(context.loc.six)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                children: [
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick("M+", "M+");
+                                  InkWell(
+                                    onTap: () {
+                                      onclick("", "undo");
                                     },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text: "M+",
-                                        style: TextStyle(
-                                            color:
-                                                controller.btnTextColor.value,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15),
-                                        imagePath: controller.btn2.value),
-                                  ),
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick("=", "=");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text: "=",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 20),
-                                        imagePath: controller.btn3.value),
-                                  ),
-                                ],
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+", "+");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 14.4.h,
-                                    text: "+",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 25),
-                                    imagePath: controller.btn4.value),
-                              ),
-                              Column(
-                                children: [
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.one, "1");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.one)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.zero, "0");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.zero)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.two, "2");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.two)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.zero1, "00");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.zero1)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.three, "3");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.three)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(".", ".");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text: ".",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      color: Colors.black,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Stack(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 7.h,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffE7E7E7),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            onclick("", "AC");
-                                            print("dwfwddeded");
-                                          },
-                                          child: Image.asset(
-                                            "assets/images/ac.png",
-                                            height: 5.h,
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            onclick("", "undo");
-                                          },
-                                          child: Image.asset(
-                                            "assets/images/undo.png",
-                                            height: 4.h,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              maxLines: 1,
-                                              "${englishToHindi(controller.display.value)}",
-                                              style: TextStyle(
-                                                  fontSize: 20.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: controller.dark.value
-                                                      ? Colors.black
-                                                      : Colors.black),
-                                            ),
-                                          ),
-                                        ),
-                                        Obx(
-                                          () => Text(
-                                            controller.displayOprater.value ==
-                                                    "="
-                                                ? ""
-                                                : controller
-                                                    .displayOprater.value,
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                color: controller.dark.value
-                                                    ? Colors.black
-                                                    : Colors.black,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 1.w,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            onclick("", "DE");
-                                          },
-                                          child: Image.asset(
-                                              "assets/images/delet.png",
-                                              height: 5.h),
-                                        )
-                                      ],
+                                    child: Image.asset(
+                                      "assets/images/undo.png",
+                                      height: 4.h,
                                     ),
                                   ),
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        maxLines: 1,
+                                        "${englishToHindi(
+                                            controller.display.value)}",
+                                        style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: controller.dark.value
+                                                ? Colors.black
+                                                : Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                  Obx(
+                                        () =>
+                                        Text(
+                                          controller.displayOprater.value ==
+                                              "="
+                                              ? ""
+                                              : controller
+                                              .displayOprater.value,
+                                          style: TextStyle(
+                                              fontSize: 20.sp,
+                                              color: controller.dark.value
+                                                  ? Colors.black
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                  ),
+                                  SizedBox(
+                                    width: 1.w,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      onclick("", "DE");
+                                    },
+                                    child: Image.asset(
+                                        "assets/images/delet.png",
+                                        height: 5.h),
+                                  )
                                 ],
                               ),
-                            ],
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding:
+                          const EdgeInsets.only(top: 43, left: 145),
+                          child: Container(
+                            height: 1.h,
+                            width: 20.w,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey.shade700),
                           ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+${englishToHindi(str!)}%", "+3%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "+${englishToHindi(str!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+${englishToHindi(str1!)}%", "+5%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "+${englishToHindi(str1!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+${englishToHindi(str2!)}%", "+12%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    text: "+${englishToHindi(str2!)}%",
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+${englishToHindi(str3!)}%", "+18%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "+${englishToHindi(str3!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+GST", "+GST");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    text: "+GST",
-                                    imagePath: controller.btn1.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-${englishToHindi(str4!)}%", "-3%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-${englishToHindi(str4!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-${englishToHindi(str5!)}%", "-5%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-${englishToHindi(str5!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-${englishToHindi(str6!)}%", "-12%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-${englishToHindi(str6!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-${englishToHindi(str7!)}%", "-18%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-${englishToHindi(str7!)}%",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-GST", "-GST");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-GST",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
-                                    imagePath: controller.btn1.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  double total =
-                                      calculateTotal(controller.value);
-                                  onclick("${total}", "GT");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "GT",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("√x", "root");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "√x",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 19),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("%", "%");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "%",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 20),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("÷", "÷");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "÷",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 24),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("MR", "MR");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "MR",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                    imagePath: controller.btn2.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.seven, "7");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text:
-                                        "${englishToHindi(context.loc.seven)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.eight, "8");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text:
-                                        "${englishToHindi(context.loc.eight)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.nine, "9");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "${englishToHindi(context.loc.nine)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("×", "*");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "×",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 24),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("MU", "MU");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "MU",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                    imagePath: controller.btn2.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.four, "4");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "${englishToHindi(context.loc.four)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.five, "5");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "${englishToHindi(context.loc.five)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick(context.loc.six, "6");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "${englishToHindi(context.loc.six)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 23),
-                                    imagePath: controller.btn1.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("-", "-");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "-",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 25),
-                                    imagePath: controller.btn2.value),
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("M-", "M-");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 7.2.h,
-                                    text: "M-",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                    imagePath: controller.btn2.value),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                children: [
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.one, "1");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.one)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.zero, "0");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.zero)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.two, "2");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.two)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.zero1, "00");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.zero1)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(context.loc.three, "3");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text:
-                                            "${englishToHindi(context.loc.three)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick(".", ".");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text: ".",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 23),
-                                        imagePath: controller.btn1.value),
-                                  ),
-                                ],
-                              ),
-                              Bouncing(
-                                onPress: () {
-                                  onclick("+", "+");
-                                },
-                                child: clickableContainer(
-                                    onTap: () {},
-                                    width: 20.w,
-                                    height: 14.4.h,
-                                    text: "+",
-                                    style: TextStyle(
-                                        color: controller.btnTextColor.value,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 25),
-                                    imagePath: controller.btn4.value),
-                              ),
-                              Column(
-                                children: [
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick("M+", "M+");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text: "M+",
-                                        style: TextStyle(
-                                            color:
-                                                controller.btnTextColor.value,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15),
-                                        imagePath: controller.btn2.value),
-                                  ),
-                                  Bouncing(
-                                    onPress: () {
-                                      onclick("=", "=");
-                                    },
-                                    child: clickableContainer(
-                                        onTap: () {},
-                                        width: 20.w,
-                                        height: 7.2.h,
-                                        text: "=",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 20),
-                                        imagePath: controller.btn3.value),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            onclick("+${englishToHindi(str!)}%", "+3%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "+${englishToHindi(str!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+${englishToHindi(str1!)}%", "+5%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "+${englishToHindi(str1!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+${englishToHindi(str2!)}%", "+12%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              text: "+${englishToHindi(str2!)}%",
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+${englishToHindi(str3!)}%", "+18%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "+${englishToHindi(str3!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+GST", "+GST");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              text: "+GST",
+                              imagePath: controller.btn1.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            onclick("-${englishToHindi(str4!)}%", "-3%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-${englishToHindi(str4!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-${englishToHindi(str5!)}%", "-5%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-${englishToHindi(str5!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-${englishToHindi(str6!)}%", "-12%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-${englishToHindi(str6!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-${englishToHindi(str7!)}%", "-18%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-${englishToHindi(str7!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-GST", "-GST");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-GST",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            onclick("MR", "MR");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "MR",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("÷", "÷");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "÷",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("%", "%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "%",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("√x", "root");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "√x",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 19),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            double total =
+                            calculateTotal(controller.value);
+                            onclick("${total}", "GT");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "GT",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16),
+                              imagePath: controller.btn2.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            onclick("MU", "MU");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "MU",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("×", "*");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "×",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.seven, "7");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text:
+                              "${englishToHindi(context.loc.seven)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.eight, "8");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text:
+                              "${englishToHindi(context.loc.eight)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.nine, "9");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "${englishToHindi(context.loc.nine)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            onclick("M-", "M-");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "M-",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-", "-");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 25),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.four, "4");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "${englishToHindi(context.loc.four)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.five, "5");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "${englishToHindi(context.loc.five)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.six, "6");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "${englishToHindi(context.loc.six)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Bouncing(
+                              onPress: () {
+                                onclick("M+", "M+");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text: "M+",
+                                  style: TextStyle(
+                                      color:
+                                      controller.btnTextColor.value,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15),
+                                  imagePath: controller.btn2.value),
+                            ),
+                            Bouncing(
+                              onPress: () {
+                                onclick("=", "=");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text: "=",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20),
+                                  imagePath: controller.btn3.value),
+                            ),
+                          ],
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+", "+");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 14.4.h,
+                              text: "+",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 25),
+                              imagePath: controller.btn4.value),
+                        ),
+                        Column(
+                          children: [
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.one, "1");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.one)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.zero, "0");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.zero)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.two, "2");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.two)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.zero1, "00");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.zero1)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.three, "3");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.three)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                            Bouncing(
+                              onPress: () {
+                                onclick(".", ".");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text: ".",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+                  : Container(
+                color: Colors.black,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Stack(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              height: 7.h,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
+                              decoration: BoxDecoration(
+                                color: Color(0xffE7E7E7),
+                              ),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      onclick("", "AC");
+                                      print("dwfwddeded");
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/ac.png",
+                                      height: 5.h,
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      onclick("", "undo");
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/undo.png",
+                                      height: 4.h,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        maxLines: 1,
+                                        "${englishToHindi(
+                                            controller.display.value)}",
+                                        style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: controller.dark.value
+                                                ? Colors.black
+                                                : Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                  Obx(
+                                        () =>
+                                        Text(
+                                          controller.displayOprater.value ==
+                                              "="
+                                              ? ""
+                                              : controller
+                                              .displayOprater.value,
+                                          style: TextStyle(
+                                              fontSize: 20.sp,
+                                              color: controller.dark.value
+                                                  ? Colors.black
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                  ),
+                                  SizedBox(
+                                    width: 1.w,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      onclick("", "DE");
+                                    },
+                                    child: Image.asset(
+                                        "assets/images/delet.png",
+                                        height: 5.h),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            onclick("+${englishToHindi(str!)}%", "+3%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "+${englishToHindi(str!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+${englishToHindi(str1!)}%", "+5%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "+${englishToHindi(str1!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+${englishToHindi(str2!)}%", "+12%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              text: "+${englishToHindi(str2!)}%",
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+${englishToHindi(str3!)}%", "+18%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "+${englishToHindi(str3!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+GST", "+GST");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              text: "+GST",
+                              imagePath: controller.btn1.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            onclick("-${englishToHindi(str4!)}%", "-3%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-${englishToHindi(str4!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-${englishToHindi(str5!)}%", "-5%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-${englishToHindi(str5!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-${englishToHindi(str6!)}%", "-12%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-${englishToHindi(str6!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-${englishToHindi(str7!)}%", "-18%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-${englishToHindi(str7!)}%",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-GST", "-GST");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-GST",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                              imagePath: controller.btn1.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            double total =
+                            calculateTotal(controller.value);
+                            onclick("${total}", "GT");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "GT",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("√x", "root");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "√x",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 19),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("%", "%");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "%",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("÷", "÷");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "÷",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("MR", "MR");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "MR",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                              imagePath: controller.btn2.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.seven, "7");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text:
+                              "${englishToHindi(context.loc.seven)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.eight, "8");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text:
+                              "${englishToHindi(context.loc.eight)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.nine, "9");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "${englishToHindi(context.loc.nine)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("×", "*");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "×",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("MU", "MU");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "MU",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                              imagePath: controller.btn2.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.four, "4");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "${englishToHindi(context.loc.four)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.five, "5");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "${englishToHindi(context.loc.five)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick(context.loc.six, "6");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "${englishToHindi(context.loc.six)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 23),
+                              imagePath: controller.btn1.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("-", "-");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "-",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 25),
+                              imagePath: controller.btn2.value),
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("M-", "M-");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 7.2.h,
+                              text: "M-",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                              imagePath: controller.btn2.value),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.one, "1");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.one)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.zero, "0");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.zero)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.two, "2");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.two)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.zero1, "00");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.zero1)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Bouncing(
+                              onPress: () {
+                                onclick(context.loc.three, "3");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text:
+                                  "${englishToHindi(context.loc.three)}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                            Bouncing(
+                              onPress: () {
+                                onclick(".", ".");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text: ".",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23),
+                                  imagePath: controller.btn1.value),
+                            ),
+                          ],
+                        ),
+                        Bouncing(
+                          onPress: () {
+                            onclick("+", "+");
+                          },
+                          child: clickableContainer(
+                              onTap: () {},
+                              width: 20.w,
+                              height: 14.4.h,
+                              text: "+",
+                              style: TextStyle(
+                                  color: controller.btnTextColor.value,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 25),
+                              imagePath: controller.btn4.value),
+                        ),
+                        Column(
+                          children: [
+                            Bouncing(
+                              onPress: () {
+                                onclick("M+", "M+");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text: "M+",
+                                  style: TextStyle(
+                                      color:
+                                      controller.btnTextColor.value,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15),
+                                  imagePath: controller.btn2.value),
+                            ),
+                            Bouncing(
+                              onPress: () {
+                                onclick("=", "=");
+                              },
+                              child: clickableContainer(
+                                  onTap: () {},
+                                  width: 20.w,
+                                  height: 7.2.h,
+                                  text: "=",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20),
+                                  imagePath: controller.btn3.value),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
             //
             // Container(
@@ -7524,7 +7970,10 @@ class _Keypad_Model_ScreenState extends State<Keypad_Model_Screen> {
             onTap: () {},
             child: Container(
               height: 55.h,
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -7730,6 +8179,7 @@ class Calculator_Controller extends GetxController {
   RxBool showsiptotal = false.obs;
   RxBool showlumtotal = false.obs;
   RxBool ageresult = false.obs;
+  RxBool buysubscribe = false.obs;
   RxDouble totalValue = 0.0.obs;
   RxDouble totalInvestedAmount = 0.0.obs;
   RxDouble estimatedReturn = 0.0.obs;
@@ -7880,6 +8330,18 @@ class Calculator_Controller extends GetxController {
 
       print("===============================$selectedIndexLanguage");
 
+  }
+    // methos save but subscribe value true or false
+
+  void saveBooleanToPrefs(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('buySubscribe', value);
+  }
+
+  Future<bool> getBooleanFromPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // If the value is not found, default to false
+    return prefs.getBool('buySubscribe') ?? false;
   }
 
   // Method to save the value list to shared preferences
@@ -8512,64 +8974,509 @@ class Calculator_Controller extends GetxController {
     });
   }
 }
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:gst_calculator/calculator/utils/ads_helper/ads_helper.dart';
+import 'package:sizer/sizer.dart';
+
+import '../../controller/calculator_controller.dart';
+
+class More_Tools_Screen extends StatefulWidget {
+  const More_Tools_Screen({super.key});
+
+  @override
+  State<More_Tools_Screen> createState() => _More_Tools_ScreenState();
+}
+
+class _More_Tools_ScreenState extends State<More_Tools_Screen> {
+  Calculator_Controller controller = Get.find();
+  Ads_Helper adscontroller = Get.find();
+@override
+void initState() {
+  Future.delayed(Duration.zero, () async{
+
+      controller.buysubscribe.value = await controller.getBooleanFromPrefs();
+      controller.buysubscribe.value == true ? () : adscontroller.loadInterstitialAd();
+
+  });
+  super.initState();
+}
 
 
+  void countTotal(int index) {
+    adscontroller.count++;
+    debugPrint("========== count plus ===================${adscontroller.count}");
+
+    if (index == 0) {
+      print('---------0000000000000000-----------');
+      Get.toNamed('sip');
+    } else if (index == 3) {
+      print('---------33333333333333-----------');
+      Get.toNamed('money');
+    } else if (index == 2) {
+      print('---------22222222222222222-----------');
+      Get.toNamed('age');
+    } else if (index == 1) {
+      print('---------1111111111111111-----------');
+      Get.toNamed('currency');
+    }
 
 
-import 'dart:io';
+    if (adscontroller.count == 5) {
+      if(adscontroller.intertital == false)
+      {
+        if( controller.buysubscribe.value == true)
+          {
 
-import 'package:flutter/cupertino.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+          }
+        else
+          {
+            adscontroller.loadInterstitialAd();
+            adscontroller.interstitialAd!.show();
+          }
 
-class Ads_Helper extends GetxController{
-  BannerAd? bannerAd;
-  InterstitialAd? interstitialAd;
-  RxInt count = 0.obs;
-  RxInt totalCount = 0.obs;
-  RxBool intertital = false.obs;
-
-  final adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/9214589741'
-      : 'ca-app-pub-3940256099942544/2934735716';
-
-  void loadAd() {
-    bannerAd = BannerAd(
-      adUnitId: adUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          debugPrint('$ad loaded.');
-
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          debugPrint('BannerAd failed to load: $err');
-          // Dispose the ad here to free resources.
-          ad.dispose();
-        },
-      ),
-    )..load();
+      }
+      adscontroller.count.value = 0;
+    }
   }
 
-  void loadInterstitialAd() {
-    print(" -------------- load intertital =================");
-    InterstitialAd.load(
-      adUnitId: "ca-app-pub-3940256099942544/1033173712",
-      request: AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          interstitialAd = ad;
-        },
-        onAdFailedToLoad: (error) {
-          intertital.value = true;
-        },
+  void countTotal2(int index) {
+    adscontroller.count++;
+    debugPrint("========== count plus ===================${adscontroller.count}");
+
+    if (index == 0) {
+      Get.toNamed('area');
+    } else if (index == 1) {
+      Get.toNamed('length');
+    } else if (index == 3) {
+      Get.toNamed('time');
+    } else if (index == 4) {
+      Get.toNamed('temp');
+    } else if(index == 5) {
+      Get.toNamed('speed');
+    } else if(index == 6) {
+      Get.toNamed('volume');
+    } else if(index == 7) {
+      Get.toNamed('energy');
+    } else if(index == 8) {
+      Get.toNamed('fuel');
+    } else if(index == 9) {
+      Get.toNamed('pre');
+    } else if(index == 2)
+    {
+      Get.toNamed('weight');
+    } else if(index == 10)
+    {
+      Get.toNamed('storage');
+    }
+
+
+    if (adscontroller.count == 5) {
+      if(adscontroller.intertital == false)
+      {
+        if( controller.buysubscribe.value == true)
+        {
+
+        }
+        else
+        {
+          adscontroller.loadInterstitialAd();
+          adscontroller.interstitialAd!.show();
+        }
+      }
+      adscontroller.count.value = 0;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(""),
+                    Spacer(),
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    Text(
+                      "More Tools",
+                      style: TextStyle(
+                        color:
+                            controller.dark.value ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Icon(
+                        Icons.clear,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 2.h,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "My Tools",
+                      style: TextStyle(
+                        color:
+                            controller.dark.value ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 3.h,
+                ),
+                SizedBox(
+                  height: 32.h,
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    // Important to set this to true
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: controller.mytools.length,
+                    // Number of containers
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      // Number of columns
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                        countTotal(index);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(2.5),
+                          decoration: BoxDecoration(
+                              color: controller.dark.value
+                                  ? Color(0xff202C35)
+                                  : Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10)),
+                          // Set your desired color
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Spacer(),
+                                Image.asset("${controller.mytools[index].img}"),
+                                Spacer(),
+                                Text(
+                                  '${controller.mytools[index].name}',
+                                  style: TextStyle(
+                                    color: controller.dark.value
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Unit Converter",
+                      style: TextStyle(
+                        color:
+                            controller.dark.value ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 2.5.h,
+                ),
+                SizedBox(
+                  height: 63.h,
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    // Important to set this to true
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: controller.unitols.length,
+                    // Number of containers
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      // Number of columns
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                         countTotal2(index);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(2.5),
+                          decoration: BoxDecoration(
+                              color: controller.dark.value
+                                  ? Color(0xff202C35)
+                                  : Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10)),
+                          // Set your desired color
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Spacer(),
+                                Image.asset("${controller.unitols[index].img}"),
+                                Spacer(),
+                                Text(
+                                  '${controller.unitols[index].name}',
+                                  style: TextStyle(
+                                    color: controller.dark.value
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Rate Us",
+                      style: TextStyle(
+                        color:
+                            controller.dark.value ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 2.5.h,
+                ),
+                Container(
+                  height: 18.h,
+                  decoration: BoxDecoration(
+                      color: controller.dark.value
+                          ? Color(0xff202C35)
+                          : Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/tools/flat.png",
+                        height: 10.h,
+                        width: 35.w,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Enjoy the app?",
+                            style: TextStyle(
+                                color: controller.dark.value
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.5),
+                          ),
+                          Text(
+                            "Leave a review in the app store",
+                            style: TextStyle(
+                                color: controller.dark.value
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                height: 4.h,
+                                width: 16.w,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    border: Border.all(color: Colors.blue)),
+                                child: Center(
+                                  child: Text("No"),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 3.w,
+                              ),
+                              Container(
+                                height: 4.h,
+                                width: 16.w,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Colors.blue,
+                                    border: Border.all(color: Colors.blue)),
+                                child: Center(
+                                  child: Text(
+                                    "yes",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 2.5.h,
+                ),
+             Obx(() => controller.buysubscribe.value == true ?SizedBox():Container(
+               height: 23.h,
+               decoration: BoxDecoration(
+                   color: controller.dark.value
+                       ? Colors.white
+                       : Colors.grey.shade300,
+                   borderRadius: BorderRadius.circular(20)),
+               child: Column(
+                 children: [
+                   SizedBox(
+                     height: 2.h,
+                   ),
+                   Row(
+                     children: [
+                       SizedBox(
+                         width: 3.w,
+                       ),
+                       Text(
+                         "GST lternic Calculator",
+                         style: TextStyle(
+                             color: Colors.black,
+                             fontSize: 17,
+                             fontWeight: FontWeight.w500),
+                       ),
+                       SizedBox(
+                         width: 2.w,
+                       ),
+                       Text(
+                         "Pro",
+                         style: TextStyle(
+                             color: Colors.yellow.shade800,
+                             fontSize: 17,
+                             fontWeight: FontWeight.w500),
+                       )
+                     ],
+                   ),
+                   SizedBox(
+                     height: 2.h,
+                   ),
+                   Row(
+                     children: [
+                       SizedBox(
+                         width: 4.w,
+                       ),
+                       SizedBox(
+                         height: 3.h,
+                         child: ClipRect(
+                           child: Image.asset("assets/images/expand.png"),
+                         ),
+                       ),
+                       SizedBox(
+                         width: 3.w,
+                       ),
+                       Text(
+                         "Enjoy Full Size Calc",
+                         style: TextStyle(
+                             color: Colors.black,
+                             fontWeight: FontWeight.w500),
+                       ),
+                     ],
+                   ),
+                   SizedBox(
+                     height: 1.h,
+                   ),
+                   Row(
+                     children: [
+                       SizedBox(
+                         width: 4.w,
+                       ),
+                       SizedBox(
+                         height: 3.h,
+                         child: ClipRect(
+                           child: Image.asset("assets/images/expand1.png"),
+                         ),
+                       ),
+                       SizedBox(
+                         width: 3.w,
+                       ),
+                       Text(
+                         "Ad Free Calculator",
+                         style: TextStyle(
+                             color: Colors.black,
+                             fontWeight: FontWeight.w500),
+                       ),
+                     ],
+                   ),
+                   SizedBox(
+                     height: 2.h,
+                   ),
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       Container(
+                         height: 5.4.h,
+                         width: 90.w,
+                         decoration: BoxDecoration(
+                             color: Color(0xff4777E3),
+                             borderRadius: BorderRadius.circular(10)),
+                         child: Center(
+                           child: Text(
+                             "Buy",
+                             style: TextStyle(
+                                 color: Colors.white,
+                                 fontSize: 15,
+                                 fontWeight: FontWeight.w500),
+                           ),
+                         ),
+                       ),
+                     ],
+                   )
+                 ],
+               ),
+             ),)
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 }
-    
+package com.calculator.financecalculator.mfcalculator
+
+import io.flutter.embedding.android.FlutterFragmentActivity
+
+
+class MainActivity : FlutterFragmentActivity() { // Your MainActivity implementation
+}
 
