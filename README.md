@@ -282,3 +282,253 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sizer/sizer.dart';
+
+class PersonalInfoPage extends StatefulWidget {
+  const PersonalInfoPage({super.key});
+
+  @override
+  State<PersonalInfoPage> createState() => _PersonalInfoPageState();
+}
+
+class _PersonalInfoPageState extends State<PersonalInfoPage> {
+  String? selectedGender;
+
+  @override
+  Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xffFFFFFF),
+        body: Center(
+          child: _buildDiplay(screenSize),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDiplay(Size screenSize) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            "assets/images/signup_login/l1.png",
+            width: screenSize.width,
+            height: (screenSize.width * 407) / 375,
+            fit: BoxFit.cover,
+          ),
+          SizedBox(height: 5.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Text(
+              "Let’s complete your profile",
+              style: GoogleFonts.poppins(
+                color: const Color(0xff1D1617),
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Text(
+              "It will help us to know more about you!",
+              style: GoogleFonts.poppins(
+                color: const Color(0xff7B6F72),
+                fontSize: 11,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          _buildGenderSelection(),
+          Padding(
+            padding: EdgeInsets.only(top: 2.h, left: 20, right: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xffF7F8F8),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: TextField(
+                readOnly: true,
+                onTap: () {},
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: "Date of Birth",
+                  labelStyle: GoogleFonts.poppins(
+                      fontSize: 12, color: const Color(0xffADA4A5)),
+                  fillColor: Colors.transparent,
+                  filled: true,
+                  prefixIcon: Icon(Icons.calendar_today_outlined,
+                      color: const Color(0xffADA4A5)),
+                ),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.only(top: 2.h, left: 20, right: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xffF7F8F8),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        labelText: "Your Weight (kg)",
+                        labelStyle: GoogleFonts.poppins(
+                            fontSize: 12, color: const Color(0xffADA4A5)),
+                        fillColor: Colors.transparent,
+                        filled: true,
+                        prefixIcon: Icon(Icons.fitness_center,
+                            color: const Color(0xffADA4A5)),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 2.w),
+                Image.asset(
+                  "assets/images/signup_login/kg.png",
+                  fit: BoxFit.contain,
+                ),
+              ],
+            ),
+          ),
+        Padding(
+          padding: EdgeInsets.only(top: 2.h, left: 20, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xffF7F8F8),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    style: TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: "Your Height (cm)",
+                      labelStyle: GoogleFonts.poppins(fontSize: 12, color: const Color(0xffADA4A5)),
+                      fillColor: Colors.transparent,
+                      filled: true,
+                      prefixIcon: Icon(Icons.height, color: const Color(0xffADA4A5)),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 2.w),
+              Image.asset(
+                "assets/images/signup_login/cm.png",
+              ),
+            ],
+          ),
+        ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
+            child: ElevatedButton(
+              onPressed: () {
+                Get.toNamed('person_info');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xff92A3FD),
+                minimumSize: Size(double.infinity, 60),
+                textStyle: TextStyle(
+                  fontSize: screenSize.width * 0.04,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xffFFFFFF),
+                ),
+              ),
+              child: Text(
+                'Next >',
+                style: TextStyle(
+                  fontSize: screenSize.width * 0.04,
+                  color: Color(0xffFFFFFF),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.05),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGenderSelection() {
+    return Padding(
+      padding: EdgeInsets.only(top: 4.h, left: 20, right: 20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xffF7F8F8),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: ExpansionTile(
+          leading: Image.asset(
+            "assets/images/signup_login/per.png",
+            height: 20,
+            width: 20,
+          ),
+          title: Text(
+            selectedGender ?? "Select Gender",
+            style: GoogleFonts.poppins(
+                fontSize: 12, color: const Color(0xffADA4A5)),
+          ),
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                "Male",
+                style: GoogleFonts.poppins(fontSize: 14),
+              ),
+              onTap: () {
+                setState(() {
+                  selectedGender = "Male";
+                });
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Female",
+                style: GoogleFonts.poppins(fontSize: 14),
+              ),
+              onTap: () {
+                setState(() {
+                  selectedGender = "Female";
+                });
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Other",
+                style: GoogleFonts.poppins(fontSize: 14),
+              ),
+              onTap: () {
+                setState(() {
+                  selectedGender = "Other";
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}
