@@ -579,3 +579,41 @@ class _HomeStayTitleScreenState extends State<HomeStayTitleScreen> {
     );
   }
 }
+import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+import 'package:travellery_mobile/travellery_mobile/utils/app_radius.dart';
+
+import '../utils/app_colors.dart';
+import '../utils/font_manager.dart';
+
+class CommonButton extends StatelessWidget {
+  final String title;
+  final VoidCallback onPressed;
+
+  const CommonButton({
+    super.key,
+    required this.title,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: 6.h,
+        width: 100.w,
+        decoration: const BoxDecoration(
+          color: AppColors.buttonColor,
+          borderRadius: BorderRadius.all(AppRadius.radius10),
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: FontManager.regular(20, color: AppColors.white),
+          ),
+        ),
+      ),
+    );
+  }
+}
