@@ -1,80 +1,205 @@
-https://www.figma.com/design/eGd8YBEnnTgG2RKuvn86he/Fitnest---Fitness-App-UI-Kit-by-Pixel-True?node-id=206-281&node-type=canvas&t=XINwDLsHtg1HRNso-0
+https://www.figma.com/design/hCTo7j1xzjuoqOof6rySGi/Travellery?node-id=13-1850&node-type=frame&t=PSeAxPTMAVwlpNmO-0
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:travellery_mobile/travellery_mobile/utils/app_radius.dart';
+import '../../../../../generated/assets.dart';
+import '../../../../common_widgets/common_button.dart';
+import '../../../../routes_app/all_routes_app.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_string.dart';
+import '../../../../utils/font_manager.dart';
+import '../../../controller/homestaytitle_controller.dart';
+import 'custtom_container.dart';
 
-class ConfirmPage1 extends StatefulWidget {
-  const ConfirmPage1({super.key});
+class AccommodationDetailsPage extends StatefulWidget {
+  const AccommodationDetailsPage({super.key});
 
   @override
-  State<ConfirmPage1> createState() => _ConfirmPage1State();
+  State<AccommodationDetailsPage> createState() =>
+      _AccommodationDetailsPageState();
 }
 
-class _ConfirmPage1State extends State<ConfirmPage1> {
+class _AccommodationDetailsPageState extends State<AccommodationDetailsPage> {
+  final HomeStayController controller = Get.find<HomeStayController>();
+  int currentPage = 1;
+  String? selectedType;
+
+  void nextPage() {
+    if (selectedType != null) {
+      setState(() {
+        currentPage++;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xffFFFFFF),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        backgroundColor: AppColors.backgroundColor,
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 3.w),
+          child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "What is your goal",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Text(
-                    "It will help us to choose a best program for you",
-                    style: GoogleFonts.poppins(
-
-                        fontSize: 12,
-                        color: Color(0xff7B6F72)), textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Container(
-                  padding: EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xffF7F8F8),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Image.asset("assets/images/signup_login/v1.png"),
-                ),
-                SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the next step or perform an action
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff92A3FD),
-                    minimumSize: Size(double.infinity, 60),
-                  ),
-                  child: Text(
-                    'Confirm Goal',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Colors.white,
+                SizedBox(height: 3.h),
+                Row(
+                  children: [
+                    Icon(Icons.keyboard_arrow_left, size: 30),
+                    const SizedBox(width: 8),
+                    Text(
+                      Strings.accommodationDetails,
+                      style: FontManager.medium(20, color: AppColors.black),
                     ),
-                  ),
+                  ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 31),
+                buildTitleStep(),
+                Column(
+                  children: [
+                    Container(
+                      width: 110.w,
+                      height: 62,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(AppRadius.radius10),
+                        border: Border.all(
+                          color: AppColors.borderContainerGriedView,
+                        ),
+                      ),
+                      child: Center(
+                        child: ListTile(
+                          title: Text(
+                            Strings.entirePlace,
+                            style:
+                                FontManager.regular(16, color: AppColors.black),
+                          ),
+                          subtitle: Text(
+                            Strings.wholePlacetoGuests,
+                            style: FontManager.regular(12,
+                                color: AppColors.greyText),
+                          ),
+                          leading: Image.asset(
+                            Assets.imagesTraditional,
+                            height: 24,
+                            width: 24,
+                            fit: BoxFit.cover,
+                          ),
+                          trailing: Radio(
+                            value: true,
+                            groupValue: null,
+                            onChanged: (value) {
+
+                            },
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 16.0),
+                          minVerticalPadding: 0,
+                          minTileHeight: 5,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3.h,
+                    ),
+                    Container(
+                      width: 110.w,
+                      height: 62,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(AppRadius.radius10),
+                        border: Border.all(
+                          color: AppColors.borderContainerGriedView,
+                        ),
+                      ),
+                      child: Center(
+                        child: ListTile(
+                          title: Text(
+                            Strings.privateRoom,
+                            style:
+                                FontManager.regular(16, color: AppColors.black),
+                          ),
+                          subtitle: Text(
+                            Strings
+                                .guestsSleepInPrivateRoomButSomeAreasAreShared,
+                            style: FontManager.regular(12,
+                                color: AppColors.greyText),
+                          ),
+                          leading: Image.asset(
+                            Assets.imagesPrivateRoom,
+                            height: 24,
+                            width: 24,
+                            fit: BoxFit.cover,
+                          ),
+                          trailing: Radio(
+                            value: true,
+                            groupValue: null,
+                            onChanged: (value) {
+
+                            },
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 16.0),
+                          minVerticalPadding: 0,
+                          minTileHeight: 5,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                    CusttomContainer(
+                      imageAsset: Assets.imagesMaxGuests,
+                      title: Strings.maxGuests,
+                      defaultNumber: Strings.defutlNumber,
+                    ),
+                    SizedBox(height: 2.h,),
+                    CusttomContainer(
+                      imageAsset: Assets.imagesSingleBed,
+                      title: Strings.singleBed,
+                      defaultNumber: Strings.defutlNumber,
+                    ),
+                    SizedBox(height: 2.h,),
+                    CusttomContainer(
+                      imageAsset: Assets.imagesDubleBed,
+                      title: Strings.doubleBed,
+                      defaultNumber: Strings.defutlNumber,
+                    ),
+                    SizedBox(height: 2.h,),
+                    CusttomContainer(
+                      imageAsset: Assets.imagesExtraFloor,
+                      title: Strings.extraFloorMattress,
+                      defaultNumber: Strings.defutlNumber,
+                    ),
+                    SizedBox(height: 2.h,),
+                    CusttomContainer(
+                      imageAsset: Assets.imagesBathRooms,
+                      title: Strings.bathRooms,
+                      defaultNumber: Strings.defutlNumber,
+                    ),
+                    SizedBox(height: 2.h,),
+                    CusttomContainer(
+                      imageAsset: Assets.imagesKitchen,
+                      title: Strings.kitchenAvailable,
+                      defaultNumber: Strings.defutlNumber,
+                    ),
+                    SizedBox(height: 16),
+                  ],
+                ),
+                SizedBox(
+                  height: 7.h,
+                  width: 50.w,
+                  child: Image.asset(Assets.imagesHomestayProgres,
+                      fit: BoxFit.contain),
+                ),
+                SizedBox(height: 1.h),
+                CommonButton(
+                  title: currentPage < 7 ? Strings.nextStep : Strings.done,
+                  onPressed: () {
+                    Get.toNamed(Routes.homestayType);
+                  },
+                ),
+                SizedBox(height: 10.h),
               ],
             ),
           ),
@@ -82,453 +207,375 @@ class _ConfirmPage1State extends State<ConfirmPage1> {
       ),
     );
   }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:sizer/sizer.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
-
-  @override
-  State<SignupPage> createState() => _SignupPageState();
-}
-
-class _SignupPageState extends State<SignupPage> {
-  TextEditingController txtName = TextEditingController();
-  TextEditingController txtLastName = TextEditingController();
-  TextEditingController txtEmail = TextEditingController();
-  TextEditingController txtPassword = TextEditingController();
-  bool isChecked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    var screensize = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: const Color(0xffFFFFFF),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 5.w), // Responsive padding
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 5.h),
-              Text(
-                "Hey there,",
-                style: GoogleFonts.poppins(
-                    color: const Color(0xff1D1617), fontSize: 16.sp),
-              ),
-              Text(
-                "Create an Account,",
-                style: GoogleFonts.poppins(
-                  color: const Color(0xff1D1617),
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              SizedBox(height: 3.h),
-              _buildTextField(txtName, "Name", Icons.person_outline_rounded),
-              _buildTextField(
-                  txtLastName, "Last Name", Icons.person_outline_rounded),
-              _buildTextField(txtEmail, "Email", Icons.email_outlined),
-              _buildTextField(
-                  txtPassword, "Password", Icons.lock_outline_rounded,
-                  isPassword: true),
-              _buildCheckbox(),
-              SizedBox(height: 2.h),
-              ElevatedButton(
-                onPressed: () {
-                  Get.toNamed('person_info');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff92A3FD),
-                  minimumSize: Size(double.infinity, 60),
-                  textStyle: TextStyle(
-                    fontSize: screensize.width * 0.04,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xffFFFFFF),
-                  ),
-                ),
-                child: Text(
-                  'Register',
-                  style: TextStyle(
-                    fontSize: screensize.width * 0.04,
-                    color: Color(0xffFFFFFF),
-                  ),
-                ),
-              ),
-              SizedBox(height: 2.5.h),
-              _buildDivider(),
-              SizedBox(height: 2.5.h),
-              _buildSocialMediaButtons(),
-              SizedBox(height: 2.5.h),
-              _buildLoginText(),
-              SizedBox(height: 2.5.h),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-      TextEditingController controller, String label, IconData icon,
-      {bool isPassword = false}) {
-    return Padding(
-      padding: EdgeInsets.only(top: 2.h),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xffF7F8F8),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: TextField(
-          controller: controller,
-          obscureText: isPassword,
-          style: TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            labelText: label,
-            labelStyle: GoogleFonts.poppins(
-                fontSize: 15.sp, color: const Color(0xffADA4A5)),
-            fillColor: Colors.transparent,
-            filled: true,
-            prefixIcon: Icon(icon, color: const Color(0xffADA4A5)),
-            suffixIcon: isPassword
-                ? Icon(Icons.visibility_off_outlined,
-                color: const Color(0xffADA4A5))
-                : null,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCheckbox() {
-    return Padding(
-      padding: EdgeInsets.only(top: 2.h),
-      child: Row(
-        children: [
-          Checkbox(
-            value: isChecked,
-            onChanged: (bool? newValue) {
-              setState(() {
-                isChecked = newValue ?? false;
-              });
-            },
-            focusColor: Colors.grey,
-            side: BorderSide(color: Colors.grey),
-          ),
-          Expanded(
-            child: Text(
-              "By continuing you accept our Privacy Policy and Term of Use",
-              style: GoogleFonts.poppins(
-                  color: const Color(0xffADA4A5), fontSize: 15.sp),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Row(
-      children: [
-        Spacer(),
-        Container(height: 1.5, width: 40.w, color: const Color(0xffDDDADA)),
-        SizedBox(width: 2.w),
-        Text("or",
-            style: GoogleFonts.poppins(
-                color: const Color(0xff1D1617), fontSize: 12.sp)),
-        SizedBox(width: 2.w),
-        Container(height: 1.5, width: 40.w, color: const Color(0xffDDDADA)),
-        Spacer(),
-      ],
-    );
-  }
-
-  Widget _buildSocialMediaButtons() {
-    return Row(
+  Widget buildTitleStep() {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset("assets/images/signup_login/g.png"),
-        SizedBox(width: 6.w),
-        Image.asset("assets/images/signup_login/f.png"),
+        Text(
+          "${Strings.stepCount} $currentPage/8",
+          style: FontManager.regular(18, color: AppColors.black),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
       ],
     );
   }
 
-  Widget _buildLoginText() {
-    return RichText(
-      text: TextSpan(
-        children: [
-          TextSpan(
-            text: 'Already have an account?',
-            style: GoogleFonts.poppins(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-          TextSpan(
-            text: ' Login',
-            style: GoogleFonts.poppins(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffcb8fed)),
-          ),
-        ],
-      ),
+  Widget customContainer() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "${Strings.stepCount} $currentPage/8",
+          style: FontManager.regular(18, color: AppColors.black),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+      ],
     );
   }
 }
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
-class PersonalInfoPage extends StatefulWidget {
-  const PersonalInfoPage({super.key});
+import '../../../../../generated/assets.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_radius.dart';
+import '../../../../utils/app_string.dart';
+import '../../../../utils/font_manager.dart';
 
-  @override
-  State<PersonalInfoPage> createState() => _PersonalInfoPageState();
-}
+class CusttomContainer extends StatelessWidget {
+  final String imageAsset;
+  final String title;
+  final String defaultNumber;
 
-class _PersonalInfoPageState extends State<PersonalInfoPage> {
-  String? selectedGender;
+  const CusttomContainer({
+    Key? key,
+    required this.imageAsset,
+    required this.title,
+    required this.defaultNumber,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: const Color(0xffFFFFFF),
-        body: Center(
-          child: _buildDiplay(screenSize),
+    return Container(
+      width: 110.w,
+      height: 8.h,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        border: Border.all(
+          color: AppColors.borderContainerGriedView,
         ),
       ),
-    );
-  }
-
-  Widget _buildDiplay(Size screenSize) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            "assets/images/signup_login/l1.png",
-            width: screenSize.width,
-            height: (screenSize.width * 407) / 375,
-            fit: BoxFit.cover,
-          ),
-          SizedBox(height: 5.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5),
-            child: Text(
-              "Let’s complete your profile",
-              style: GoogleFonts.poppins(
-                color: const Color(0xff1D1617),
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-              textAlign: TextAlign.center,
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SizedBox(width: 3.w,),
+            Image.asset(
+              imageAsset,
+              height: 28,
+              width: 28,
+              fit: BoxFit.cover,
             ),
-          ),
-          SizedBox(height: 10),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5),
-            child: Text(
-              "It will help us to know more about you!",
-              style: GoogleFonts.poppins(
-                color: const Color(0xff7B6F72),
-                fontSize: 11,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
+            SizedBox(width: 5.w,),
+            Text(
+              title,
+              style: TextStyle(fontSize: 16, color: Colors.black),
             ),
-          ),
-          _buildGenderSelection(),
-          Padding(
-            padding: EdgeInsets.only(top: 2.h, left: 20, right: 20),
-            child: Container(
+          Spacer(),
+          Row(children: [
+            Image.asset(
+              Assets.imagesDividecircle,
+              height: 24,
+            ),
+            SizedBox(width: 1.w,),
+            Container(
+              width: 40,
+              height: 30,
               decoration: BoxDecoration(
-                color: const Color(0xffF7F8F8),
-                borderRadius: BorderRadius.circular(15),
+                color: AppColors.perpalContainer,
+                borderRadius: BorderRadius.all(AppRadius.radius4),
               ),
-              child: TextField(
-                readOnly: true,
-                onTap: () {},
-                style: TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  labelText: "Date of Birth",
-                  labelStyle: GoogleFonts.poppins(
-                      fontSize: 12, color: const Color(0xffADA4A5)),
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  prefixIcon: Icon(Icons.calendar_today_outlined,
-                      color: const Color(0xffADA4A5)),
+              child: Center(
+                child: Text(
+                  Strings.defutlNumber,
+                  style: FontManager.regular(14),
                 ),
               ),
             ),
-          ),
-
-          Padding(
-            padding: EdgeInsets.only(top: 2.h, left: 20, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xffF7F8F8),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      style: TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        labelText: "Your Weight (kg)",
-                        labelStyle: GoogleFonts.poppins(
-                            fontSize: 12, color: const Color(0xffADA4A5)),
-                        fillColor: Colors.transparent,
-                        filled: true,
-                        prefixIcon: Icon(Icons.fitness_center,
-                            color: const Color(0xffADA4A5)),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 2.w),
-                Image.asset(
-                  "assets/images/signup_login/kg.png",
-                  fit: BoxFit.contain,
-                ),
-              ],
+            SizedBox(width: 1.w,),
+            Image.asset(
+              Assets.imagesPluscircle,
+              height: 24,
             ),
-          ),
-        Padding(
-          padding: EdgeInsets.only(top: 2.h, left: 20, right: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xffF7F8F8),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      labelText: "Your Height (cm)",
-                      labelStyle: GoogleFonts.poppins(fontSize: 12, color: const Color(0xffADA4A5)),
-                      fillColor: Colors.transparent,
-                      filled: true,
-                      prefixIcon: Icon(Icons.height, color: const Color(0xffADA4A5)),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 2.w),
-              Image.asset(
-                "assets/images/signup_login/cm.png",
-              ),
-            ],
-          ),
-        ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
-            child: ElevatedButton(
-              onPressed: () {
-                Get.toNamed('person_info');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xff92A3FD),
-                minimumSize: Size(double.infinity, 60),
-                textStyle: TextStyle(
-                  fontSize: screenSize.width * 0.04,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffFFFFFF),
-                ),
-              ),
-              child: Text(
-                'Next >',
-                style: TextStyle(
-                  fontSize: screenSize.width * 0.04,
-                  color: Color(0xffFFFFFF),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: screenSize.height * 0.05),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGenderSelection() {
-    return Padding(
-      padding: EdgeInsets.only(top: 4.h, left: 20, right: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xffF7F8F8),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: ExpansionTile(
-          leading: Image.asset(
-            "assets/images/signup_login/per.png",
-            height: 20,
-            width: 20,
-          ),
-          title: Text(
-            selectedGender ?? "Select Gender",
-            style: GoogleFonts.poppins(
-                fontSize: 12, color: const Color(0xffADA4A5)),
-          ),
-          children: <Widget>[
-            ListTile(
-              title: Text(
-                "Male",
-                style: GoogleFonts.poppins(fontSize: 14),
-              ),
-              onTap: () {
-                setState(() {
-                  selectedGender = "Male";
-                });
-              },
-            ),
-            ListTile(
-              title: Text(
-                "Female",
-                style: GoogleFonts.poppins(fontSize: 14),
-              ),
-              onTap: () {
-                setState(() {
-                  selectedGender = "Female";
-                });
-              },
-            ),
-            ListTile(
-              title: Text(
-                "Other",
-                style: GoogleFonts.poppins(fontSize: 14),
-              ),
-              onTap: () {
-                setState(() {
-                  selectedGender = "Other";
-                });
-              },
-            ),
+            SizedBox(width: 3.w,),
+          ],)
           ],
         ),
       ),
     );
   }
+}
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
+import '../../../../../generated/assets.dart';
+import '../../../../common_widgets/common_button.dart';
+import '../../../../routes_app/all_routes_app.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_radius.dart';
+import '../../../../utils/app_string.dart';
+import '../../../../utils/font_manager.dart';
+import '../../../controller/homestaytitle_controller.dart';
 
+class HomeStayTypeScreen extends StatefulWidget {
+  const HomeStayTypeScreen({super.key});
+
+  @override
+  State<HomeStayTypeScreen> createState() => _HomeStayTypeScreenState();
+}
+
+class _HomeStayTypeScreenState extends State<HomeStayTypeScreen> {
+  final HomeStayController controller = Get.find<HomeStayController>();
+  int currentPage = 1;
+  String? selectedType;
+
+  void nextPage() {
+    if (selectedType != null) {
+      setState(() {
+        currentPage++;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 3.w),
+          child: Column(
+            children: [
+              SizedBox(height: 3.h),
+              Row(
+                children: [
+                  const Icon(Icons.keyboard_arrow_left, size: 30),
+                  const SizedBox(width: 8),
+                  Text(
+                    Strings.homestayType,
+                    style: FontManager.medium(20, color: AppColors.black),
+                  ),
+                ],
+              ),
+              SizedBox(height: 3.h),
+              buildTitleStep(),
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2, // Two cards per row
+                  crossAxisSpacing: 11,
+                  mainAxisSpacing: 15,
+                  childAspectRatio: 1.3,
+                  children: [
+                    buildHomestayTypeCard("Traditional",Assets.imagesTraditional),
+                    buildHomestayTypeCard("Bed & Breakfast",Assets.imagesBedbreakfast),
+                    buildHomestayTypeCard("Urban",Assets.imagesUrban),
+                    buildHomestayTypeCard("Eco-Friendly",Assets.imagesEcofriendly),
+                    buildHomestayTypeCard("Adventure",Assets.imagesAdventure),
+                    buildHomestayTypeCard("Luxury",Assets.imagesLuxury),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 7.h,
+                width: 50.w,
+                child: Image.asset(Assets.imagesHomestayProgres, fit: BoxFit.contain),
+              ),
+              SizedBox(height: 1.h),
+              CommonButton(
+                title: currentPage < 7 ? Strings.nextStep : Strings.done,
+                onPressed: (){
+                  Get.toNamed(Routes.accoummodationPage);
+                },
+              ),
+              SizedBox(height: 10.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTitleStep() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "${Strings.stepCount} $currentPage/8",
+          style: FontManager.regular(18, color: AppColors.black),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget buildHomestayTypeCard(String type,String image) {
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedType = type;
+        });
+      },
+      child: Container(
+        height: 150,
+        width: 150,
+        decoration: BoxDecoration(
+          color:  AppColors.white,
+          border: Border.all(
+            color: AppColors.borderContainerGriedView,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.all(AppRadius.radius10),
+        ),
+        padding: EdgeInsets.all(16.0),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Spacer(),
+            Image.asset(image,height: 5.h,width: 10.w,fit: BoxFit.contain,),
+            Spacer(),
+            Center(
+              child: Text(
+                type,
+                style: FontManager.regular(
+                  16,
+                  color:  AppColors.black,
+                ),
+              ),
+            ),
+            Spacer(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
+import 'package:travellery_mobile/travellery_mobile/routes_app/all_routes_app.dart';
+import 'package:travellery_mobile/travellery_mobile/utils/app_colors.dart';
+import 'package:travellery_mobile/travellery_mobile/utils/font_manager.dart';
+import '../../../../../generated/assets.dart';
+import '../../../../common_widgets/common_button.dart';
+import '../../../../utils/app_string.dart';
+import '../../../../utils/textFormField.dart';
+import '../../../controller/homestaytitle_controller.dart';
+
+class HomeStayTitleScreen extends StatefulWidget {
+  const HomeStayTitleScreen({super.key});
+
+  @override
+  State<HomeStayTitleScreen> createState() => _HomeStayTitleScreenState();
+}
+
+class _HomeStayTitleScreenState extends State<HomeStayTitleScreen> {
+  final HomeStayController controller = Get.find<HomeStayController>();
+  final PageController _pageController = PageController();
+  int currentPage = 1;
+
+  void nextPage() {
+    if (currentPage <= 8) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+      setState(() {
+        currentPage++;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 3.w),
+          child: Column(
+            children: [
+              SizedBox(height: 3.h),
+              Row(
+                children: [
+                  Icon(Icons.keyboard_arrow_left, size: 30),
+                  const SizedBox(width: 8),
+                  Text(
+                    Strings.homestayTitle,
+                    style: FontManager.medium(20, color: AppColors.black),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 31),
+              buildTitleStep(),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(Strings.titleLabel, style: FontManager.regular(14)),
+                    SizedBox(height: 0.5.h),
+                    CustomTextField(
+                      maxLength: 100,
+                      hintText: Strings.enterTitle,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return Strings.enterTitle;
+                        }
+                        return null;
+                      },
+                      onSaved: (value) =>
+                          controller.homestayTitle.value = value!,
+                      onChanged: (value) => controller.setTitle(value),
+                    ),
+                    SizedBox(height: 3.h),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 7.h,
+                width: 50.w,
+                child: Image.asset(Assets.imagesHomestayProgres,
+                    fit: BoxFit.contain),
+              ),
+              SizedBox(height: 1.h),
+              CommonButton(
+                title: currentPage < 7 ? Strings.nextStep : Strings.done,
+                onPressed: () {
+                  Get.toNamed(Routes.homestayType);
+                },
+              ),
+              SizedBox(height: 10.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTitleStep() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          Strings.stepCount + " " + currentPage.toString() + "/8",
+          style: FontManager.regular(18, color: AppColors.black),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
 }
