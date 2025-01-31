@@ -1,4752 +1,4862 @@
-https://www.figma.com/design/hCTo7j1xzjuoqOof6rySGi/Travellery?node-id=13-1850&node-type=frame&t=PSeAxPTMAVwlpNmO-0
+E-commorese 
 
-import 'package:get/get.dart';
+- code structure
+- android,ios,web
+- payment inte
+- responsive 
+- deep link
+- push notification
+- chat sale up customer
+- ui with animation
+- with proper route management
+- order management
+- profile managment
+- social login
+- clean arcitacter clean code
+- payment management
+- bloc state management
+- cart management local database
+- wishilist faverite
+- multi language ,hindi, arbic,english
+- multi theme
+ 
 
-class HomeStayController extends GetxController{
 
-  var homestayTitle = ''.obs;
+BaaS - (backend-as-a-service)
 
-  void setTitle(String title) {
-    homestayTitle.value = title;
-  }
+How are they different?#
+- Firebase and Supabase differ in several ways. The main one being that Firebase is a
+   document store, whereas Supabase is based on PostgreSQL - a relational, SQL-based database management system.
 
+What is AutoRoute?
+  - It's a Flutter navigation package, it allows for strongly-typed arguments passing,
+     effortless deep-linking and it uses code generation to simplify routes setup
+
+ravina@Techienutz123
+
+Foreign Key Reference:
+
+The foreign key constraints for both inviterId and inviteeId reference auth.users(id).
+ This ensures that only valid user IDs from the auth.users table can be inserted into inviterId and inviteeId.
+The on delete cascade option ensures that if a user is deleted from
+ the auth.users table, all corresponding rows in the invitations table will be deleted automatically. 
+This maintains referential integrity.
+
+Firebase (Cloud Firestore):
+
+Firestore is a NoSQL database where data is stored in collections and documents.
+Each document represents a single entity (e.g., a message, user, or chat room).
+Firestore is optimized for horizontal scaling, which is great for real-time applications like chat.
+Supabase (PostgreSQL):
+
+Supabase uses PostgreSQL, which is a relational database that stores data in tables.
+A typical structure for chat messages might include tables like users, messages, chats, etc., with foreign keys to establish
+ relationships between them.
+
+		
+navigation : - navigation system in Flutter is based on a Stack-based model and 
+                relies on the Navigator widget. It allows you to push and pop pages on a stack,  that are active
+
+	      - Doesn't scale well with complex routing, deep links, and advanced use cases like nested navigation.
+
+
+ Navigation 2.0 (Declarative Navigation) : - it's to provide a more flexible, declarative, and structured approach 
+			to navigation. It allows for more control over the navigation 
+			stack, URL handling, and more fine-grained management of navigation state
+
+navigation when :- When the app is simple, and you don’t need URL-based routing or advanced navigation management.
+
+navigation 2.0 when :- When building complex apps with deep linking, web apps, or when you need more 
+			control over navigation logic.
+
+
+Navigation 2.0 :- (go route)
+		handles the high-level app navigation and URL parsing (e.g., handling the URL, deep linking,
+		 or route state).
+
+Nested Navigation: - (auto route)
+		manages navigation within specific sections (e.g., tabs or a bottom navigation bar), 
+		each with its own stack of routes.
+
+
+1. What is the difference between go Router and Auto_route?
+   - go routes does not use code generation.
+
+ go Router : - deep-linking and it uses code generation to simplify routes setup
+
+When to Use AutoRoute: -
+	1.When you need type-safe routing with code generation and prefer a more robust, feature-rich solution.
+	2.For large, complex apps that require nested navigation and deep linking.
+
+When to Use GoRouter :- 
+	1.When building web apps or apps that need URL-based routing
+	2.For simpler projects that don’t require the complexity of code generation.
+	
+Generics provide a way to write flexible, reusable, and type-safe code
+
+
+Flame is a modular Flutter game engine that provides a complete set of out-of-the-way solutions for games.
+
+foocusNode basically focuses on the keyboard event. add textfield 
+
+deep linking :- Deep linking allows users to be directed to specific content or screens in your app via URLs. 
+     		 feature that allows users to access a specific page or action within an app by clicking on a 
+                 link from another app or web page 
+
+
+A tooltip in Flutter is a text label that explains the function of a button or other user interface action.
+
+State is a Data. It is information based on which Flutter will build its UI.
+
+flutter state type 
+
+App State
+Ephemeral State
+
+app state type :- 
+foground
+background
+killed 
+
+how many navigator : -
+navigator 1.0 : - Navigator.push() and Navigator.pop() 
+Navigator 2.0 : - allowing for more control and flexibility, especially in complex apps 
+                  like those with deep linking or browser-like routing
+
+
+
+{
+  "type": "service_account",
+  "project_id": "chatapp-4c7b9",
+  "private_key_id": "65911cad1ff4f5becbb923c23f79c995b655d771",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD5jUCLLI8Cmz7c\n6qh1HsO9yudYFjTjOYu9CJsFnDYUaduc1trqzwOw+OpPJ9GCMZILUV204BpEIZ1+\n0JPpGMAHsYSFD/3M3PEhd6kzLO6zkwBuSJ5aUd5pf4CBc6nskXc6rjUxW7wCLbll\nmZ/P+a5Hnc+TrllDX3k6DDv4ugOfVW7gdWSBw8UKpmE/XU54oYTjhZE3tVgd7CIK\nP+lsZNTBNDRPlayTX+SKzcrVn/Vaw/THO6DK8Cwkv37saGVw1D9rOLKmZzwfeHaM\ni+YFCgVrg7H/CG8ymnTYsKI8c48bknTjGTRs9HKuTH9sHABwD0RH+8GnztJb2npR\nY3DByz/LAgMBAAECggEAYxuFfCBUpYDZTOxGvcjbjScljJa5J1rF0+u0gVxiH+ZQ\nqS+tHp7bhO++QnR6YL3mFeeZEwoDdHZzMZeNfn/tV8DY8+1/atp+Sz/WKzRXkmq5\nu5LMjOtBrN1NwFuaqxC0bNId3v3jI2xcWmzSCstKuzeB5lFSMw8aOoL8WFIruR1w\nl/l4xnBc0kQwuXzRbMkLdenTpX5Lto3v/qaY5uNXP+m0zhaF2AyaQUClZRNQWpF+\nH6Loi593pzYMTy1abNEwNojJDVxeteXcaKKpgZ3+HhYtEaacsmagh1TA96rsakRB\n7EDY3XgBvd/5xI6xvueYRYnz3T1aOdEzUb0bbpEq2QKBgQD+0LEDRMSppmxlS5dw\nZ1Fl3sY8Fq5Yv+3/6KaAv5AIu6vVEsSz7g+c73kZyIMm/0nECZEoLwrRNLIHg1aO\nI7tkd0YJgtVa/1nwEhe48kl0mkug6OhHlRAPLzg4vqA5ttj4h5moQodekMyn7rY9\nOg22FErb3FwFUeYHeVs7ymoGqQKBgQD6tkupyGCpC3LrJCUMgtKf2P1/sesYrQ+S\nVizj+eqiyaNpzFsjwA658uPAS2Fvi/lXFZPY3H87mqqd8JSEjmVBEgaP/1DnWpFG\np3iqKV1XH/iSDfNH15QEZYv7dvOPQVvBDhueu4Y7P3hNHsNhk03+BfPa/4MJAXtr\nGUxDgbu/UwKBgDfPWZXPsAtASil9fvO9jVR0kJKEnTcPAn+0YxN74X4oLKCEddS6\n5WyH/swo4KDf9TYcqlBUzVe45O1EVObY6Kg+f3aB010U5IvySoPVfUUurjXWDVnw\nSg4pV3UGO22ooKj+eiciOyf5Kvn1DLEoT+x7UVIKV5VKtMkaSWM1GDfRAoGBAKD0\nS5sSc0vTd9GSAN8JVeMdUZGbTY0n/ak6/dLWbVZZEToo4hIPiOTEFIctXb5ZJJhN\n1/8Pf/dqEkMXYqG/MS4XPnNPvEbrE/1CIutLZws6EUDjB96FfhdcggPMmAzOLvO/\n9OdxCHodA0SvjUulYBrHA4kDJMKxWuSk9xsXvMrVAoGACzsfe4ubgmqESclNUbuA\nX9IsMJLIXJOD6oihxOaPXzUSwtayr4yYD0qH5wR63uPyCXKo4nSQMV+0QQR+stt5\nWU9c/ucWjp7ra3VScpzOKKOHDhOAM67dOoRnxY1L0jUDGNXeli1vzwCnlVUIQ8bR\n7SWBpVQprWvWhXuJDJibpsk=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-2s49k@chatapp-4c7b9.iam.gserviceaccount.com",
+  "client_id": "109487600773801532875",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-2s49k%40chatapp-4c7b9.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
 }
-import 'package:get/get.dart';
 
-class ImageController extends GetxController {
-
-  RxList<String?> imagePaths = List<String?>.filled(6, null).obs;
-
-  void setImage(int index, String? path) {
-    imagePaths[index] = path;
-  }
-
-  List<String?> getSelectedImages() {
-    return imagePaths;
-  }
+{
+ "iss": "firebase-adminsdk-2s49k@chatapp-4c7b9.iam.gserviceaccount.com",
+  "scope": "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/firebase.messaging",
+  "aud": "https://oauth2.googleapis.com/token",
+  "exp": "1735722877",
+  "iat": "1735636477"
 }
 
-import 'package:get/get.dart';
 
-import '../../routes_app/all_routes_app.dart';
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD5jUCLLI8Cmz7c
+6qh1HsO9yudYFjTjOYu9CJsFnDYUaduc1trqzwOw+OpPJ9GCMZILUV204BpEIZ1+
+0JPpGMAHsYSFD/3M3PEhd6kzLO6zkwBuSJ5aUd5pf4CBc6nskXc6rjUxW7wCLbll
+mZ/P+a5Hnc+TrllDX3k6DDv4ugOfVW7gdWSBw8UKpmE/XU54oYTjhZE3tVgd7CIK
+P+lsZNTBNDRPlayTX+SKzcrVn/Vaw/THO6DK8Cwkv37saGVw1D9rOLKmZzwfeHaM
+i+YFCgVrg7H/CG8ymnTYsKI8c48bknTjGTRs9HKuTH9sHABwD0RH+8GnztJb2npR
+Y3DByz/LAgMBAAECggEAYxuFfCBUpYDZTOxGvcjbjScljJa5J1rF0+u0gVxiH+ZQ
+qS+tHp7bhO++QnR6YL3mFeeZEwoDdHZzMZeNfn/tV8DY8+1/atp+Sz/WKzRXkmq5
+u5LMjOtBrN1NwFuaqxC0bNId3v3jI2xcWmzSCstKuzeB5lFSMw8aOoL8WFIruR1w
+l/l4xnBc0kQwuXzRbMkLdenTpX5Lto3v/qaY5uNXP+m0zhaF2AyaQUClZRNQWpF+
+H6Loi593pzYMTy1abNEwNojJDVxeteXcaKKpgZ3+HhYtEaacsmagh1TA96rsakRB
+7EDY3XgBvd/5xI6xvueYRYnz3T1aOdEzUb0bbpEq2QKBgQD+0LEDRMSppmxlS5dw
+Z1Fl3sY8Fq5Yv+3/6KaAv5AIu6vVEsSz7g+c73kZyIMm/0nECZEoLwrRNLIHg1aO
+I7tkd0YJgtVa/1nwEhe48kl0mkug6OhHlRAPLzg4vqA5ttj4h5moQodekMyn7rY9
+Og22FErb3FwFUeYHeVs7ymoGqQKBgQD6tkupyGCpC3LrJCUMgtKf2P1/sesYrQ+S
+Vizj+eqiyaNpzFsjwA658uPAS2Fvi/lXFZPY3H87mqqd8JSEjmVBEgaP/1DnWpFG
+p3iqKV1XH/iSDfNH15QEZYv7dvOPQVvBDhueu4Y7P3hNHsNhk03+BfPa/4MJAXtr
+GUxDgbu/UwKBgDfPWZXPsAtASil9fvO9jVR0kJKEnTcPAn+0YxN74X4oLKCEddS6
+5WyH/swo4KDf9TYcqlBUzVe45O1EVObY6Kg+f3aB010U5IvySoPVfUUurjXWDVnw
+Sg4pV3UGO22ooKj+eiciOyf5Kvn1DLEoT+x7UVIKV5VKtMkaSWM1GDfRAoGBAKD0
+S5sSc0vTd9GSAN8JVeMdUZGbTY0n/ak6/dLWbVZZEToo4hIPiOTEFIctXb5ZJJhN
+1/8Pf/dqEkMXYqG/MS4XPnNPvEbrE/1CIutLZws6EUDjB96FfhdcggPMmAzOLvO/
+9OdxCHodA0SvjUulYBrHA4kDJMKxWuSk9xsXvMrVAoGACzsfe4ubgmqESclNUbuA
+X9IsMJLIXJOD6oihxOaPXzUSwtayr4yYD0qH5wR63uPyCXKo4nSQMV+0QQR+stt5
+WU9c/ucWjp7ra3VScpzOKKOHDhOAM67dOoRnxY1L0jUDGNXeli1vzwCnlVUIQ8bR
+7SWBpVQprWvWhXuJDJibpsk=
+-----END PRIVATE KEY-----
 
-class SignUpLoginController extends GetxController{
 
-  var name = ''.obs;
-  var email = ''.obs;
-  var mobile = ''.obs;
-  var password = ''.obs;
-
-  // Method to handle signup
-  void signup() {
-    // Example of validation logic
-    if (name.isEmpty || email.isEmpty || mobile.isEmpty || password.isEmpty) {
-      Get.snackbar('Error', 'All fields are required');
-      return;
-    }
-
-    Get.toNamed(Routes.login);
-  }
-  // Method to handle login
-  void login() {
-    Get.toNamed(Routes.listHomestayPage1);
-
-    if (email.isEmpty || password.isEmpty) {
-      Get.snackbar('Error', 'Email and password cannot be empty');
-      return;
-    }
-
-    print('Logging in with Email: $email, Password: $password');
-
-    Get.toNamed(Routes.listHomestayPage1);
-  }
-
-}
-
+import 'package:chat_app/bloc_observer.dart';
+import 'package:chat_app/screen/all_chats_flow/view/chatlist_page.dart';
+import 'package:chat_app/screen/auth_flow/login_flow/bloc/login_bloc.dart';
+import 'package:chat_app/screen/auth_flow/login_flow/view/login_page.dart';
+import 'package:chat_app/screen/auth_flow/signup_flow/bloc/signup_bloc.dart';
+import 'package:chat_app/screen/auth_flow/signup_flow/view/signup_page.dart';
+import 'package:chat_app/screen/chat_flow/view/chat_page.dart';
+import 'package:chat_app/screen/group/select_users_page.dart';
+import 'package:chat_app/screen/invitation_flow/view/invitation_page.dart';
+import 'package:chat_app/screen/list_user_flow/view/loginuser_page.dart';
+import 'package:chat_app/screen/splash_flow/view/splash_page.dart';
+import 'package:chat_app/services/firebase_services.dart';
+import 'package:chat_app/services/notification_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-import '../../../../utils/textFormField.dart';
+import 'firebase_options.dart';
+import 'package:chat_app/screen/chat_flow/bloc/chat_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class AddressPage extends StatefulWidget {
-  const AddressPage({super.key});
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  @override
-  State<AddressPage> createState() => _AddressPageState();
-}
 
-class _AddressPageState extends State<AddressPage> {
-  int currentPage = 6;
+Future<void> main() async {
 
-  String? address;
-  String? streetAddress;
-  String? landmark;
-  String? city;
-  String? pinCode;
-  String? state;
+  WidgetsFlutterBinding.ensureInitialized();
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 3.h),
-                Row(
-                  children: [
-                    const Icon(Icons.keyboard_arrow_left, size: 30),
-                    const SizedBox(width: 8),
-                    Text(
-                      Strings.address,
-                      style: FontManager.medium(20, color: AppColors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 31),
-                buildTitleStep(),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: Strings.address,
-                            style:
-                                FontManager.regular(14, color: AppColors.black),
-                          ),
-                          TextSpan(
-                            style: FontManager.regular(14,
-                                color: AppColors.redAccent),
-                            text: Strings.addressIcon,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  hintText: Strings.enterYourAddress,
-                  onSaved: (value) => address = value,
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: Strings.streetAddress,
-                            style:
-                                FontManager.regular(14, color: AppColors.black),
-                          ),
-                          TextSpan(
-                            style: FontManager.regular(14,
-                                color: AppColors.redAccent),
-                            text: Strings.addressIcon,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  hintText: Strings.enterYourStreetAddress,
-                  onSaved: (value) => streetAddress = value,
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: Strings.landmark,
-                            style:
-                                FontManager.regular(14, color: AppColors.black),
-                          ),
-                          TextSpan(
-                            style: FontManager.regular(14,
-                                color: AppColors.redAccent),
-                            text: Strings.addressIcon,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  hintText: Strings.landmark,
-                  onSaved: (value) => landmark = value,
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: Strings.cityTown,
-                            style:
-                                FontManager.regular(14, color: AppColors.black),
-                          ),
-                          TextSpan(
-                            style: FontManager.regular(14,
-                                color: AppColors.redAccent),
-                            text: Strings.addressIcon,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  hintText: Strings.cityTown,
-                  onSaved: (value) => city = value,
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: Strings.pinCode,
-                            style:
-                                FontManager.regular(14, color: AppColors.black),
-                          ),
-                          TextSpan(
-                            style: FontManager.regular(14,
-                                color: AppColors.redAccent),
-                            text: Strings.addressIcon,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  hintText: Strings.pinCode,
-                  onSaved: (value) => pinCode = value,
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: Strings.state,
-                            style:
-                                FontManager.regular(14, color: AppColors.black),
-                          ),
-                          TextSpan(
-                            style: FontManager.regular(14,
-                                color: AppColors.redAccent),
-                            text: Strings.addressIcon,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  hintText: Strings.state,
-                  onSaved: (value) => state = value,
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      Strings.showYourSpecificLocation,
-                      style: FontManager.regular(16,
-                          color: AppColors.textAddProreties),
-                    ),
-                    Switch(
-                      value: false,
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      thumbColor:
-                          WidgetStateProperty.all(AppColors.buttonColor),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 1.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.w),
-                  child: Text(
-                    Strings.addressDiscription,
-                    style: FontManager.regular(12, color: AppColors.greyText),
-                    textAlign: TextAlign.start,
-                  ),
-                ),
-                SizedBox(height: 7.h),
-                SizedBox(
-                  height: 7.h,
-                  width: 50.w,
-                  child: Image.asset(Assets.imagesHomeProgress5,
-                      fit: BoxFit.contain),
-                ),
-                SizedBox(height: 1.h),
-                CommonButton(
-                  title: Strings.nextStep,
-                  onPressed: () {
-                    Get.toNamed(Routes.photoPage);
-                  },
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await PushNotifications.initNotifications();
+
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser != null) {
+    await PushNotifications.getFirebaseMessagingToken(userId: currentUser.uid);
   }
 
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
+  await FirebaseMessaging.instance.requestPermission();
+
+  void handleNotificationTapFromTerminatedState(RemoteMessage message) {
+    if (message.data['chatId'] != null) {
+      print("Notification tapped while app terminated: ${message.data}");
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (context) => ChatPage(chatId: message.data['chatId']),
         ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-
-class AmenitiesPage extends StatefulWidget {
-  const AmenitiesPage({super.key});
-
-  @override
-  State<AmenitiesPage> createState() => _AmenitiesPageState();
-}
-
-class _AmenitiesPageState extends State<AmenitiesPage> {
-  final PageController _pageController = PageController();
-  int currentPage = 1;
-
-  void nextPage() {
-    if (currentPage <= 8) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
       );
-      setState(() {
-        currentPage++;
-      });
+    } else {
+      print("Chat ID is null in notification data.");
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.w),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 3.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.keyboard_arrow_left, size: 30),
-                    const SizedBox(width: 8),
-                    Text(
-                      Strings.amenities,
-                      style: FontManager.medium(20, color: AppColors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 31),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildTitleStep(),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 6.h,
-                      width: 100.w,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.buttonColor)),
-                      child: Center(
-                        child: Text(
-                          Strings.addAmenities,
-                          style: FontManager.regular(14,
-                              color: AppColors.buttonColor),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 3.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 3.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesWiFi,
-                              height: 28,
-                              width: 28,
-                              fit: BoxFit.cover,
-                            ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.wiFi,
-                              style: FontManager.regular(14,
-                                  color: AppColors.textAddProreties),
-                            ),
-                            Spacer(),
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Icon(
-                              Icons.circle_outlined,
-                              color: AppColors.borderContainerGriedView,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 3.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesAirCondioner,
-                              height: 28,
-                              width: 28,
-                              fit: BoxFit.cover,
-                            ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.airConditioner,
-                              style: FontManager.regular(14,
-                                  color: AppColors.textAddProreties),
-                            ),
-                            Spacer(),
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Icon(
-                              Icons.check_circle_rounded,
-                              color: AppColors.buttonColor,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 3.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesFirAlarm,
-                              height: 28,
-                              width: 28,
-                              fit: BoxFit.cover,
-                            ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.fireAlarm,
-                              style: FontManager.regular(14,
-                                  color: AppColors.textAddProreties),
-                            ),
-                            Spacer(),
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Icon(
-                              Icons.circle_outlined,
-                              color: AppColors.borderContainerGriedView,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 0.5.h),
-                  ],
-                ),
-                SizedBox(height: 1.h),
-                Text(
-                  Strings.newAmenities,
-                  style: FontManager.medium(18, color: AppColors.black),
-                ),
-                // SizedBox(
-                //   height: 7.h,
-                //   width: 50.w,
-                //   child: Image.asset(Assets.imagesHomestayProgres,
-                //       fit: BoxFit.contain),
-                // ),
-                SizedBox(
-                  height: 2.h,
-                ),
-                Container(
-                  width: 110.w,
-                  height: 7.h,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(
-                      color: AppColors.borderContainerGriedView,
-                    ),
-                  ),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          width: 3.w,
-                        ),
-                        Image.asset(
-                          Assets.imagesHometherater,
-                          height: 28,
-                          width: 28,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(
-                          width: 5.w,
-                        ),
-                        Text(
-                          Strings.homeTheater,
-                          style: FontManager.regular(14,
-                              color: AppColors.textAddProreties),
-                        ),
-                        Spacer(),
-                        SizedBox(
-                          width: 1.w,
-                        ),
-                        Icon(
-                          Icons.check_circle_rounded,
-                          color: AppColors.buttonColor,
-                        ),
-                        SizedBox(
-                          width: 3.w,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 2.h,
-                ),
-                Container(
-                  width: 110.w,
-                  height: 7.h,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(
-                      color: AppColors.borderContainerGriedView,
-                    ),
-                  ),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          width: 3.w,
-                        ),
-                        Image.asset(
-                          Assets.imagesMastrSuite,
-                          height: 28,
-                          width: 28,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(
-                          width: 5.w,
-                        ),
-                        Text(
-                          Strings.masterSuiteBalcony,
-                          style: FontManager.regular(14,
-                              color: AppColors.textAddProreties),
-                        ),
-                        Spacer(),
-                        SizedBox(
-                          width: 1.w,
-                        ),
-                        Icon(
-                          Icons.check_circle_rounded,
-                          color: AppColors.buttonColor,
-                        ),
-                        SizedBox(
-                          width: 3.w,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+  FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    if (message != null && message.data.containsKey('chatId')) {
+      final chatId = message.data['chatId'];
+      print("App launched from terminated state with chatId: $chatId");
 
-                SizedBox(height: 1.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 7.h,
-                      width: 50.w,
-                      child: Image.asset(Assets.imagesHomeProgres2,
-                          fit: BoxFit.contain),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 1.h),
-                CommonButton(
-                  title: currentPage < 7 ? Strings.nextStep : Strings.done,
-                  onPressed: () {
-                    Get.toNamed(Routes.newamenities);
-                  },
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-
-class CheckInOutDetailsPage extends StatefulWidget {
-  const CheckInOutDetailsPage({super.key});
-
-  @override
-  State<CheckInOutDetailsPage> createState() => _CheckInOutDetailsPageState();
-}
-
-class _CheckInOutDetailsPageState extends State<CheckInOutDetailsPage> {
-  bool isChecked = false;
-  bool isChecked1 = true;
-  int currentPage = 5;
-  String? selectedType;
-
-  void nextPage() {
-    if (selectedType != null) {
-      setState(() {
-        currentPage++;
+      FirebaseFirestore.instance
+          .collection('chats')
+          .doc(chatId)
+          .get()
+          .then((chatDoc) {
+        if (chatDoc.exists) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            navigatorKey.currentState?.push(
+              MaterialPageRoute(
+                builder: (context) => ChatPage(chatId: chatId),
+              ),
+            );
+          });
+        } else {
+          print("Chat document not found for chatId: $chatId");
+        }
+      }).catchError((error) {
+        print("Error fetching chat document: $error");
       });
+    } else {
+      print("Notification does not contain a valid chatId.");
     }
-  }
+  });
 
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+  });
+
+  SystemChannels.lifecycle.setMessageHandler((msg) async {
+    if (msg == AppLifecycleState.resumed.toString()) {
+      await FirebaseHelper.firebaseHelper.updateUserOnlineStatus(true);
+    } else if (msg == AppLifecycleState.paused.toString() ||
+        msg == AppLifecycleState.detached.toString() ||
+        msg == AppLifecycleState.inactive.toString()) {
+      await FirebaseHelper.firebaseHelper.updateUserOnlineStatus(false);
+    }
+    return null;
+  });
+
+  Bloc.observer = ChatObserver();
+  runApp(MyApp());
+}
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.w),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 3.h),
-                Row(
-                  children: [
-                    const Icon(Icons.keyboard_arrow_left, size: 30),
-                    const SizedBox(width: 8),
-                    Text(
-                      Strings.checkInOutDetails,
-                      style: FontManager.medium(20, color: AppColors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 31),
-                buildTitleStep(),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(Strings.checkInTime,
-                        style: FontManager.medium(color: AppColors.black, 16)),
-                  ],
-                ),
-                SizedBox(height: 2.h),
-                // time
-
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Checkbox(
-                      value: isChecked,
-                      onChanged: (bool? newValue) {
-                        setState(() {
-                          isChecked = newValue ?? false;
-                        });
-                      },
-                      side: const BorderSide(color: AppColors.texFiledColor),
-                    ),
-                    Text(Strings.flexibleWithCheckInTime,
-                        style: FontManager.regular(color: AppColors.black, 14)),
-                    const Spacer(),
-                  ],
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(Strings.checkOutTime,
-                        style: FontManager.medium(color: AppColors.black, 16)),
-                  ],
-                ),
-                SizedBox(height: 2.h),
-                // time
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Checkbox(
-                      value: isChecked1,
-                      onChanged: (bool? newValue) {
-                        setState(() {
-                          isChecked1 = newValue ?? true;
-                        });
-                      },
-                      side: const BorderSide(color: AppColors.texFiledColor),
-                    ),
-                    Text(
-                      Strings.flexibleWithCheckInTime,
-                      style: FontManager.regular(color: AppColors.black, 14),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-                SizedBox(height: 7.h),
-                SizedBox(
-                  height: 7.h,
-                  width: 50.w,
-                  child: Image.asset(Assets.imagesHomeProgres4,
-                      fit: BoxFit.contain),
-                ),
-                SizedBox(height: 1.h),
-                CommonButton(
-                  title: currentPage < 7 ? Strings.nextStep : Strings.done,
-                  onPressed: () async {
-                    Get.toNamed(Routes.locationView);
-
-                  },
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_radius.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-import '../../../controller/homestaytitle_controller.dart';
-
-class HomeStayTypeScreen extends StatefulWidget {
-  const HomeStayTypeScreen({super.key});
-
-  @override
-  State<HomeStayTypeScreen> createState() => _HomeStayTypeScreenState();
-}
-
-class _HomeStayTypeScreenState extends State<HomeStayTypeScreen> {
-  final HomeStayController controller = Get.find<HomeStayController>();
-  int currentPage = 1;
-  String? selectedType;
-
-  void nextPage() {
-    if (selectedType != null) {
-      setState(() {
-        currentPage++;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.w),
-          child: Column(
-            children: [
-              SizedBox(height: 3.h),
-              Row(
-                children: [
-                  const Icon(Icons.keyboard_arrow_left, size: 30),
-                  const SizedBox(width: 8),
-                  Text(
-                    Strings.homestayType,
-                    style: FontManager.medium(20, color: AppColors.black),
-                  ),
-                ],
-              ),
-              SizedBox(height: 3.h),
-              buildTitleStep(),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2, // Two cards per row
-                  crossAxisSpacing: 11,
-                  mainAxisSpacing: 15,
-                  childAspectRatio: 1.3,
-                  children: [
-                    buildHomestayTypeCard("Traditional",Assets.imagesTraditional),
-                    buildHomestayTypeCard("Bed & Breakfast",Assets.imagesBedbreakfast),
-                    buildHomestayTypeCard("Urban",Assets.imagesUrban),
-                    buildHomestayTypeCard("Eco-Friendly",Assets.imagesEcofriendly),
-                    buildHomestayTypeCard("Adventure",Assets.imagesAdventure),
-                    buildHomestayTypeCard("Luxury",Assets.imagesLuxury),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 7.h,
-                width: 50.w,
-                child: Image.asset(Assets.imagesHomestayProgres, fit: BoxFit.contain),
-              ),
-              SizedBox(height: 1.h),
-              CommonButton(
-                title: currentPage < 7 ? Strings.nextStep : Strings.done,
-                onPressed: (){
-                  Get.toNamed(Routes.accoummodationPage);
-                },
-              ),
-              SizedBox(height: 10.h),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-
-  Widget buildHomestayTypeCard(String type,String image) {
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedType = type;
-        });
-      },
-      child: Container(
-        height: 150,
-        width: 150,
-        decoration: BoxDecoration(
-          color:  AppColors.white,
-          border: Border.all(
-            color: AppColors.borderContainerGriedView,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.all(AppRadius.radius10),
-        ),
-        padding: EdgeInsets.all(16.0),
-        child: Column(mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Spacer(),
-            Image.asset(image,height: 5.h,width: 10.w,fit: BoxFit.contain,),
-            Spacer(),
-            Center(
-              child: Text(
-                type,
-                style: FontManager.regular(
-                  16,
-                  color:  AppColors.black,
-                ),
-              ),
-            ),
-            Spacer(),
+    return Sizer(
+      builder: (p0, p1, p2) {
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<SignupBloc>(create: (context) => SignupBloc()),
+            BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
+            BlocProvider<ChatBloc>(create: (context) => ChatBloc()),
           ],
-        ),
-      ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-import '../../../../utils/textFormField.dart';
-
-class HomeStayDescriptionPage extends StatefulWidget {
-  const HomeStayDescriptionPage({super.key});
-
-  @override
-  State<HomeStayDescriptionPage> createState() => _HomeStayDescriptionPageState();
-}
-
-class _HomeStayDescriptionPageState extends State<HomeStayDescriptionPage> {
-  int currentPage = 8;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w),
-          child: Column(
-            children: [
-              SizedBox(height: 3.h),
-              Row(
-                children: [
-                  const Icon(Icons.keyboard_arrow_left, size: 30),
-                  const SizedBox(width: 8),
-                  Text(
-                    Strings.description,
-                    style: FontManager.medium(20, color: AppColors.black),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 31),
-              buildTitleStep(),
-              SizedBox(height: 2.h),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      Strings.description,
-                      style: FontManager.regular(14, color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 0.5.h),
-              CustomTextField(
-                maxLines: 7,
-                maxLength: 500,
-                hintText: Strings.enterDescription,
-                onChanged: (value) {
-
-                },
-              ),
-             Spacer(),
-              CommonButton(
-                title: Strings.nextStep,
-                onPressed: () {
-                  Get.toNamed(Routes.priceAndContactDetailsPage);
-                },
-              ),
-              SizedBox(height: 8.h),
-            ],
+          child: MaterialApp(
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            routes: {
+              '/': (context) => const SplashScreen(),
+              'signUp': (context) => const SignupPage(),
+              'login': (context) => const LogInPage(),
+              'home': (context) => const ChatListPage(),
+              'user': (context) => const LoginUserPage(),
+              'notification': (context) => const InvitationPage(),
+              'groupSelect': (context) => const SelectUsersPage(),
+            },
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
+        );
+      },
     );
   }
 }
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/routes_app/all_routes_app.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_colors.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/font_manager.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/textFormField.dart';
-import '../../../controller/homestaytitle_controller.dart';
 
-class HomeStayTitleScreen extends StatefulWidget {
-  const HomeStayTitleScreen({super.key});
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class ChatObserver extends BlocObserver {
+  @override
+  void onEvent(Bloc bloc, Object? event) {
+    super.onEvent(bloc, event);
+    print('Event****: $event');
+  }
 
   @override
-  State<HomeStayTitleScreen> createState() => _HomeStayTitleScreenState();
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    print('Transition: $transition');
+  }
 }
+import 'dart:convert';
+import 'package:chat_app/main.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../screen/chat_flow/view/chat_page.dart';
 
-class _HomeStayTitleScreenState extends State<HomeStayTitleScreen> {
-  final HomeStayController controller = Get.find<HomeStayController>();
-  final PageController _pageController = PageController();
-  int currentPage = 1;
+class PushNotifications {
+  static final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  static final FlutterLocalNotificationsPlugin localNotifications = FlutterLocalNotificationsPlugin();
 
-  void nextPage() {
-    if (currentPage <= 8) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-      setState(() {
-        currentPage++;
-      });
+  static Future<void> initNotifications() async {
+    await firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    await localNotifications.initialize(
+      const InitializationSettings(
+        android: androidSettings,
+        iOS: iosSettings,
+      ),
+      onDidReceiveNotificationResponse: (details) {
+        handleNotificationTap(details);
+      },
+    );
+
+    await createNotificationChannel();
+
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+    FirebaseMessaging.onMessage.listen(handleForegroundMessage);
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      handleNotificationTap(NotificationResponse(
+        notificationResponseType: NotificationResponseType.selectedNotification,
+        payload: createPayload(message),
+      ));
+    });
+  }
+
+  static Future<void> createNotificationChannel() async {
+    const channel = AndroidNotificationChannel(
+      'chat_messages',
+      'Chat Messages',
+      description: 'Notifications for new chat messages',
+      importance: Importance.high,
+      enableVibration: true,
+      playSound: true,
+      enableLights: true,
+      ledColor: Colors.blue,
+      showBadge: true,
+    );
+
+    await localNotifications
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
+
+  static Future<void> getFirebaseMessagingToken({required String userId}) async {
+    try {
+      final token = await firebaseMessaging.getToken();
+      if (token != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .update({
+          'pushToken': token,
+          'lastTokenUpdate': FieldValue.serverTimestamp(),
+        });
+        print('FCM Token stored for user $userId: $token');
+      }
+    } catch (e) {
+      print('Error getting/storing FCM token: $e');
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.w),
-          child: Column(
-            children: [
-              SizedBox(height: 3.h),
-              Row(
-                children: [
-                  Icon(Icons.keyboard_arrow_left, size: 30),
-                  const SizedBox(width: 8),
-                  Text(
-                    Strings.homestayTitle,
-                    style: FontManager.medium(20, color: AppColors.black),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 31),
-              buildTitleStep(),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(Strings.titleLabel, style: FontManager.regular(14)),
-                    SizedBox(height: 0.5.h),
-                    CustomTextField(
-                      maxLength: 100,
-                      hintText: Strings.enterTitle,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return Strings.enterTitle;
-                        }
-                        return null;
-                      },
-                      onSaved: (value) =>
-                          controller.homestayTitle.value = value!,
-                      onChanged: (value) => controller.setTitle(value),
-                    ),
-                    SizedBox(height: 3.h),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 7.h,
-                width: 50.w,
-                child: Image.asset(Assets.imagesHomestayProgres,
-                    fit: BoxFit.contain),
-              ),
-              SizedBox(height: 1.h),
-              CommonButton(
-                title: currentPage < 7 ? Strings.nextStep : Strings.done,
-                onPressed: () {
-                  Get.toNamed(Routes.homestayType);
-                },
-              ),
-              SizedBox(height: 10.h),
-            ],
-          ),
-        ),
-      ),
-    );
+  static Future<void> handleForegroundMessage(RemoteMessage message) async {
+    print('Handling foreground message: ${message.messageId}');
+    await showNotification(message);
   }
 
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          Strings.stepCount + " " + currentPage.toString() + "/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
+  static String createPayload(RemoteMessage message) {
+    return jsonEncode({
+      'chatId': message.data['chatId'],
+      'senderId': message.data['senderId'],
+      'type': message.data['type'],
+      'timestamp': message.data['timestamp'],
+    });
   }
-}
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:sizer/sizer.dart';
+  static void handleNotificationTap(NotificationResponse details) {
+    if (details.payload != null) {
+      try {
+        final payloadStr = details.payload!;
+        final payload = Map<String, dynamic>.from(jsonDecode(payloadStr));
+        if (payload['chatId'] != null) {
+          print("ooooooooooooooooooooooooooooooooooooo11111111111111111111");
 
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (context) => ChatPage(chatId: payload['chatId']),
+            ),
+          );
 
-class HouseRulesPage extends StatefulWidget {
-  const HouseRulesPage({super.key});
-
-  @override
-  State<HouseRulesPage> createState() => _HouseRulesPageState();
-}
-
-class _HouseRulesPageState extends State<HouseRulesPage> {
-  final PageController _pageController = PageController();
-  int currentPage = 1;
-
-  void nextPage() {
-    if (currentPage <= 8) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-      setState(() {
-        currentPage++;
-      });
+        } else {
+          print('No chatId found in the payload');
+        }
+      } catch (e) {
+        print('Error handling notification tap: $e');
+      }
     }
   }
 
+
+  static Future<void> showNotification(RemoteMessage message) async {
+    RemoteNotification? notification = message.notification;
+    String messageType = message.data['type'] ?? 'chat_message';
+
+    if (notification != null) {
+      String timeString = DateFormat('HH:mm').format(DateTime.now());
+      String senderName = message.data['senderName'] ?? 'Someone';
+
+      if (messageType == 'invitation') {
+        await localNotifications.show(
+          notification.hashCode,
+          'New Chat Invitation',
+          '$senderName wants to chat with you',
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'chat_invitations',
+              'Chat Invitations',
+              channelDescription: 'Notifications for chat invitations',
+              importance: Importance.high,
+              priority: Priority.high,
+              showWhen: true,
+              when: DateTime.now().millisecondsSinceEpoch,
+              enableVibration: true,
+              playSound: true,
+              largeIcon: const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+              color: Colors.blue,
+              subText: timeString,
+              category: AndroidNotificationCategory.social,
+              visibility: NotificationVisibility.public,
+            ),
+            iOS: DarwinNotificationDetails(
+              presentAlert: true,
+              presentBadge: true,
+              presentSound: true,
+              subtitle: timeString,
+              threadIdentifier: 'invitations',
+            ),
+          ),
+          payload: createPayload(message),
+        );
+      } else {
+        await localNotifications.show(
+          notification.hashCode,
+          'New Chat',
+          '$senderName sent a chat',
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'chat',
+              'Chat',
+              channelDescription: 'Notifications for chat messages',
+              importance: Importance.high,
+              priority: Priority.high,
+              showWhen: true,
+              when: DateTime.now().millisecondsSinceEpoch,
+              enableVibration: true,
+              playSound: true,
+              largeIcon: const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+              color: Colors.blue,
+              subText: timeString,
+              category: AndroidNotificationCategory.social,
+              visibility: NotificationVisibility.public,
+            ),
+            iOS: DarwinNotificationDetails(
+              presentAlert: true,
+              presentBadge: true,
+              presentSound: true,
+              subtitle: timeString,
+              threadIdentifier: 'message',
+            ),
+          ),
+          payload: createPayload(message),
+        );
+      }
+    }
+  }
+}
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling background message: ${message.messageId}');
+}
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart';
+// ignore: depend_on_referenced_packages
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../screen/chat_flow/data/model.dart';
+import 'notification_services.dart';
+
+class FirebaseHelper {
+  static final FirebaseHelper firebaseHelper = FirebaseHelper._internal();
+  FirebaseHelper._internal();
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
+  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  Future<String> signInAnonymously() async {
+    try {
+      await auth.signInAnonymously();
+      return "Success";
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> createAccount(String email, String password) async {
+    try {
+      await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return "Success";
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> signInWithEmailPassword(String email, String password) async {
+    try {
+      await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return "Success";
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<UserCredential> googleSignIn() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      if (googleUser == null || googleAuth == null) {
+        throw 'Google sign-in failed';
+      }
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential =
+          await auth.signInWithCredential(credential);
+
+      await saveGoogleUserData(userCredential.user!);
+
+      await PushNotifications.getFirebaseMessagingToken(
+          userId: userCredential.user!.uid);
+
+      return userCredential;
+    } catch (e) {
+      throw 'Error during Google sign-in: $e';
+    }
+  }
+
+  Future<String> createChat(String otherUserId) async {
+    String currentUserId = auth.currentUser!.uid;
+    String chatId = generateChatId(currentUserId, otherUserId);
+
+    if (chatId.isEmpty) {
+      throw 'Chat ID cannot be empty';
+    }
+    await firebaseFirestore.collection('chats').doc(chatId).set({
+      'users': [currentUserId, otherUserId],
+      'isGroup': false,
+      'lastMessage': 'Chat started!',
+      'lastMessageTime': FieldValue.serverTimestamp(),
+      'unreadCount': {
+        currentUserId: 0,
+        otherUserId: 0,
+      },
+      'typing': {
+        currentUserId: false,
+        otherUserId: false,
+      },
+    });
+
+    await firebaseFirestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .add({
+      'senderId': currentUserId,
+      'message': 'Chat started!',
+      'timestamp': FieldValue.serverTimestamp(),
+      'type': 'system',
+    });
+
+    return chatId;
+  }
+
+  String generateChatId(String user1, String user2) {
+    List<String> users = [user1, user2]..sort();
+    return users.join('_');
+  }
+
+  bool checkUser() {
+    User? user = auth.currentUser;
+    return user != null;
+  }
+
+  Future<void> userLogout() async {
+    try {
+      final user = auth.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'isOnline': false,
+          'lastSeen': FieldValue.serverTimestamp(),
+        });
+      }
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user?.uid)
+          .update({
+        'pushToken': null,
+      });
+
+      await auth.signOut();
+      await GoogleSignIn().signOut();
+    } catch (e) {
+      debugPrint('Error during logout: $e');
+    }
+  }
+
+  // Future<String> uploadProfileImage(File profileImage) async {
+  //   try {
+  //     String fileName = 'profile_images/${DateTime.now().millisecondsSinceEpoch}.jpg';
+  //     UploadTask uploadTask = storage.ref(fileName).putFile(profileImage);
+  //     TaskSnapshot snapshot = await uploadTask;
+  //     String downloadUrl = await snapshot.ref.getDownloadURL();
+  //     return downloadUrl;
+  //   } catch (e) {
+  //     return '';
+  //   }
+  // }
+
+  Future<void> saveGoogleUserData(User user) async {
+    try {
+      String username = user.displayName ?? 'Anonymous';
+      String email = user.email ?? '';
+      String profileImageUrl = user.photoURL ?? '';
+
+      var userDoc =
+          await firebaseFirestore.collection('users').doc(user.uid).get();
+
+      if (!userDoc.exists) {
+        await firebaseFirestore.collection('users').doc(user.uid).set({
+          'username': username,
+          'email': email,
+          'profileImage': profileImageUrl,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+
+        await PushNotifications.getFirebaseMessagingToken(userId: user.uid);
+      }
+    } catch (e) {
+      throw 'Error saving user data to Firestore: $e';
+    }
+  }
+
+  Future<void> saveUserData(
+      String userId, String username, String email) async {
+    try {
+      await firebaseFirestore.collection('users').doc(userId).set({
+        'username': username,
+        'email': email,
+        // 'profileImage': profileImageUrl,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> checkUserExists(String uid) async {
+    try {
+      DocumentSnapshot userDoc =
+          await firebaseFirestore.collection('users').doc(uid).get();
+      return userDoc.exists;
+    } catch (e) {
+      print('Error checking user in Firestore: $e');
+      return false;
+    }
+  }
+
+  Future<List<DocumentSnapshot>> getUsers() async {
+    try {
+      QuerySnapshot snapshot =
+          await firebaseFirestore.collection('users').get();
+      return snapshot.docs;
+    } catch (e) {
+      throw 'Error fetching users: $e';
+    }
+  }
+
+  Stream<QuerySnapshot> getChatsStream() {
+    final currentUser = auth.currentUser;
+    if (currentUser == null) throw 'User not authenticated';
+
+    return firebaseFirestore
+        .collection('chats')
+        .where('users', arrayContains: currentUser.uid)
+        .snapshots();
+  }
+
+  Future<DocumentSnapshot> getUserData(String userId) async {
+    try {
+      return await firebaseFirestore.collection('users').doc(userId).get();
+    } catch (e) {
+      throw 'Error getting user data: $e';
+    }
+  }
+
+  Future<String> getChatName(String chatId, String currentUserId) async {
+    try {
+      final chatDoc =
+          await firebaseFirestore.collection('chats').doc(chatId).get();
+      if (!chatDoc.exists) throw 'Chat not found';
+
+      final chatData = chatDoc.data() as Map<String, dynamic>;
+      final bool isGroup = chatData['isGroup'] ?? false;
+
+      if (isGroup) {
+        return chatData['groupName'] ?? 'Unnamed Group';
+      } else {
+        List<String> users = List<String>.from(chatData['users']);
+        String otherUserId = users.firstWhere(
+          (userId) => userId != currentUserId,
+          orElse: () => '',
+        );
+
+        if (otherUserId.isEmpty) return 'Unknown User';
+
+        final userDoc = await getUserData(otherUserId);
+        return userDoc.get('username') ?? 'Unknown User';
+      }
+    } catch (e) {
+      throw 'Error getting chat name: $e';
+    }
+  }
+
+  Future<void> deleteUserAccount(String uid) async {
+    try {
+      User? user = auth.currentUser;
+      print("zzzzzzzzzzzzzzzzzzzzzzzzz${user}");
+      if (user != null && user.uid == uid) {
+        print("zzzzzzzzzzzzzzzzzzzzzzzzz11${user}");
+        await user.delete().then(
+          (value) {
+            print("ccccccccccccccc${user}");
+          },
+        );
+      }
+    } catch (e) {
+      throw "Error deleting user account.";
+    }
+  }
+
+  Future<void> sendChatInvite(
+      String inviterId, String inviteeId, String message) async {
+    try {
+      QuerySnapshot userInvite = await firebaseFirestore
+          .collection('invitations')
+          .where('inviteeId', isEqualTo: inviteeId)
+          .where('inviterId', isEqualTo: inviterId)
+          .limit(1)
+          .get();
+
+      if (userInvite.docs.isNotEmpty) {
+        throw Exception('An invitation has already been sent to this user.');
+      }
+
+      final inviterDoc = await getUserData(inviterId);
+      final inviterName = inviterDoc.get('username') ?? 'Someone';
+
+      final inviteeDoc = await getUserData(inviteeId);
+       String? inviteeToken = inviteeDoc.get('pushToken');
+
+      await firebaseFirestore.collection('invitations').add({
+        'inviterId': inviterId,
+        'inviteeId': inviteeId,
+        'message': message,
+        'status': 'pending',
+        'inviteTime': FieldValue.serverTimestamp(),
+      });
+      inviteeToken = 'dZMU-LHcSku1_FvL_6QYTs:APA91bHS62EEC-56dMj7K9J3sp5Z5PXIV9HPz--F-PV86E92u7fBHUNcBtRPA9MtpAt_uWfLZgPC6igc4m0e_B3rL1AFavFxPbvUeUMzMNR-VZ1AdltzOtI';
+      // if (inviteeToken != null) {
+        await sendFCMNotification(
+          token: inviteeToken,
+          title: 'New Chat Invitation',
+          body: '$inviterName wants to chat with you',
+          data: {
+            'type': 'invitation',
+            'inviterId': inviterId,
+            'senderName': inviterName,
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+          },
+        );
+      // }
+    } catch (e) {
+      throw Exception("Error sending chat invite: $e");
+    }
+  }
+
+  Stream<Map<String, dynamic>> checkInviteStatus(String userId) {
+    try {
+      return firebaseFirestore
+          .collection('invitations')
+          .where('inviterId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('inviteeId', isEqualTo: userId)
+          .where('status', whereIn: ['pending', 'declined', 'accepted'])
+          .limit(1)
+          .snapshots()
+          .map((snapshot) {
+            if (snapshot.docs.isNotEmpty) {
+              var status = snapshot.docs.first['status'];
+              return {
+                'pending': status == 'pending',
+                'declined': status == 'declined',
+                'accepted': status == 'accepted',
+              };
+            } else {
+              return {'pending': false, 'declined': false, 'accepted': false};
+            }
+          });
+    } catch (e) {
+      throw Exception("Error checking invite status: $e");
+    }
+  }
+
+  Future<bool> isUserInChat(String currentUserId, String selectedUserId) async {
+    try {
+      var chatUser = FirebaseFirestore.instance.collection('chats');
+      var querySnapshot = await chatUser.where('users',
+          arrayContainsAny: [currentUserId, selectedUserId]).get();
+
+      return querySnapshot.docs.any((doc) {
+        var users = List<String>.from(doc['users']);
+        return users.contains(currentUserId) && users.contains(selectedUserId);
+      });
+    } catch (e) {
+      print("Error checking chat status: $e");
+      return false;
+    }
+  }
+
+  Future<String> createGroupChat(
+      String groupName, List<String> selectedUsers) async {
+    try {
+      String currentUserId = auth.currentUser!.uid;
+
+      if (selectedUsers.isEmpty ||
+          (selectedUsers.length == 1 && selectedUsers.first == currentUserId)) {
+        throw 'Please select at least one other user for the group';
+      }
+
+      if (!selectedUsers.contains(currentUserId)) {
+        selectedUsers.add(currentUserId);
+      }
+
+      QuerySnapshot existingGroups = await firebaseFirestore
+          .collection('chats')
+          .where('isGroup', isEqualTo: true)
+          .get();
+
+      for (var doc in existingGroups.docs) {
+        List<String> users = List<String>.from(doc['users'] ?? []);
+        if (users.length == selectedUsers.length &&
+            users.every((user) => selectedUsers.contains(user))) {
+          throw 'A group with these exact members already exists';
+        }
+      }
+
+      DocumentReference chatRef =
+          await firebaseFirestore.collection('chats').add({
+        'users': selectedUsers,
+        'isGroup': true,
+        'groupName': groupName,
+        'createdBy': currentUserId,
+        'createdAt': FieldValue.serverTimestamp(),
+        'lastMessage': 'Group created',
+        'lastMessageTime': FieldValue.serverTimestamp(),
+        'unreadCount': {for (var user in selectedUsers) user: 0},
+      });
+
+      await chatRef.collection('messages').add({
+        'senderId': currentUserId,
+        'message': 'Group created',
+        'timestamp': FieldValue.serverTimestamp(),
+        'type': 'system',
+      });
+
+      for (String userId in selectedUsers) {
+        if (userId != currentUserId) {
+          await firebaseFirestore.collection('users').doc(userId).update({
+            'unreadCount': FieldValue.increment(1),
+          });
+        }
+      }
+
+      return chatRef.id;
+    } catch (e) {
+      throw 'Error creating group chat: $e';
+    }
+  }
+
+  Future<void> sendMessage(String chatId, String message) async {
+    try {
+      final currentUser = auth.currentUser;
+      if (currentUser == null) return;
+
+      final chatDoc =
+          await firebaseFirestore.collection('chats').doc(chatId).get();
+      if (!chatDoc.exists) return;
+
+      final List<String> users =
+          List<String>.from(chatDoc.data()?['users'] ?? []);
+      final bool isGroup = chatDoc.data()?['isGroup'] ?? false;
+
+      final senderDoc = await getUserData(currentUser.uid);
+      final senderName = senderDoc.get('username') ?? 'Unknown User';
+
+      await firebaseFirestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .add({
+        'senderId': currentUser.uid,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(),
+        'type': 'text',
+      });
+
+      await firebaseFirestore.collection('chats').doc(chatId).update({
+        'lastMessage': message,
+        'lastMessageTime': FieldValue.serverTimestamp(),
+      });
+
+      for (String userId in users) {
+        if (userId != currentUser.uid) {
+          final userDoc = await getUserData(userId);
+           String? pushToken = userDoc.get('pushToken');
+          print("token show 111111111111111111${pushToken}");
+          pushToken = "dZMU-LHcSku1_FvL_6QYTs:APA91bHS62EEC-56dMj7K9J3sp5Z5PXIV9HPz--F-PV86E92u7fBHUNcBtRPA9MtpAt_uWfLZgPC6igc4m0e_B3rL1AFavFxPbvUeUMzMNR-VZ1AdltzOtI";
+          if (pushToken != null) {
+            await sendFCMNotification(
+              token: pushToken,
+              title: isGroup ? chatDoc.get('groupName') : senderName,
+              body: message,
+              data: {
+                'chatId': chatId,
+                'senderId': currentUser.uid,
+                'senderName': senderName,
+                'type': 'chat_message',
+                'isGroup': isGroup.toString(),
+                'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+              },
+            );
+          }
+        }
+      }
+      await updateUnreadCount(chatId, currentUser.uid);
+    } catch (e) {
+      throw 'Error sending message: $e';
+    }
+  }
+
+  Future<void> sendFCMNotification({
+    required String token,
+    required String title,
+    required String body,
+    required Map<String, String> data,
+  }) async {
+    try {
+      print("Called ************************************");
+      final response = await http.post(
+        Uri.parse('https://fcm.googleapis.com/v1/projects/chatapp-4c7b9/messages:send'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Bearer ya29.c.c0ASRK0GbxduaCCosYaMncmKGyNwt36JX9jnM3VzONS1xIn5hveL-JA01ExvfbpfVLUpoxGA77AY4fJ_WD8ZBBYwmZ-m5NKjnZOITUGQMFf5r-48BGOhUse0SSGt94niOrvqKZ5hWWbrTPi2CpIAYTbeJLYoWnkuQ0Oqy8JdjMUg5eA6Bx8WQcC_hOngq_2ATbc9VM066bp2PQcIcPoumuqbYPXyGjH4Q9O6y6iB4DbRLhWmi0fwWCwxal8UYIh8e_O-pw5mFPUEzrG242Jxc28yNA2WUHkeednTtLvau5bgIq0jnmmWhHlqavznLVtpM5NNnpTYjVG4DTO2Qr5-A1Betm9lYZ87-CTcf8PewlrtKnd9-Av5FHUgXhtXOtL389P5effnyoaxj-006yciSY1IbU7lWbqYbs7WVqiurnqgvt0npnoyO869BV2ncoOgbF2mgfdxbjnFqy-BWcdbac3p-Wy17zyUxnjsOVZMy7rqdBhrBUmJb1X-b9wZRoQqlYIXdf56lWXfoia_QchVt7be_VtwrdrQ8uJn686RxZgpRbmonUx3SV2fjvMSMYJjlWRojfjixMjj9ZjiZ_pcyWiVY3pxfpy_4IjMac8JJsaa7R_ubwUwJZbqSYoq8FtJZOYV-dV74gQ1x8khUQcosbFYiFV9ogRegUZgbXya9O_Qi9s3B8ap2uw4QwJoR4Ovp0_lgi_99MaXBl8u4Ffo0IQk5s__qq7XtMISea6tSxZrxQ6qB5ee9s_0R-p-qJhUX2cO0rYel225vapnJZlVJdv3OVYY7nMubjO-Sm-B5n2aVV6JYMcqXarQMis51VU4SayUkFB2x_xj651aWj1BIx9fJYX0g28slrUYRtrF-MYt77Jtg2Qjy56JeWowp6dBfOqWpFX5Iphss2h5a3ZZ7kyzZJXh892usF29va2uW4zn92XpjQStp6lBaa8iRdbsuf15VQB6fnXmok90ijuSk-isMnoV94bfutswhjU1-F-dxhqyO2Z1-UOQt',
+        },
+        body: jsonEncode({
+          'message': {
+            'notification': {'title': title, 'body': body},
+            'token': 'dZMU-LHcSku1_FvL_6QYTs:APA91bHS62EEC-56dMj7K9J3sp5Z5PXIV9HPz--F-PV86E92u7fBHUNcBtRPA9MtpAt_uWfLZgPC6igc4m0e_B3rL1AFavFxPbvUeUMzMNR-VZ1AdltzOtI',
+            'data': data
+          }
+        }),
+      );
+
+      print('FCM Response: ${response.body}');
+    } catch (e) {
+      print('Error sending FCM notification: $e');
+    }
+  }
+
+  Future<void> updateUnreadCount(String chatId, String senderId) async {
+    try {
+      final chatDoc =
+          await firebaseFirestore.collection('chats').doc(chatId).get();
+      if (!chatDoc.exists) return;
+
+      Map<String, dynamic> unreadCount =
+          Map<String, dynamic>.from(chatDoc.data()?['unreadCount'] ?? {});
+
+      List<String> users = List<String>.from(chatDoc.data()?['users'] ?? []);
+
+      for (String userId in users) {
+        if (userId != senderId) {
+          unreadCount[userId] = (unreadCount[userId] ?? 0) + 1;
+        }
+      }
+
+      await firebaseFirestore.collection('chats').doc(chatId).update({
+        'unreadCount': unreadCount,
+      });
+    } catch (e) {
+      print('Error updating unread count: $e');
+    }
+  }
+
+  Future<void> resetUnreadCount(String chatId) async {
+    try {
+      final currentUser = auth.currentUser;
+      if (currentUser == null) return;
+
+      final chatDoc =
+          await firebaseFirestore.collection('chats').doc(chatId).get();
+      if (!chatDoc.exists) return;
+
+      Map<String, dynamic> unreadCount =
+          Map<String, dynamic>.from(chatDoc.data()?['unreadCount'] ?? {});
+
+      unreadCount[currentUser.uid] = 0;
+
+      await firebaseFirestore.collection('chats').doc(chatId).update({
+        'unreadCount': unreadCount,
+      });
+    } catch (e) {
+      print('Error resetting unread count: $e');
+    }
+  }
+
+  Future<void> updateUserOnlineStatus(bool isOnline) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'isOnline': isOnline,
+          'lastSeen': FieldValue.serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      debugPrint('Error updating online status: $e');
+    }
+  }
+
+  Future<void> setupPresence() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final userStatusRef =
+        FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    await userStatusRef.update({
+      'isOnline': true,
+      'lastSeen': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Stream<DocumentSnapshot> getUserOnlineStatus(String userId) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .snapshots();
+  }
+
+  Future<void> setTypingStatus(String chatId, bool isTyping) async {
+    try {
+      final user = auth.currentUser;
+      if (user == null) return;
+
+      await firebaseFirestore.collection('chats').doc(chatId).update({
+        'typing.${user.uid}': isTyping,
+      });
+    } catch (e) {
+      debugPrint('Error updating typing status: $e');
+    }
+  }
+
+  Stream<DocumentSnapshot> getTypingStatus(String chatId) {
+    return firebaseFirestore.collection('chats').doc(chatId).snapshots();
+  }
+
+  Future<void> toggleReaction(String chatId, String messageId, String userId, String reaction) async {
+    try {
+      final messageRef = firebaseFirestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId);
+
+      final messageDoc = await messageRef.get();
+      Map<String, String> reactions = Map<String, String>.from(messageDoc.data()?['reactions'] ?? {});
+
+      if (reactions[userId] == reaction) {
+        reactions.remove(userId);
+      } else {
+        reactions[userId] = reaction;
+      }
+
+      await messageRef.update({'reactions': reactions});
+    } catch (e) {
+      throw 'Error toggling reaction: $e';
+    }
+  }
+
+  Future<void> deleteMessages(String chatId, List<Message> messages, String userId) async {
+    try {
+      final batch = firebaseFirestore.batch();
+      
+      for (final message in messages) {
+        if (message.senderId == userId) {
+          final messageRef = firebaseFirestore
+              .collection('chats')
+              .doc(chatId)
+              .collection('messages')
+              .doc(message.id);
+          batch.delete(messageRef);
+        }
+      }
+
+      await batch.commit();
+    } catch (e) {
+      throw 'Error deleting messages: $e';
+    }
+  }
+
+  Future<void> editMessage(String chatId, String messageId, String newMessage) async {
+    try {
+      final messageRef = firebaseFirestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId);
+
+      await messageRef.update({
+        'message': newMessage,
+        'isEdited': true,
+      });
+
+      final chatDoc = await firebaseFirestore.collection('chats').doc(chatId).get();
+      if (chatDoc.data()?['lastMessage'] == messageId) {
+        await firebaseFirestore.collection('chats').doc(chatId).update({
+          'lastMessage': newMessage,
+        });
+      }
+    } catch (e) {
+      throw 'Error editing message: $e';
+    }
+  }
+
+  Future<void> toggleMessagePin(String chatId, String messageId, bool isPinned) async {
+    try {
+      final messageRef = firebaseFirestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId);
+
+      await messageRef.update({'isPinned': isPinned});
+    } catch (e) {
+      throw 'Error toggling pin: $e';
+    }
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
+import '../../../generated/assets.dart';
+import '../bloc/splash_bloc.dart';
+import '../bloc/splash_event.dart';
+import '../bloc/splash_state.dart';
+
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return BlocProvider(
+      create: (context) => SplashBloc()..add(SplashStartEvent()),
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.w),
-          child: SingleChildScrollView(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 31),
-                Row(crossAxisAlignment: CrossAxisAlignment.center,
-            
-                  children: [
-                    Icon(Icons.keyboard_arrow_left, size: 30),
-                    const SizedBox(width: 8),
-                    Text(
-
-                      Strings.houseRules,
-                      style: FontManager.medium( 20, color: AppColors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 31),
-                Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildTitleStep(),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 6.h,
-                      width: 100.w,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.buttonColor)),
-                      child: Center(
-                        child: Text(
-                          Strings.addRules,
-                          style: FontManager.regular(14,
-                              color: AppColors.buttonColor),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 3.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesNoSmoking,
-                              height: 28,
-                              width: 28,
-                              fit: BoxFit.cover,
-                            ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.noSmoking,
-                              style: FontManager.regular( 14, color: AppColors.textAddProreties),
-                            ),
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Icon(Icons.circle_outlined,color: AppColors.borderContainerGriedView,),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 3.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesNoDrinking,
-                              height: 28,
-                              width: 28,
-                              fit: BoxFit.cover,
-                            ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.noDrinking,
-                              style: FontManager.regular( 14, color: AppColors.textAddProreties),
-                            ),
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Icon(Icons.check_circle_rounded,color: AppColors.buttonColor,),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 3.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesNoPet,
-                              height: 28,
-                              width: 28,
-                              fit: BoxFit.cover,
-                            ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.noPet,
-                              style: FontManager.regular( 14, color: AppColors.textAddProreties),
-                            ),
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Icon(Icons.circle_outlined,color: AppColors.borderContainerGriedView,),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 2.h,
-                ),
-                Text(
-                  Strings.newRules,
-                  style: FontManager.medium( 18, color: AppColors.textAddProreties),
-                ),
-             
-                SizedBox(
-                  height: 2.h,
-                ),
-                Container(
-                  width: 110.w,
-                  height: 7.h,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(
-                      color: AppColors.borderContainerGriedView,
-                    ),
-                  ),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          width: 3.w,
-                        ),
-                        Image.asset(
-                          Assets.imagesDamageToProretiy,
-                          height: 28,
-                          width: 28,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(
-                          width: 5.w,
-                        ),
-                        Text(
-                          Strings.damageToProperty,
-                          style: FontManager.regular( 14, color: AppColors.textAddProreties),
-                        ),
-                        Spacer(),
-            
-                        SizedBox(
-                          width: 1.w,
-                        ),
-                        Icon(Icons.check_circle,color: AppColors.buttonColor,),
-                        SizedBox(
-                          width: 3.w,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                CommonButton(
-                  title: currentPage < 7 ? Strings.nextStep : Strings.done,
-                  onPressed: () {
-                     Get.toNamed(Routes.newRules);
-                  },
-                ),
-                SizedBox(height: 10.h),
-              ],
+        body: Center(
+          child: BlocListener<SplashBloc, SplashState>(
+            listener: (context, state) {
+              if (state is SplashLoadedState) {
+                if (state.isLoggedIn) {
+                  Navigator.pushReplacementNamed(context, 'home');
+                } else {
+                  Navigator.pushReplacementNamed(context, 'login');
+                }
+              } else if (state is SplashErrorState) {
+                Navigator.pushReplacementNamed(context, 'signUp');
+              }
+            },
+            child: Image.asset(
+              Assets.imagesSplash,
+              height: 20.h,
+              width: MediaQuery.of(context).size.width * 0.5,
             ),
           ),
         ),
       ),
     );
   }
+}
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../services/firebase_services.dart';
+import 'splash_event.dart';
+import 'splash_state.dart';
 
+class SplashBloc extends Bloc<SplashEvent, SplashState> {
+  SplashBloc() : super(SplashInitialState()) {
+    on<SplashStartEvent>((event, emit) async {
+      User? user = FirebaseAuth.instance.currentUser;
 
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
+      if (user != null) {
+        bool userExists =
+            await FirebaseHelper.firebaseHelper.checkUserExists(user.uid);
+
+        if (userExists) {
+          emit(SplashLoadedState(isLoggedIn: true));
+        } else {
+          emit(SplashErrorState( "User Token Expired. Please complete your registration."));
+          await FirebaseHelper.firebaseHelper.deleteUserAccount(user.uid);
+        }
+      } else {
+        emit(SplashLoadedState(isLoggedIn: false));
+      }
+
+      await Future.delayed(const Duration(seconds: 3));
+    });
+  }
+}
+import 'package:equatable/equatable.dart';
+
+abstract class SplashEvent extends Equatable {}
+
+class SplashStartEvent extends SplashEvent {
+  @override
+  List<Object?> get props => [];
+}
+import 'package:equatable/equatable.dart';
+
+abstract class SplashState extends Equatable {}
+
+class SplashInitialState extends SplashState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SplashLoadedState extends SplashState {
+  final bool isLoggedIn;
+
+  SplashLoadedState({required this.isLoggedIn});
+
+  @override
+  List<Object?> get props => [];
+}
+
+class SplashErrorState extends SplashState {
+  final String message;
+
+  SplashErrorState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../generated/assets.dart';
+import '../../../services/firebase_services.dart';
+import '../bloc/user_bloc.dart';
+import '../bloc/user_event.dart';
+import '../bloc/user_state.dart';
+
+class LoginUserPage extends StatelessWidget {
+  const LoginUserPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return Scaffold(
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, 'login');
+            },
+            child: const Text('Please log in'),
+          ),
         ),
-        const SizedBox(height: 20),
-      ],
+      );
+    }
+    return BlocProvider(
+      create: (context) =>
+          UserBloc(firebaseHelper: FirebaseHelper.firebaseHelper)
+            ..add(FetchUsersEvent()),
+      child: BlocListener<UserBloc, UserState>(
+        listener: (context, state) {
+          if (state is UserErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error)),
+            );
+          }
+        },
+        child: Scaffold(
+          backgroundColor: Colors.grey[300],
+          appBar: AppBar(
+            backgroundColor: Colors.grey[300],
+            title: const Text('Invite Chat Users'),
+          ),
+          body: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              if (state is UserLoadingState) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is UserErrorState) {
+                return Center(child: Text(state.error));
+              } else if (state is UserLoadedState) {
+                var users = state.users;
+                users = users.where((userDoc) {
+                  String userId = userDoc.id;
+                  return userId != FirebaseAuth.instance.currentUser?.uid;
+                }).toList();
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView.builder(
+                    itemCount: users.length,
+                    itemBuilder: (context, index) {
+                      var userData = users[index].data() as Map<String, dynamic>;
+                      String username = userData['username'] ?? 'No name';
+                      String email = userData['email'] ?? 'No email';
+                      String profileImage = userData['profileImage'] ?? '';
+                      String userId = users[index].id;
+
+                      return BlocProvider(
+                        create: (context) => UserBloc(firebaseHelper: FirebaseHelper.firebaseHelper),
+                        child: UserInviteCard(
+                          userId: userId,
+                          username: username,
+                          email: email,
+                          profileImage: profileImage,
+                        ),
+                      );
+
+                    },
+                  ),
+                );
+              } else {
+                return const Center(child: Text('No users found.'));
+              }
+            },
+          ),
+        ),
+      ),
     );
   }
 }
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/font_manager.dart';
 
-class ListHomePage extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String imagePath;
-  final String imagePath2;
-  final String description;
-  final String description2;
+class UserInviteCard extends StatelessWidget {
+  final String userId;
+  final String username;
+  final String email;
+  final String profileImage;
 
-  final String buttonText;
-  final String nextRoute;
-  final double? imageWidth;
-  final double? imageHeight;
-
-  const ListHomePage({
+  const UserInviteCard({
     super.key,
-    required this.title,
-    required this.subtitle,
-    required this.imagePath,
-    required this.imagePath2,
-    required this.description,
-    required this.description2,
-    required this.buttonText,
-    required this.nextRoute,
-    this.imageWidth,
-    this.imageHeight,
+    required this.userId,
+    required this.username,
+    required this.email,
+    required this.profileImage,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 7.w),
-          child: SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 3.5.h),
-                  Text(
-                    title,
-                    style: FontManager.medium(22),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 1.5.h),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      subtitle,
-                      style: FontManager.regular(15.sp, color: AppColors.greyText),
-                      textAlign: TextAlign.center,
+    return BlocProvider(
+      create: (context) =>
+          UserBloc(firebaseHelper: FirebaseHelper.firebaseHelper),
+      child: StreamBuilder<Map<String, dynamic>>(
+        stream: FirebaseHelper.firebaseHelper.checkInviteStatus(userId),
+        builder: (context, statusSnapshot) {
+          if (statusSnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (statusSnapshot.hasError) {
+            return Center(child: Text(statusSnapshot.error.toString()));
+          } else if (statusSnapshot.hasData) {
+            var status = statusSnapshot.data!;
+            bool isPending = status['pending'];
+            bool isDeclined = status['declined'];
+            bool isAccepted = status['accepted'];
+            
+            print("cccccccccccc222222222$isPending");
+
+            print("user id ${FirebaseAuth.instance.currentUser!.uid}");
+            print("inviteeId111111111111111 $userId");
+
+            return FutureBuilder<bool>(
+              future: FirebaseHelper.firebaseHelper
+                  .isUserInChat(FirebaseAuth.instance.currentUser!.uid, userId),
+              builder: (context, chatSnapshot) {
+                if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                bool isInChat = chatSnapshot.data ?? false;
+
+                return Card(
+                  color: Colors.grey[100],
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: profileImage.isNotEmpty
+                          ? NetworkImage(profileImage)
+                          : const AssetImage(Assets.imagesProfile)
+                              as ImageProvider,
+                      radius: 25,
                     ),
+                    title: Text(username),
+                    subtitle: Text(email),
+                    trailing: isInChat
+                        ? InkWell(onTap: () {
+                          Navigator.pop(context);
+                        },
+                          child: const Text(
+                              "Already in chat",
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                        )
+                        : isPending
+                            ? const Text(
+                                "Pending",
+                                style: TextStyle(color: Colors.orange),
+                              )
+                            : isDeclined
+                                ? const Text(
+                                    "Declined",
+                                    style: TextStyle(color: Colors.redAccent),
+                                  )
+                                : isAccepted
+                                    ? const Text(
+                                        "Accepted",
+                                        style: TextStyle(color: Colors.green),
+                                      )
+                                    : IconButton(
+                                        icon: const Icon(Icons.message),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (dialogContext) {
+                                              return AlertDialog(
+                                                backgroundColor: Colors.white,
+                                                title:
+                                                    const Text('Chat Invite'),
+                                                content: const Text(
+                                                    'Do you want to invite this user to chat?'),
+                                                actions: [
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                        backgroundColor: Colors
+                                                            .grey.shade200),
+                                                    onPressed: () {
+                                                      Navigator.of(dialogContext).pop();
+                                                    },
+                                                    child: const Text(
+                                                      'Cancel',
+                                                      style: TextStyle(
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: isInChat
+                                                        ? null
+                                                        : () {
+                                                            BlocProvider.of<
+                                                                        UserBloc>(
+                                                                    context)
+                                                                .add(
+                                                              SendChatInviteEvent(
+                                                                currentUserId:
+                                                                    FirebaseAuth
+                                                                        .instance
+                                                                        .currentUser!
+                                                                        .uid,
+                                                                selectedUserId:
+                                                                    userId,
+                                                                inviteMessage:
+                                                                    "Hey, let's chat!",
+                                                              ),
+                                                            );
+                                                            Navigator.of(
+                                                                    dialogContext)
+                                                                .pop();
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                content: Text(
+                                                                    'Invite sent!'),
+                                                              ),
+                                                            );
+                                                          },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Colors.black),
+                                                    child: const Text(
+                                                     'Send Invite',
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
                   ),
-                  SizedBox(height: 9.5.h),
-                  Image.asset(
-                    imagePath,
-                    width: imageWidth ?? 90.w,
-                    height: imageHeight,
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(height: 2.5.h),
-                  Text(
-                    description,
-                    style: FontManager.medium(20, color: AppColors.buttonColor),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 2.8.h),
-                  Text(
-                    description2,
-                    style: FontManager.regular(12, color: AppColors.black),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 5.h),
-                  SizedBox(
-                    height: 3.h,
-                    width: 20.w,
-                    child: Image.asset(imagePath2,fit: BoxFit.contain,),
-                  ),
-                  SizedBox(height: 7.5.h),
-                  CommonButton(
-                    title: buttonText,
-                    onPressed: () {
-                      Get.toNamed(nextRoute);
-                    },
-                  ),
-                  SizedBox(height: 4.5.h),
-                ],
-              ),
-            ),
-          ),
-        ),
+                );
+              },
+            );
+          } else {
+            return const Center(child: Text('No data available.'));
+          }
+        },
       ),
     );
   }
 }
-import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_string.dart';
-import 'custom_view_list_home.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../services/firebase_services.dart';
+import 'user_event.dart';
+import 'user_state.dart';
 
-class ListHomestayPage1 extends StatelessWidget {
-  const ListHomestayPage1({super.key});
+class UserBloc extends Bloc<UserEvent, UserState> {
+  final FirebaseHelper firebaseHelper;
 
-  @override
-  Widget build(BuildContext context) {
-    return ListHomePage(
-      title: Strings.listHomeStay,
-      subtitle: Strings.listHomeStayGreyText,
-      imagePath: Assets.imagesListHome,
-      description: Strings.aboutYourStay,
-      description2: Strings.listHomeStayInto1,
-      imagePath2: Assets.imagesIntodesh,
-      buttonText: Strings.getStarted,
-      imageHeight: 25.h,
-      nextRoute: Routes.listHomestayPage2,
-    );
+  UserBloc({required this.firebaseHelper}) : super(UserLoadingState()) {
+    on<FetchUsersEvent>(onFetchUsersEvent);
+    on<SendChatInviteEvent>(onSendChatInviteEvent);
+  }
+
+  Future<void> onFetchUsersEvent(
+      FetchUsersEvent event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoadingState());
+      var users = await firebaseHelper.getUsers();
+      emit(UserLoadedState(users));
+    } catch (e) {
+      emit(UserErrorState(e.toString()));
+    }
+  }
+
+  Future<void> onSendChatInviteEvent(
+      SendChatInviteEvent event, Emitter<UserState> emit) async {
+    try {
+      await firebaseHelper.sendChatInvite(
+        event.currentUserId,
+        event.selectedUserId,
+        event.inviteMessage,
+      );
+    } catch (e) {
+      emit(UserErrorState(e.toString()));
+    }
   }
 }
+import 'package:equatable/equatable.dart';
 
+abstract class UserEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchUsersEvent extends UserEvent {}
+
+class SendChatInviteEvent extends UserEvent {
+  final String currentUserId;
+  final String selectedUserId;
+  final String inviteMessage;
+
+  SendChatInviteEvent(
+      {required this.currentUserId,
+      required this.selectedUserId,
+      required this.inviteMessage});
+
+  @override
+  List<Object?> get props => [currentUserId, selectedUserId, inviteMessage];
+}
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+
+abstract class UserState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class UserInitialState extends UserState {}
+
+class UserLoadingState extends UserState {}
+
+class UserLoadedState extends UserState {
+  final List<DocumentSnapshot> users;
+
+  UserLoadedState(this.users);
+
+  @override
+  List<Object?> get props => [users];
+}
+
+class UserErrorState extends UserState {
+  final String error;
+
+  UserErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class InviteStatusState extends UserState {
+  final bool isPending;
+  final bool isDeclined;
+  final bool isAccepted;
+
+  InviteStatusState(
+      {required this.isPending,
+      required this.isDeclined,
+      required this.isAccepted});
+
+  @override
+  List<Object?> get props => [isPending, isDeclined, isAccepted];
+}
+import 'package:chat_app/screen/invitation_flow/bloc/invitation_bloc.dart';
+import 'package:chat_app/screen/invitation_flow/bloc/invitation_event.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_string.dart';
-import 'custom_view_list_home.dart';
 
-class ListHomestayPage2 extends StatelessWidget {
-  const ListHomestayPage2({super.key});
+import '../bloc/invitation_state.dart';
+
+class InvitationPage extends StatelessWidget {
+  const InvitationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return  ListHomePage(
-      title: Strings.listHomeStay,
-      subtitle: Strings.listHomeStayGreyText,
-      imagePath: Assets.imagesListHome2,
-      imagePath2: Assets.imagesIntodesh2,
-      description2: Strings.listHomeStayInto2,
-      description: Strings.hotToGetThere,
-      buttonText: Strings.getStarted,
-      imageHeight: 25.h,
-      nextRoute: Routes.listHomestayPage3,
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_string.dart';
-import 'custom_view_list_home.dart';
+    return BlocProvider(
+      create: (context) => InvitationBloc()..add(FetchInvitationsEvent()),
+      child: Scaffold(
+        backgroundColor: Colors.grey[300],
+        appBar: AppBar(
+          backgroundColor: Colors.grey[300],
+          title: const Text('Invitations Messages'),
+        ),
+        body: BlocBuilder<InvitationBloc, InvitationState>(
+          builder: (context, state) {
+            if (state is InvitationLoadingState) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-class ListHomestayPage3 extends StatelessWidget {
-  const ListHomestayPage3({super.key});
+            if (state is InvitationErrorState) {
+              return Center(child: Text('Error: ${state.message}'));
+            }
 
-  @override
-  Widget build(BuildContext context) {
-    return  ListHomePage(
-      title: Strings.listHomeStay,
-      subtitle: Strings.listHomeStayGreyText,
-      imagePath: Assets.imagesListHome3,
-      imagePath2: Assets.imagesIntodesh3,
-      description: Strings.previewandPublish,
-      description2: Strings.listHomeStayInto3,
-      buttonText: Strings.getStarted,
-      nextRoute: Routes.homestaylist1,
-      imageHeight: 25.h,
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/common_widgets/common_button.dart';
+            if (state is InvitationLoadedState) {
+              final invitations = state.invitations;
 
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_dialog.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
+              if (invitations.isEmpty) {
+                return const Center(child: Text('No invitations.'));
+              }
 
-class LocationView extends StatefulWidget {
-  const LocationView({Key? key}) : super(key: key);
+              return ListView.builder(
+                itemCount: invitations.length,
+                itemBuilder: (context, index) {
+                  var inviteData =
+                      invitations[index].data() as Map<String, dynamic>;
+                  String inviterId = inviteData['inviterId'];
+                  String inviteMessage = inviteData['message'];
+                  Timestamp? inviteTime = inviteData['inviteTime'];
+                  String formattedTime = inviteTime != null
+                      ? DateFormat('hh:mm a').format(inviteTime.toDate())
+                      : 'Unknown Time';
 
-  @override
-  _LocationViewState createState() => _LocationViewState();
-}
+                  return FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(inviterId)
+                        .get(),
+                    builder: (context, inviterSnapshot) {
+                      if (inviterSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-class _LocationViewState extends State<LocationView> {
+                      if (inviterSnapshot.hasError) {
+                        return Center(
+                            child: Text('Error: ${inviterSnapshot.error}'));
+                      }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Scaffold(
-          backgroundColor: AppColors.backgroundColor,
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 3.w),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 16,
-                  left: 16,
-                  right: 16,
-                  child:  Row(
-                    children: [
-                      const Icon(Icons.keyboard_arrow_left, size: 30),
-                      const SizedBox(width: 8),
-                      Text(
-                        Strings.location,
-                        style: FontManager.medium(20, color: AppColors.black),
-                      ),
-                    ],
-                  ),
-                ),
+                      var inviterData =
+                          inviterSnapshot.data?.data() as Map<String, dynamic>;
+                      String inviterName = inviterData['username'] ?? 'Unknown';
+                      String inviterProfileImage =
+                          inviterData['profileImage'] ?? '';
 
-                Positioned(
-                  top: 45.h,
-                  left: 16,
-                  right: 16,
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(Strings.addLocation,style: FontManager.regular(18),),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  bottom: 16,
-                  left: 16,
-                  right: 16,
-                  child: CommonButton(title: Strings.nextStep,
-                    onPressed: () {
-                      CustomDialog.showCustomDialog(
-                        context: context,
-                        title: Strings.turnLocationOn,
-                        message: Strings.locationDiscription,
-                        imageAsset: Assets.imagesQuestionDialog,
-                        buttonLabel: Strings.settings,
-                        changeEmailLabel: Strings.cancel,
-                        onResendPressed: () {
-                           Get.toNamed(Routes.addressPage);
-                        },
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: inviterProfileImage.isNotEmpty
+                                    ? NetworkImage(inviterProfileImage)
+                                    : const AssetImage(
+                                            'assets/images/profile.png')
+                                        as ImageProvider,
+                                radius: 25,
+                              ),
+                              SizedBox(width: 2.h),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          inviterName,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                        Text(
+                                          formattedTime,
+                                          style: const TextStyle(
+                                              fontSize: 12, color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 0.5.h),
+                                    Text(inviteMessage,
+                                        style: const TextStyle(fontSize: 14)),
+                                    SizedBox(height: 1.5.h),
+                                    Row(
+                                      children: [
+                                        buildActionButton(
+                                            context, 'Decline', Colors.red, () {
+                                          context.read<InvitationBloc>().add(
+                                              DeclineInvitationEvent(
+                                                  invitationId:
+                                                      invitations[index].id));
+                                        }),
+                                        const SizedBox(width: 16),
+                                        buildActionButton(
+                                            context, 'Accept', Colors.green,
+                                            () {
+                                          context
+                                              .read<InvitationBloc>()
+                                              .add(AcceptInvitationEvent(
+                                                invitationId:
+                                                    invitations[index].id,
+                                                inviterId: inviterId,
+                                              ));
+                                        }),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     },
-                  ),
-                ),
-              ],
-            ),
-          ),
+                  );
+                },
+              );
+            }
+            return const Center(child: Text('Unknown State'));
+          },
         ),
       ),
     );
   }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_colors.dart';
 
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-
-class NewAmenitiesPages extends StatefulWidget {
-  const NewAmenitiesPages({super.key});
-
-  @override
-  State<NewAmenitiesPages> createState() => _NewAmenitiesPagesState();
-}
-
-class _NewAmenitiesPagesState extends State<NewAmenitiesPages> {
-  int currentPage = 3;
-  String? selectedType;
-
-  void nextPage() {
-    if (selectedType != null) {
-      setState(() {
-        currentPage++;
-      });
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body:  Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.w),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 3.h),
-                Row(
-                  children: [
-                    const Icon(Icons.keyboard_arrow_left, size: 30),
-                    const SizedBox(width: 8),
-                    Text(
-                      Strings.newAmenities,
-                      style: FontManager.medium(20, color: AppColors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 31),
-                buildTitleStep(),
-                Column(
-                  children: [
-                    SizedBox(height: 1.h),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.homeTheater,
-                              style: FontManager.regular( 16, color: AppColors.textAddProreties),
-                            ),
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesDividecircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.masterSuiteBalcony,
-                              style: FontManager.regular( 16, color: AppColors.black),
-                            ),
-
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesDividecircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.amenities3,
-                              style: FontManager.regular( 16, color: AppColors.greyText),
-                            ),
-
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesPluscircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.amenities4,
-                              style: FontManager.regular( 16, color: AppColors.greyText),
-                            ),
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesPluscircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.amenities5,
-                              style: FontManager.regular( 16, color: AppColors.greyText),
-                            ),
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesPluscircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                SizedBox(
-                  height: 7.h,
-                  width: 50.w,
-                  child: Image.asset(Assets.imagesHomeProgres2, fit: BoxFit.contain),
-                ),
-                SizedBox(height: 1.h),
-                CommonButton(
-                  title: currentPage < 7 ? Strings.done : Strings.done,
-
-                  onPressed: (){
-                    Get.toNamed(Routes.houseRules);
-                  },
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
-          ),
-        ),
-      ),);
-  }
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_colors.dart';
-
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-
-class NewRulesPages extends StatefulWidget {
-  const NewRulesPages({super.key});
-
-  @override
-  State<NewRulesPages> createState() => _NewRulesPagesState();
-}
-
-class _NewRulesPagesState extends State<NewRulesPages> {
-  int currentPage = 4;
-  String? selectedType;
-
-  void nextPage() {
-    if (selectedType != null) {
-      setState(() {
-        currentPage++;
-      });
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body:  Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.w),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 3.h),
-                Row(
-                  children: [
-                    const Icon(Icons.keyboard_arrow_left, size: 30),
-                    const SizedBox(width: 8),
-                    Text(
-                      Strings.newRules,
-                      style: FontManager.medium(20, color: AppColors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 31),
-                buildTitleStep(),
-                Column(
-                  children: [
-                    SizedBox(height: 1.h),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.damageToProperty,
-                              style: FontManager.regular( 16, color: AppColors.textAddProreties),
-                            ),
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesDividecircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.rules2,
-                              style: FontManager.regular( 16, color: AppColors.greyText),
-                            ),
-
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesDividecircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.rules3,
-                              style: FontManager.regular( 16, color: AppColors.greyText),
-                            ),
-
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesPluscircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.rules4,
-                              style: FontManager.regular( 16, color: AppColors.greyText),
-                            ),
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesPluscircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Container(
-                      width: 110.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(
-                          color: AppColors.borderContainerGriedView,
-                        ),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              Strings.rules5,
-                              style: FontManager.regular( 16, color: AppColors.greyText),
-                            ),
-                            Spacer(),
-
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              Assets.imagesPluscircle2,
-                              height: 25,
-                              width: 25,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                SizedBox(
-                  height: 7.h,
-                  width: 50.w,
-                  child: Image.asset(Assets.imagesHomeProgres3, fit: BoxFit.contain),
-                ),
-                SizedBox(height: 1.h),
-                CommonButton(
-                  title: currentPage < 7 ? Strings.done : Strings.done,
-
-                  onPressed: (){
-                    Get.toNamed(Routes.checkInOutDetails);
-                  },
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
-          ),
-        ),
-      ),);
-  }
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-
-  Widget customContainer() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-}
-import 'dart:io';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-import '../../../../../generated/assets.dart';
-
-class PhotoUploadContainer extends StatelessWidget {
-  final int index;
-  final String? imagePath;
-  final ValueChanged<String?> onImageSelected;
-
-  const PhotoUploadContainer({
-    Key? key,
-    required this.index,
-    this.imagePath,
-    required this.onImageSelected,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildActionButton(
+      BuildContext context, String label, Color color, VoidCallback onPressed) {
     return Container(
-      height: 130,
-      width: 150.w,
-      decoration: BoxDecoration(
-        image: imagePath != null
-            ? DecorationImage(
-          image: FileImage(File(imagePath!)),
-          fit: BoxFit.fill,
-        )
-            : DecorationImage(
-          image: AssetImage(Assets.imagesImageRectangle),
-          fit: BoxFit.fill,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            Assets.imagesUploadImage,
-            height: 30,
-            width: 30,
-          ),
-          RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: Strings.photoChooseDiscription,
-                  style: FontManager.regular(10, color: AppColors.greyText),
-                ),
-                TextSpan(
-                  mouseCursor: SystemMouseCursors.click,
-                  style: FontManager.regular(10, color: AppColors.buttonColor),
-                  text: Strings.chooseFile,
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () async {
-                      FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-                      if (result != null) {
-                        String filePath = result.files.single.path!;
-                        print("${Strings.fileExpection} $filePath for index $index");
-                        onImageSelected(filePath);
-                      } else {
-                        print(Strings.noFileSelectedExpection);
-                      }
-                    },
-                ),
-                TextSpan(
-                  style: FontManager.regular(10, color: AppColors.greyText),
-                  text: Strings.to,
-                ),
-                TextSpan(
-                  style: FontManager.regular(10, color: AppColors.greyText),
-                  text: Strings.upload,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/routes_app/all_routes_app.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_colors.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-import 'custom_photo_upload_image.dart';
-
-class PhotoPage extends StatefulWidget {
-  const PhotoPage({super.key});
-
-  @override
-  State<PhotoPage> createState() => _PhotoPageState();
-}
-
-class _PhotoPageState extends State<PhotoPage> {
-  int currentPage = 7;
-  List<String?> imagePaths = List.filled(6, null);
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.w),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 3.h),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.keyboard_arrow_left,
-                      size: 30,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      Strings.photos,
-                      style: FontManager.medium(20, color: AppColors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 31),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildTitleStep(),
-                  ],
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  Strings.coverPhoto,
-                  style: FontManager.regular(14, color: AppColors.textAddProreties),
-                ),
-                SizedBox(height: 10),
-                PhotoUploadContainer(
-                  index: 0,
-                  imagePath: imagePaths[0],
-                  onImageSelected: (path) {
-                    setState(() {
-                      imagePaths[0] = path;
-                    });
-                  },
-                ),
-                SizedBox(height: 30),
-                Text(
-                  Strings.homestayPhotos,
-                  style: FontManager.regular(14, color: AppColors.textAddProreties),
-                ),
-                SizedBox(height: 2.h),
-                buildPhotoUploadRows(),
-                SizedBox(height: 7.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 7.h,
-                      width: 50.w,
-                      child: Image.asset(Assets.imagesImageProgres6, fit: BoxFit.contain),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 1.h),
-                CommonButton(
-                  title: Strings.nextStep,
-                  onPressed: () {
-                    Get.toNamed(Routes.homeStayDescriptionPage);
-                  },
-                ),
-                SizedBox(height: 8.h),
-              ],
-            ),
-          ),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      decoration:
+          BoxDecoration(color: color, borderRadius: BorderRadius.circular(8)),
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Text(
+          label,
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
+}
 
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../services/firebase_services.dart';
+import '../../../services/notification_services.dart';
+import 'invitation_event.dart';
+import 'invitation_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-  Widget buildPhotoUploadRows() {
-    return Column(
-      children: List.generate(3, (rowIndex) {
-        return Column(
-          children: [
-            SizedBox(height: 14),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: PhotoUploadContainer(
-                    index: rowIndex * 2,
-                    imagePath: imagePaths[rowIndex * 2],
-                    onImageSelected: (path) {
-                      setState(() {
-                        imagePaths[rowIndex * 2] = path; // Update the image path
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Flexible(
-                  child: PhotoUploadContainer(
-                    index: rowIndex * 2 + 1,
-                    imagePath: imagePaths[rowIndex * 2 + 1],
-                    onImageSelected: (path) {
-                      setState(() {
-                        imagePaths[rowIndex * 2 + 1] = path; // Update the image path
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-      }),
-    );
+class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
+  InvitationBloc() : super(InvitationInitialState()) {
+
+    on<FetchInvitationsEvent>((event, emit) async {
+      emit(InvitationLoadingState()); 
+
+      try {
+        var userId = FirebaseAuth.instance.currentUser!.uid;
+        var invitations = await FirebaseFirestore.instance
+            .collection('invitations')
+            .where('inviteeId', isEqualTo: userId)
+            .where('status', isEqualTo: 'pending')
+            .get();
+
+        emit(InvitationLoadedState(invitations: invitations.docs));
+      } catch (e) {
+        emit(InvitationErrorState(message: 'Failed to load invitations: $e'));
+      }
+    });
+
+    on<AcceptInvitationEvent>((event, emit) async {
+      try {
+        await FirebaseFirestore.instance
+            .collection('invitations')
+            .doc(event.invitationId)
+            .update({'status': 'accepted'});
+
+        await FirebaseHelper.firebaseHelper.createChat(event.inviterId);
+
+        add(FetchInvitationsEvent());
+      } catch (e) {
+        emit(InvitationErrorState(message: 'Failed to accept invitation: $e'));
+      }
+    });
+
+    on<DeclineInvitationEvent>((event, emit) async {
+      try {
+        await FirebaseFirestore.instance
+            .collection('invitations')
+            .doc(event.invitationId)
+            .update({'status': 'declined'});
+
+        add(FetchInvitationsEvent());
+      } catch (e) {
+        emit(InvitationErrorState(message: 'Failed to decline invitation: $e'));
+      }
+    });
   }
 }
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-import '../../../../utils/textFormField.dart';
+import 'package:equatable/equatable.dart';
 
-class PriceAndContactDetailsPage extends StatefulWidget {
-  const PriceAndContactDetailsPage({super.key});
-
+abstract class InvitationEvent extends Equatable {
   @override
-  State<PriceAndContactDetailsPage> createState() =>
-      _PriceAndContactDetailsPageState();
+  List<Object?> get props => [];
 }
 
-class _PriceAndContactDetailsPageState
-    extends State<PriceAndContactDetailsPage> {
-  int currentPage = 8;
+class FetchInvitationsEvent extends InvitationEvent {}
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w),
-          child: SingleChildScrollView(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 3.h),
-                Row(
-                  children: [
-                    const Icon(Icons.keyboard_arrow_left, size: 30),
-                    const SizedBox(width: 8),
-                    Text(
-                      Strings.priceAndContactDetailsPage,
-                      style: FontManager.medium(20, color: AppColors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 31),
-                Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildTitleStep(),
-                  ],
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  Strings.price,
-                  style: FontManager.regular(14, color: AppColors.black),
-                ),
-                SizedBox(height: 0.5.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      flex: 2,
-                      child: CustomTextField(
-                        hintText: Strings.enterStartPrice,
-                        onChanged: (value) {},
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Text(
-                        Strings.to,
-                        style: FontManager.regular(14, color: Colors.black),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Flexible(
-                      flex: 2,
-                      child: CustomTextField(
-                        hintText: Strings.enterEndPrice,
-                        onChanged: (value) {},
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 3.h),
-                Text(
-                  Strings.ownerDetails,
-                  style: FontManager.semiBold(18, color: AppColors.buttonColor),
-                ),
-                SizedBox(height: 1.5.h),
-                Text(Strings.ownerContactNo,
-                    style: FontManager.regular(14)),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  hintText: Strings.mobileNumberHint,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return Strings.mobileNumberError;
-                    } else if (value.length < 10) {
-                      return Strings.mobileNumberLengthError;
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    // Handle saved value
-                  },
-                ),
-                SizedBox(height: 3.h),
-                Text(Strings.ownerEmailID,
-                    style: FontManager.regular(14, color: AppColors.black)),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  hintText: Strings.emailHint,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return Strings.emailEmpty;
-                    } else if (!GetUtils.isEmail(value)) {
-                      return Strings.invalidEmail;
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
+class AcceptInvitationEvent extends InvitationEvent {
+  final String invitationId;
+  final String inviterId;
 
-                  },
-                ),
-                SizedBox(height: 3.h),
-                Text(
-                  Strings.homeStayDetails,
-                  style: FontManager.semiBold(18, color: AppColors.buttonColor),
-                ),
-                SizedBox(height: 1.5.h),
-                Text(Strings.homeStayContactNo,
-                    style: FontManager.regular(14)),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  textStyle: FontManager.regular(16),
-                  suffixIconImage: Image.asset(
-                    Assets.imagesPluscircle2,
-                    height: 17,
-                    width: 17,
-                    fit: BoxFit.contain,
-                  ),
-                  showSuffixIcon: true,
-                  hintText: Strings.homeStayContactNo1,
-                  onSaved: (value) {
-
-                  },
-                ),
-                SizedBox(height: 2.h),
-                CustomTextField(
-                  suffixIconImage: Image.asset(
-                    Assets.imagesPluscircle2,
-                    height: 17,
-                    width: 17,
-                    fit: BoxFit.contain,
-                  ),
-                  showSuffixIcon: true,
-                  hintText: Strings.homeStayContactNo1,
-                  onSaved: (value) {
-
-                  },
-                ),
-                SizedBox(height: 3.h),
-                Text(Strings.homeStayEmailID,
-                    style: FontManager.regular(14, color: AppColors.black)),
-                SizedBox(height: 0.5.h),
-                CustomTextField(
-                  suffixIconImage: Image.asset(
-                    Assets.imagesPluscircle2,
-                    height: 17,
-                    width: 17,
-                    fit: BoxFit.contain,
-                  ),
-                  showSuffixIcon: true,
-                  hintText: Strings.homeStayEmailID1,
-                  onSaved: (value) {
-
-                  },
-
-                ),
-                SizedBox(height: 2.h),
-                CustomTextField(
-                  suffixIconImage: Image.asset(
-                    Assets.imagesPluscircle2,
-                    height: 17,
-                    width: 17,
-                    fit: BoxFit.contain,
-                  ),
-                  showSuffixIcon: true,
-                  hintText: Strings.homeStayEmailID2,
-                  onSaved: (value) {
-
-                  },
-                ),
-                SizedBox(height: 7.h),
-                CommonButton(
-                  title: Strings.nextStep,
-                  onPressed: () {
-                    Get.toNamed(Routes.previewPage);
-                  },
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTitleStep() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${Strings.stepCount} $currentPage/8",
-          style: FontManager.regular(18, color: AppColors.black),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-}
-import 'package:flutter/material.dart';
-
-class TermsAndConditionPage extends StatefulWidget {
-  const TermsAndConditionPage({super.key});
-
-  @override
-  State<TermsAndConditionPage> createState() => _TermsAndConditionPageState();
-}
-
-class _TermsAndConditionPageState extends State<TermsAndConditionPage> {
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold());
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/font_manager.dart';
-
-class TopView extends StatelessWidget {
-  final String title;
-  final String? promptText;
-  final Widget content;
-  final String imagePath;
-
-  const TopView({
-    super.key,
-    required this.title,
-    required this.promptText,
-    required this.content,
-    this.imagePath = Assets.imagesSplash,
+  AcceptInvitationEvent({
+    required this.invitationId,
+    required this.inviterId,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 7.w),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 5.h),
-                Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Image.asset(imagePath),
-                      ),
-                      SizedBox(height: 3.h),
-                      Text(
-                        title,
-                        style: FontManager.semiBold(28),
-                        textAlign: TextAlign.center,
-                      ),
-                        SizedBox(height: 1.h),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            promptText!,
-                            style: FontManager.regular(15.sp, color: AppColors.greyText),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 4.5.h),
-                content,
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  List<Object?> get props => [invitationId, inviterId];
 }
+
+class DeclineInvitationEvent extends InvitationEvent {
+  final String invitationId;
+
+  DeclineInvitationEvent({required this.invitationId});
+
+  @override
+  List<Object?> get props => [invitationId];
+}
+
+import 'package:equatable/equatable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+abstract class InvitationState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class InvitationInitialState extends InvitationState {}
+
+class InvitationLoadingState extends InvitationState {}
+
+class InvitationLoadedState extends InvitationState {
+  final List<QueryDocumentSnapshot> invitations;
+
+  InvitationLoadedState({required this.invitations});
+
+  @override
+  List<Object?> get props => [invitations];
+}
+
+class InvitationErrorState extends InvitationState {
+  final String message;
+
+  InvitationErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../common_widgets/common_dialog.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-import '../../../../utils/textFormField.dart';
-import '../../../controller/signup_Login_controller.dart';
-import '../common_view/common_topview_forget_pages.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../../services/firebase_services.dart';
 
-class ForgetPassword extends StatefulWidget {
-  const ForgetPassword({super.key});
+class SelectUsersPage extends StatefulWidget {
+  const SelectUsersPage({super.key});
 
   @override
-  State<ForgetPassword> createState() => _ForgetPasswordState();
+  State<SelectUsersPage> createState() => _SelectUsersPageState();
 }
 
-class _ForgetPasswordState extends State<ForgetPassword> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final SignUpLoginController controller = Get.find<SignUpLoginController>();
-
-  @override
-  Widget build(BuildContext context) {
-    return TopView(
-      title: Strings.forgetPassword,
-      promptText: Strings.forgetPasswordPrompt,
-      content: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Email Field
-            Text(Strings.emailLabel, style: FontManager.regular(14, color: Colors.black)),
-            SizedBox(height: 0.5.h),
-            CustomTextField(
-              hintText: Strings.emailHint,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return Strings.emailEmpty;
-                } else if (!GetUtils.isEmail(value)) {
-                  return Strings.invalidEmail;
-                }
-                return null;
-              },
-              onChanged: (value) => controller.email.value = value,
-              prefixIconData: Icons.email_outlined,
-            ),
-            SizedBox(height: 37.h),
-            CommonButton(
-              title: Strings.reset,
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-
-                }
-                CustomDialog.showCustomDialog(
-                  context: context,
-                  title: Strings.checkYouEmail,
-                  message: Strings.theEmailHasBeenResent,
-                  imageAsset: Assets.imagesDialogemail,
-                  buttonLabel: Strings.resend,
-                  changeEmailLabel: Strings.changeEmail,
-                  onResendPressed: () {
-                    Get.toNamed(Routes.verificationPage);
-                  },
-                  onChangeEmailPressed: () {
-                    // Handle change email logic here
-                  },
-                );
-              },
-            ),
-            SizedBox(height: 2.h),
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  Get.offNamed(Routes.login);
-                },
-                child: Text(
-                  Strings.cancel,
-                  style: FontManager.regular(color: AppColors.buttonColor, 20),
-                ),
-              ),
-            ),
-            SizedBox(height: 4.h),
-          ],
-        ),
-      ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../../generated/assets.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../common_widgets/common_dialog.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-import '../../../../utils/textFormField.dart';
-import '../../../controller/signup_Login_controller.dart';
-import '../common_view/common_topview_forget_pages.dart';
-
-class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
-
-  @override
-  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
-}
-
-class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final SignUpLoginController controller = Get.find<SignUpLoginController>();
-  bool isPasswordVisible = false;
-  bool isConfirmPasswordVisible = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return TopView(
-      title: Strings.resetPassword,
-      promptText: Strings.resetCodePrompt,
-      content: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 2.h),
-            Text(Strings.newPasswordLabel, style: FontManager.regular(14)),
-            SizedBox(height: 0.5.h),
-            CustomTextField(
-              hintText: Strings.passwordHint,
-              prefixIconData: Icons.lock_outline_rounded,
-              obscureText: !isPasswordVisible,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return Strings.passwordError;
-                } else if (value.length < 6) {
-                  return Strings.passwordLengthError;
-                }
-                return null;
-              },
-              onSaved: (value) => controller.password.value = value!,
-              showSuffixIcon: true,
-              onSuffixIconPressed: () {
-                setState(() {
-                  isPasswordVisible = !isPasswordVisible;
-                });
-              },
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              Strings.confirmPassword,
-              style: FontManager.regular(14),
-            ),
-            SizedBox(height: 0.5.h),
-            CustomTextField(
-              hintText: Strings.confirmPasswordHint,
-              prefixIconData: Icons.lock_outline_rounded,
-              obscureText: !isConfirmPasswordVisible,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return Strings.confirmPasswordError;
-                } else if (value != controller.password.value) {
-                  return Strings.passwordMatchError;
-                }
-                return null;
-              },
-              showSuffixIcon: true,
-              onSuffixIconPressed: () {
-                setState(() {
-                  isConfirmPasswordVisible = !isConfirmPasswordVisible;
-                });
-              },
-            ),
-            SizedBox(height: 28.h),
-            CommonButton(
-              title: Strings.submit,
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-                }
-                CustomDialog.showCustomDialog(
-                  context: context,
-                  title: Strings.passwordUpdate,
-                  message: Strings.thepasswordChange,
-                  imageAsset: Assets.imagesDialogPassword,
-                  buttonLabel: Strings.login,
-                  onResendPressed: () {
-                    Get.toNamed(Routes.login);
-                  },
-                );
-              },
-            ),
-            SizedBox(height: 2.h),
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  Get.offNamed(Routes.login);
-                },
-                child: Text(
-                  Strings.cancel,
-                  style:
-                      FontManager.regular(color: AppColors.buttonColor, 20),
-                ),
-              ),
-            ),
-            SizedBox(height: 4.h),
-          ],
-        ),
-      ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../common_widgets/common_button.dart';
-import '../../../../routes_app/all_routes_app.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../../utils/app_string.dart';
-import '../../../../utils/font_manager.dart';
-import '../common_view/common_topview_forget_pages.dart';
-
-class VerificationCodeScreen extends StatefulWidget {
-  const VerificationCodeScreen({super.key});
-
-  @override
-  State<VerificationCodeScreen> createState() => _VerificationCodeScreenState();
-}
-
-class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
-  final TextEditingController _controller = TextEditingController();
+class _SelectUsersPageState extends State<SelectUsersPage> {
+  final List<String> selectedUsers = [];
+  final TextEditingController groupNameController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void dispose() {
-    _controller.dispose();
+    groupNameController.dispose();
     super.dispose();
   }
 
+  Future<void> createGroup() async {
+    if (selectedUsers.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select at least one user')),
+      );
+      return;
+    }
+
+    if (groupNameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a group name')),
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      await FirebaseHelper.firebaseHelper.createGroupChat(
+        groupNameController.text.trim(),
+        selectedUsers,
+      );
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Group created successfully!')),
+        );
+    } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error creating group: $e')),
+        );
+    } finally {
+        setState(() => isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TopView(
-      title: Strings.verificationCodeTitle,
-      promptText: Strings.verificationCodePrompt,
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: 2.h),
-          Center(
-            child: Text(
-              Strings.verificationCodeHint,
-              style: FontManager.regular(14, color: AppColors.black),
-              textAlign: TextAlign.center,
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          'Create Group',
+          style: TextStyle(
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          if (selectedUsers.isNotEmpty)
+            TextButton(
+              onPressed: isLoading ? null : () => createGroup(),
+              child: isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('Create'),
             ),
-          ),
-          SizedBox(height: 2.h),
-          PinCodeTextField(
-            controller: _controller,
-            appContext: context,
-            length: 6,
-            obscureText: false,
-            animationType: AnimationType.fade,
-            pinTheme: PinTheme(
-              shape: PinCodeFieldShape.box,
-              borderRadius: BorderRadius.circular(5),
-              borderWidth: 1,
-              fieldHeight: 50,
-              fieldWidth: 40,
-              inactiveColor: Colors.grey,
-              activeColor: Colors.blue,
-              selectedColor: Colors.blueAccent,
-            ),
-            onChanged: (value) {},
-            validator: (value) {
-              if (value!.length < 6) {
-                return Strings.verifyFullCodeError;
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 34.h),
-          CommonButton(
-            title: Strings.verify,
-            onPressed: () {
-              if (_controller.text.length == 6) {
-                // Handle verification logic
-                Get.snackbar(Strings.success, Strings.verificationCodeEntered);
-              } else {
-                Get.snackbar(Strings.error,Strings.verifiCodeComple);
-              }
-            },
-          ),
-          SizedBox(height: 2.h),
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                Get.offNamed(Routes.resetPage);
-              },
-              child: Text(
-                Strings.resend,
-                style: FontManager.regular(color: AppColors.buttonColor, 20),
-              ),
-            ),
-          ),
-          SizedBox(height: 4.h),
         ],
       ),
-    );
-  }
-}
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import '../../../../generated/assets.dart';
-import '../../../common_widgets/common_button.dart';
-import '../../../routes_app/all_routes_app.dart';
-import '../../../utils/app_colors.dart';
-import '../../../utils/app_string.dart';
-import '../../../utils/font_manager.dart';
-import '../../../utils/textFormField.dart';
-import '../../controller/signup_Login_controller.dart';
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final SignUpLoginController controller = Get.find<SignUpLoginController>();
-  bool isChecked = false;
-  bool isPasswordVisible = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 7.w),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,children: [
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          child: Image.asset(Assets.imagesSplash),
-                        ),
-                        SizedBox(height: 3.h),
-                        Text(Strings.welcome,
-                            style: FontManager.semiBold(28),
-                            textAlign: TextAlign.center),
-                        Text(Strings.gladToSeeYou,
-                            style: FontManager.medium(18,
-                                color: const Color(0xffB1B6B9)),
-                            textAlign: TextAlign.center),
-                      ],
-                    ),
-                  ],),
-
-                  SizedBox(height: 6.h),
-                  Text(Strings.emailLabel,
-                      style: FontManager.regular(14, color: Colors.black)),
-                  SizedBox(height: 0.5.h),
-                  CustomTextField(
-                    hintText: Strings.emailHint,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return Strings.emailEmpty;
-                      } else if (!GetUtils.isEmail(value)) {
-                        return Strings.invalidEmail;
-                      }
-                      return null;
-                    },
-                    onChanged: (value) => controller.email.value = value,
-                    prefixIconData: Icons.email_outlined,
-                  ),
-                  SizedBox(height: 3.h),
-                  Text(Strings.passwordLabel, style: FontManager.regular(14)),
-                  SizedBox(height: 0.5.h),
-                  CustomTextField(
-                    hintText: Strings.passwordHint,
-                    prefixIconData: Icons.lock_outline_rounded,
-                    obscureText: !isPasswordVisible,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return Strings.passwordError;
-                      } else if (value.length < 6) {
-                        return Strings.passwordLengthError;
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => controller.password.value = value!,
-                    showSuffixIcon: true,
-                    onSuffixIconPressed: () {
-                      setState(() {
-                        isPasswordVisible = !isPasswordVisible;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 1.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Checkbox(
-                        value: isChecked,
-                        onChanged: (bool? newValue) {
-                          setState(() {
-                            isChecked = newValue ?? false;
-                          });
-                        },
-                        side: const BorderSide(color: AppColors.texFiledColor),
-                      ),
-                      Text(Strings.rememberMe,
-                          style:
-                              FontManager.regular(color: AppColors.black, 12)),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () => Get.toNamed(Routes.forgetPage),
-                        child: Text(Strings.forgetPassword,
-                            style: FontManager.medium(
-                                color: AppColors.buttonColor, 12)),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 7.h),
-                  CommonButton(title: Strings.login, onPressed: onLogin),
-                  SizedBox(height: 0.5.h),
-                  Column(
-                    children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [Image.asset(Assets.imagesOr,height: 6.h,width: 50.w,)]),
-                      SizedBox(height: 0.5.h),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(Assets.imagesGoogleIcon,height: 7.h,width: 20.w,fit: BoxFit.cover,),
-                            SizedBox(width: 1.5.w),
-                            Image.asset(Assets.imagesFacbookicon,height: 7.h,width: 20.w,fit: BoxFit.cover,),
-                          ]),
-                    ],
-                  ),
-                  SizedBox(height: 2.5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: Strings.dontHaveAccount,
-                              style: FontManager.regular(15,
-                                  color: AppColors.black),
-                            ),
-                            TextSpan(
-                              style: FontManager.semiBold(15,
-                                  color: AppColors.buttonColor),
-                              text: Strings.signUp,
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => Get.toNamed(Routes.signup),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 33),
-                ],
+      body: Column(
+        children: [
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(16),
+            child: TextField(
+              controller: groupNameController,
+              decoration: InputDecoration(
+                hintText: 'Group Name',
+                hintStyle: TextStyle(color: Colors.grey.shade400),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+                filled: true,
+                fillColor: Colors.grey[50],
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-
-  void onLogin() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-    }
-    controller.login();
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_colors.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_radius.dart';
-
-import '../../../../generated/assets.dart';
-import '../../../utils/app_string.dart';
-import '../../../utils/font_manager.dart';
-
-class OnboardingCard extends StatelessWidget {
-  final String imagePath;
-  final String title;
-  final String description;
-  final VoidCallback onNext;
-  final double titleFontSize;
-  final double descriptionFontSize;
-  final double buttonFontSize;
-
-  const OnboardingCard({
-    super.key,
-    required this.imagePath,
-    required this.title,
-    required this.description,
-    required this.onNext,
-    this.titleFontSize = 24.0,
-    this.descriptionFontSize = 12.0,
-    this.buttonFontSize = 16.0,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 42.h,
-      width: 100.w,
-      decoration: const BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.only(
-          topLeft: AppRadius.radiusM,
-          topRight: AppRadius.radiusM,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(height: 3.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 3.h,
-                width: 20.w,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(imagePath),
-                    fit: BoxFit.contain,
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Text(
+                  'Selected Users: ${selectedUsers.length}',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 3.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.w),
-            child: Text(
-              title,
-              style: FontManager.medium(titleFontSize),
-              textAlign: TextAlign.center,
+              ],
             ),
           ),
-          SizedBox(height: 4.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.w),
-            child: Text(
-              description,
-              style: FontManager.regular(descriptionFontSize, color: AppColors.greyText),
-              textAlign: TextAlign.center,
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance.collection('users').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final users = snapshot.data!.docs;
+
+                return ListView.builder(
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    final userData =
+                        users[index].data() as Map<String, dynamic>;
+                    final userId = users[index].id;
+                    final username = userData['username'] ?? 'Unknown User';
+                    final profileImage = userData['profileImage'] ?? '';
+
+                    if (userId == FirebaseAuth.instance.currentUser?.uid) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: profileImage.isNotEmpty
+                              ? NetworkImage(profileImage)
+                              : const AssetImage('assets/images/profile.png')
+                                  as ImageProvider,
+                        ),
+                        title: Text(
+                          username,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        trailing: Checkbox(
+                          value: selectedUsers.contains(userId),
+                          activeColor: Colors.black54,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              if (value == true) {
+                                selectedUsers.add(userId);
+                              } else {
+                                selectedUsers.remove(userId);
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ),
-          SizedBox(height: 4.h),
-          GestureDetector(
-            onTap: onNext,
-            child: Container(
-              height: 5.2.h,
-              width: 32.w,
-              decoration: const BoxDecoration(
-                color: AppColors.buttonColor,
-                borderRadius: BorderRadius.all(AppRadius.radiusSM),
+        ],
+      ),
+    );
+  }
+}
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:chat_app/screen/chat_flow/bloc/chat_bloc.dart';
+import 'package:chat_app/screen/chat_flow/bloc/chat_event.dart';
+import 'package:chat_app/screen/chat_flow/bloc/chat_state.dart';
+import 'package:chat_app/services/firebase_services.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import '../data/model.dart';
+
+const List<String> reactions = ['❤️', '👍', '👎', '😂', '😮', '🤝', '🔥'];
+
+class ChatPage extends StatefulWidget {
+  final String chatId;
+
+  const ChatPage({super.key, required this.chatId});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
+  final controller = TextEditingController();
+  final ScrollController scrollController = ScrollController();
+  bool shouldAutoScroll = true;
+  String? chatName;
+  bool isGroup = false;
+  String? otherUserId;
+  Stream<DocumentSnapshot>? userStatusStream;
+  Timer? typingTimer;
+  bool isTyping = false;
+  final Set<Message> selectedMessages = {};
+  bool isSearching = false;
+  TextEditingController searchController = TextEditingController();
+  List<Message> searchResults = [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    scrollController.addListener(scrollListener);
+    initializeChat();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToBottom();
+    });
+    controller.addListener(onTextChanged);
+  }
+
+  void initializeChat() {
+    context.read<ChatBloc>().add(LoadMessagesEvent(widget.chatId));
+    getChatInfo();
+    FirebaseHelper.firebaseHelper.resetUnreadCount(widget.chatId);
+  }
+
+  void scrollListener() {
+    if (scrollController.hasClients) {
+      final maxScroll = scrollController.position.maxScrollExtent;
+      final currentScroll = scrollController.position.pixels;
+      shouldAutoScroll = (maxScroll - currentScroll) < 50;
+    }
+  }
+
+  void onTextChanged() {
+    if (!isTyping) {
+      isTyping = true;
+      FirebaseHelper.firebaseHelper.setTypingStatus(widget.chatId, true);
+    }
+
+    typingTimer?.cancel();
+    typingTimer = Timer(const Duration(milliseconds: 1000), () {
+      isTyping = false;
+      FirebaseHelper.firebaseHelper.setTypingStatus(widget.chatId, false);
+    });
+  }
+
+  @override
+  void dispose() {
+    typingTimer?.cancel();
+    controller.removeListener(onTextChanged);
+    FirebaseHelper.firebaseHelper.setTypingStatus(widget.chatId, false);
+    FirebaseHelper.firebaseHelper.resetUnreadCount(widget.chatId);
+    WidgetsBinding.instance.removeObserver(this);
+    scrollController.removeListener(scrollListener);
+    scrollController.dispose();
+    controller.dispose();
+    searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> getChatInfo() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+    final chatDoc = await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.chatId)
+        .get();
+
+    final chatData = chatDoc.data();
+    if (chatData == null) return;
+
+    isGroup = chatData['isGroup'] ?? false;
+
+    if (isGroup) {
+      setState(() {
+        chatName = chatData['groupName'] ?? 'Unnamed Group';
+      });
+    } else {
+      List<String> users = List<String>.from(chatData['users'] ?? []);
+      otherUserId = users.firstWhere(
+        (userId) => userId != currentUser.uid,
+        orElse: () => '',
+      );
+
+      if (otherUserId!.isNotEmpty) {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(otherUserId)
+            .get();
+        setState(() {
+          chatName = userDoc.data()?['username'] ?? 'Unknown User';
+          userStatusStream =
+              FirebaseHelper.firebaseHelper.getUserOnlineStatus(otherUserId!);
+        });
+      }
+    }
+  }
+
+  bool _shouldShowTimestamp(Message current, Message previous) {
+    final currentDate = current.timestamp.toDate();
+    final previousDate = previous.timestamp.toDate();
+
+    return !isSameDay(currentDate, previousDate);
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  Widget _buildDateSeparator(DateTime date) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              formatDate(date),
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 12,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    Strings.nextButton,
-                    style: FontManager.regular(
-                      buttonFontSize,
-                      color: AppColors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String formatDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final messageDate = DateTime(date.year, date.month, date.day);
+
+    if (messageDate == today) {
+      return 'Today';
+    } else if (messageDate == yesterday) {
+      return 'Yesterday';
+    } else {
+      return DateFormat('MMM d, y').format(date);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('Navigated to ChatPage with chatId: ${widget.chatId}');
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: _buildAppBar(),
+      body: Column(
+        children: [
+          Expanded(
+            child: BlocConsumer<ChatBloc, ChatState>(
+              listenWhen: (previous, current) =>
+                  current is MessageSentState || current is MessageErrorState,
+              listener: (context, state) {
+                if (state is MessagesLoadedState || state is MessageSentState) {
+                  scrollToBottom();
+                } else if (state is MessageErrorState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.error)),
+                  );
+                }
+
+              },
+              buildWhen: (previous, current) =>
+                  current is MessagesLoadedState || current is ChatInitialState,
+              builder: (context, state) {
+                if (state is MessagesLoadedState) {
+                  return _buildMessageList(state.messages);
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
+          ),
+          _buildMessageInput(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageList(List<Message> messages) {
+    final displayMessages =
+        searchResults.isNotEmpty && isSearching ? searchResults : messages;
+
+    if (displayMessages.isEmpty) {
+      return Center(
+        child: Text(
+          isSearching ? 'No messages found' : 'No messages yet.',
+          style: TextStyle(color: Colors.grey.shade600),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      controller: scrollController,
+      padding: const EdgeInsets.all(12),
+      itemCount: displayMessages.length,
+      itemBuilder: (context, index) {
+        final message = displayMessages[index];
+        final showTimestamp = index == 0 ||
+            _shouldShowTimestamp(
+                displayMessages[index], displayMessages[index - 1]);
+
+        return GestureDetector(
+          onLongPress: () => _selectMessage(message),
+          onTap: () {
+            if (selectedMessages.isNotEmpty) {
+              _selectMessage(message);
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: selectedMessages.contains(message)
+                  ? Colors.blue.shade50
+                  : Colors.transparent,
+            ),
+            child: Column(
+              children: [
+                if (showTimestamp)
+                  _buildDateSeparator(message.timestamp.toDate()),
+                MessageBubble(
+                  message: message,
+                  isGroup: isGroup,
+                  chatId: widget.chatId,
+                  isSelected: selectedMessages.contains(message),
+                  onTap: selectedMessages.isNotEmpty
+                      ? () => _selectMessage(message)
+                      : null,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void scrollToBottom() {
+    if (scrollController.hasClients) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      });
+    }
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      elevation: 1,
+      backgroundColor: Colors.grey.shade100,
+      leadingWidth: 70,
+      titleSpacing: 0,
+      leading: InkWell(
+        onTap: () {
+          FirebaseHelper.firebaseHelper.resetUnreadCount(widget.chatId);
+          Navigator.pop(context);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.arrow_back, color: Colors.grey.shade800),
+          ],
+        ),
+      ),
+      title: _buildAppBarTitle(),
+      actions: [
+        if (selectedMessages.isNotEmpty) ...[
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                '${selectedMessages.length} selected',
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.red.shade600),
+            onPressed: _deleteSelectedMessages,
+          ),
+          IconButton(
+            icon: Icon(
+              selectedMessages.first.isPinned
+                  ? Icons.push_pin
+                  : Icons.push_pin_outlined,
+              color: Colors.blue,
+            ),
+            onPressed: () {
+              togglePin(selectedMessages.first);
+              setState(() => selectedMessages.clear());
+            },
+          ),
+        ] else ...[
+          IconButton(
+            icon: Icon(
+              isSearching ? Icons.close : Icons.search,
+              color: Colors.grey.shade700,
+            ),
+            onPressed: () {
+              setState(() {
+                isSearching = !isSearching;
+                if (!isSearching) {
+                  searchController.clear();
+                  searchResults.clear();
+                }
+              });
+            },
+          ),
+          if (isGroup)
+            IconButton(
+              icon: Icon(Icons.group, color: Colors.grey.shade700),
+              onPressed: () {},
+            ),
+        ],
+        BlocListener<ChatBloc, ChatState>(
+          listener: (context, state) {
+            if (state is MessagesDeletedState) {
+            } else if (state is MessageErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
+            }
+          },
+          child: PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert, color: Colors.grey.shade700),
+            color: Colors.white,
+            onSelected: (value) async {
+              if (value == 'delete') {
+                bool? confirmDelete = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    textAlign: TextAlign.center,
+                    title: const Text(
+                      'Delete Messages',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    content: Text(
+                      'Are you sure you want to delete all messages in this chat?',
+                      style: TextStyle(color: Colors.grey.shade800),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.grey.shade600),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(color: Colors.red.shade600),
+                        ),
+                      ),
+                    ],
                   ),
-                  Image.asset(
-                    Assets.imagesIntoarro,
-                    color: AppColors.white,
-                    width: 5.w,
+                );
+                if (confirmDelete == true) {
+                  context
+                      .read<ChatBloc>()
+                      .add(DeleteAllMessagesEvent(widget.chatId));
+                }
+              } else if (value == 'remove') {
+                bool? confirmRemove = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    title: const Text(
+                      'Remove Chat',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    content: Text(
+                      'Are you sure you want to remove this chat?',
+                      style: TextStyle(color: Colors.grey.shade800),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.grey.shade600),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: Text(
+                          'Remove',
+                          style: TextStyle(color: Colors.red.shade600),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:travellery_mobile/generated/assets.dart';
-import 'package:travellery_mobile/travellery_mobile/routes_app/all_routes_app.dart';
-import '../../../utils/app_string.dart';
-import 'common_onbording.dart';
+                );
 
-class OnbordingPage1 extends StatelessWidget {
-  const OnbordingPage1({super.key});
+                if (confirmRemove == true) {
+                  try {
+                    final messagesQuery = await FirebaseFirestore.instance
+                        .collection('chats')
+                        .doc(widget.chatId)
+                        .collection('messages')
+                        .get();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(Assets.imagesInto1),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              OnboardingCard(
-                imagePath: Assets.imagesIntodesh,
-                title: Strings.onboardingTitle1,
-                description: Strings.onboardingDescription1,
-                onNext: () {
-                  Get.toNamed(Routes.onboarding2);
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:travellery_mobile/generated/assets.dart';
-import 'package:travellery_mobile/travellery_mobile/routes_app/all_routes_app.dart';
-import '../../../utils/app_string.dart';
-import 'common_onbording.dart';
+                    final batch = FirebaseFirestore.instance.batch();
 
-class OnbordingPage2 extends StatelessWidget {
-  const OnbordingPage2({super.key});
+                    for (var doc in messagesQuery.docs) {
+                      batch.delete(doc.reference);
+                    }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(Assets.imagesInto2),
-                fit: BoxFit.cover,
-              ),
-            ),
+                    batch.delete(FirebaseFirestore.instance
+                        .collection('chats')
+                        .doc(widget.chatId));
+
+                    final invitationsQuery = await FirebaseFirestore.instance
+                        .collection('invitations')
+                        .where('inviterId', whereIn: [
+                      FirebaseAuth.instance.currentUser?.uid,
+                      otherUserId
+                    ]).where('inviteeId', whereIn: [
+                      FirebaseAuth.instance.currentUser?.uid,
+                      otherUserId
+                    ]).get();
+
+                    for (var doc in invitationsQuery.docs) {
+                      batch.delete(doc.reference);
+                    }
+
+                    await batch.commit();
+
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Chat removed successfully')),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error removing chat: $e')),
+                    );
+                  }
+                }
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem<String>(
+                  value: 'delete',
+                  child: Text('Delete Messages'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'remove',
+                  child: Text('Remove Chat'),
+                ),
+              ];
+            },
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // Onboarding Card
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: OnboardingCard(
-                  imagePath: Assets.imagesIntodesh2,
-                  title: Strings.onboardingTitle2,
-                  description: Strings.onboardingDescription2,
-                  onNext: () {
-                    Get.toNamed(Routes.onboarding3);
+        ),
+      ],
+      bottom: isSearching
+          ? PreferredSize(
+              preferredSize: const Size.fromHeight(60),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                color: Colors.white,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value.isEmpty) {
+                      setState(() => searchResults.clear());
+                      return;
+                    }
+
+                    final state = context.read<ChatBloc>().state;
+                    if (state is MessagesLoadedState) {
+                      setState(() {
+                        searchResults = state.messages
+                            .where((message) => message.message
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
+                      });
+                    }
                   },
                 ),
               ),
-            ],
+            )
+          : null,
+    );
+  }
+
+  Widget _buildMessageInput() {
+    scrollToBottom();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
           ),
         ],
       ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:travellery_mobile/generated/assets.dart';
-import 'package:travellery_mobile/travellery_mobile/routes_app/all_routes_app.dart';
-import '../../../utils/app_string.dart';
-import 'common_onbording.dart';
-
-class OnbordingPage3 extends StatelessWidget {
-  const OnbordingPage3({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+      child: Row(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(Assets.imagesInto3),
-                fit: BoxFit.cover,
+          Expanded(
+            child: TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                hintText: 'Message',
+                hintStyle: TextStyle(color: Colors.grey.shade400),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 8),
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              OnboardingCard(
-                imagePath: Assets.imagesIntodesh3,
-                title: Strings.onboardingTitle3,
-                description: Strings.onboardingDescription3,
-                onNext: () {
-                  Get.toNamed(Routes.signup);
-                },
-              ),
-            ],
+          IconButton(
+            icon: const Icon(Icons.send),
+            color: Colors.grey.shade600,
+            onPressed: () {
+              final message = controller.text.trim();
+              if (message.isNotEmpty) {
+                context
+                    .read<ChatBloc>()
+                    .add(SendMessageEvent(widget.chatId, message));
+                controller.clear();
+              }
+            },
           ),
         ],
       ),
     );
   }
+
+  Widget _buildAppBarTitle() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          chatName ?? 'Chat',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (!isGroup && userStatusStream != null)
+          StreamBuilder<DocumentSnapshot>(
+            stream:
+                FirebaseHelper.firebaseHelper.getTypingStatus(widget.chatId),
+            builder: (context, typingSnapshot) {
+              if (!typingSnapshot.hasData || !typingSnapshot.data!.exists) {
+                return const SizedBox.shrink();
+              }
+
+              try {
+                final typingData = typingSnapshot.data?.get('typing') as Map?;
+                final isOtherUserTyping = typingData?[otherUserId] ?? false;
+                if (isOtherUserTyping) {
+                  return Text(
+                    'Typing...',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.green.shade600,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  );
+                }
+
+                return StreamBuilder<DocumentSnapshot>(
+                  stream: userStatusStream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || !snapshot.data!.exists) {
+                      return const SizedBox.shrink();
+                    }
+                    final isOnline = snapshot.data?.get('isOnline') ?? false;
+                    return Text(
+                      isOnline ? 'Online' : 'Offline',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: isOnline
+                            ? Colors.green.shade600
+                            : Colors.grey.shade600,
+                      ),
+                    );
+                  },
+                );
+              } catch (e) {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
+      ],
+    );
+  }
+
+  void _selectMessage(Message message) {
+    setState(() {
+      if (selectedMessages.contains(message)) {
+        selectedMessages.remove(message);
+      } else {
+        selectedMessages.add(message);
+      }
+    });
+  }
+
+  Future<void> _deleteSelectedMessages() async {
+    if (selectedMessages.isEmpty) return;
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    final canDeleteAny =
+        selectedMessages.any((message) => message.senderId == currentUser.uid);
+
+    if (!canDeleteAny) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('You can only delete your own messages'),
+        ),
+      );
+      return;
+    }
+
+    try {
+      context.read<ChatBloc>().add(DeleteSelectedMessagesEvent(
+            widget.chatId,
+            selectedMessages.toList(),
+            currentUser.uid,
+          ));
+
+      setState(() {
+        selectedMessages.clear();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting messages: $e')),
+      );
+    }
+  }
+
+  void togglePin(Message message) {
+    print(
+        'Toggling pin for message: ${message.id}, current status: ${message.isPinned}');
+    context.read<ChatBloc>().add(ToggleMessagePinEvent(
+          widget.chatId,
+          message.id,
+          !message.isPinned,
+        ));
+  }
 }
-import 'package:flutter/gestures.dart';
+
+class MessageBubble extends StatefulWidget {
+  final Message message;
+  final bool isGroup;
+  final bool isSelected;
+  final Function()? onTap;
+  final String chatId;
+
+  const MessageBubble({
+    super.key,
+    required this.message,
+    required this.isGroup,
+    required this.chatId,
+    this.isSelected = false,
+    this.onTap,
+  });
+
+  @override
+  State<MessageBubble> createState() => _MessageBubbleState();
+}
+
+class _MessageBubbleState extends State<MessageBubble> {
+  bool isEditing = false;
+  late TextEditingController editController;
+
+  @override
+  void initState() {
+    super.initState();
+    editController = TextEditingController(text: widget.message.message);
+  }
+
+  @override
+  void dispose() {
+    editController.dispose();
+    super.dispose();
+  }
+
+  void handleEdit() {
+    final newMessage = editController.text.trim();
+    if (newMessage.isNotEmpty && newMessage != widget.message.message) {
+      context.read<ChatBloc>().add(EditMessageEvent(
+            widget.chatId,
+            widget.message.id,
+            newMessage,
+          ));
+    }
+    setState(() => isEditing = false);
+  }
+
+  void showReactionPicker(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => BlocListener<ChatBloc, ChatState>(
+        listener: (context, state) {
+          if (state is ReactionUpdatedState) {
+            Navigator.pop(context);
+          } else if (state is ReactionErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error)),
+            );
+          }
+        },
+        child: AlertDialog(
+          backgroundColor: Colors.white,
+          contentPadding: const EdgeInsets.all(8),
+          content: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            children: reactions.map((reaction) {
+              final isSelected =
+                  widget.message.reactions[currentUser.uid] == reaction;
+              return InkWell(
+                onTap: () {
+                  context.read<ChatBloc>().add(ToggleReactionEvent(
+                        widget.chatId,
+                        widget.message.id,
+                        currentUser.uid,
+                        reaction,
+                      ));
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color:
+                        isSelected ? Colors.blue.shade100 : Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    reaction,
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final isSentByUser = widget.message.senderId == currentUser?.uid;
+
+    return GestureDetector(
+      onLongPress: isSentByUser ? widget.onTap : null,
+      onTap: isSentByUser
+          ? () => setState(() => isEditing = true)
+          : (widget.onTap ?? () => showReactionPicker(context)),
+      child: Align(
+        alignment: isSentByUser ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? Colors.blue.shade100
+                : (isSentByUser ? Colors.grey.shade200 : Colors.white),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                offset: const Offset(0, 2),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.75,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (isEditing) ...[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: editController,
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onSubmitted: (_) => handleEdit(),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, size: 20),
+                      onPressed: () => setState(() => isEditing = false),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.check, size: 20),
+                      onPressed: handleEdit,
+                    ),
+                  ],
+                ),
+              ] else
+                Text(
+                  widget.message.message,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+              if (widget.message.reactions.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 4,
+                  children: widget.message.reactions.entries.map((entry) {
+                    return Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(entry.value,
+                          style: const TextStyle(fontSize: 12)),
+                    );
+                  }).toList(),
+                ),
+              ],
+              const SizedBox(height: 4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (widget.message.isPinned)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: Icon(
+                        Icons.push_pin,
+                        size: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  if (widget.message.isEdited ?? false)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: Text(
+                        'edited',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey.shade500,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  Text(
+                    DateFormat('HH:mm')
+                        .format(widget.message.timestamp.toDate()),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  if (isSentByUser) ...[
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.done_all,
+                      size: 16,
+                      color: Colors.grey.shade400,
+                    ),
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Message {
+  final String id;
+  final String senderId;
+  final String message;
+  final Timestamp timestamp;
+  final Map<String, String> reactions;
+  final bool? isEdited;
+  final bool isPinned;
+
+  Message({
+    required this.id,
+    required this.senderId,
+    required this.message,
+    required this.timestamp,
+    this.reactions = const {},
+    this.isEdited,
+    this.isPinned = false,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'senderId': senderId,
+      'message': message,
+      'timestamp': timestamp,
+      'reactions': reactions,
+      'isEdited': isEdited,
+      'isPinned': isPinned,
+    };
+  }
+
+  factory Message.fromMap(Map<String, dynamic> map) {
+    return Message(
+      id: map['id'] ?? '',
+      senderId: map['senderId'] ?? '',
+      message: map['message'] ?? '',
+      timestamp: map['timestamp'] ?? Timestamp.now(),
+      reactions: Map<String, String>.from(map['reactions'] ?? {}),
+      isEdited: map['isEdited'],
+      isPinned: map['isPinned'] ?? false,
+    );
+  }
+}
+import 'package:chat_app/screen/chat_flow/data/model.dart';
+import 'package:equatable/equatable.dart';
+
+abstract class ChatState extends Equatable {
+  const ChatState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ChatInitialState extends ChatState {}
+
+class MessagesLoadedState extends ChatState {
+  final List<Message> messages;
+
+  const MessagesLoadedState(this.messages);
+
+  @override
+  List<Object> get props => [messages];
+}
+
+class MessageSendingState extends ChatState {}
+
+class MessageSentState extends ChatState {}
+
+class MessageErrorState extends ChatState {
+  final String error;
+  const MessageErrorState(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
+class MessagesEmptyState extends ChatState {}
+
+class MessagesDeletedState extends ChatState {}
+
+class ReactionUpdatingState extends ChatState {}
+
+class ReactionUpdatedState extends ChatState {}
+
+class ReactionErrorState extends ChatState {
+  final String error;
+  const ReactionErrorState(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
+
+class MessageEditingState extends ChatState {}
+
+class MessageEditedState extends ChatState {}
+import 'package:chat_app/screen/chat_flow/data/model.dart';
+import 'package:equatable/equatable.dart';
+
+abstract class ChatEvent extends Equatable {
+  const ChatEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class LoadMessagesEvent extends ChatEvent {
+  final String chatId;
+
+  const LoadMessagesEvent(this.chatId);
+
+  @override
+  List<Object> get props => [chatId];
+}
+
+class SendMessageEvent extends ChatEvent {
+  final String chatId;
+  final String message;
+
+  const SendMessageEvent(this.chatId, this.message);
+
+  @override
+  List<Object> get props => [chatId, message];
+}
+
+class DeleteAllMessagesEvent extends ChatEvent {
+  final String chatId;
+
+  const DeleteAllMessagesEvent(this.chatId);
+}
+
+class NewMessagesEvent extends ChatEvent {
+  final List<Message> messages;
+
+  const NewMessagesEvent(this.messages);
+
+  @override
+  List<Object> get props => [messages];
+}
+
+class ToggleReactionEvent extends ChatEvent {
+  final String chatId;
+  final String messageId;
+  final String userId;
+  final String reaction;
+
+  const ToggleReactionEvent(
+    this.chatId,
+    this.messageId,
+    this.userId,
+    this.reaction,
+  );
+
+  @override
+  List<Object> get props => [chatId, messageId, userId, reaction];
+}
+
+class DeleteSelectedMessagesEvent extends ChatEvent {
+  final String chatId;
+  final List<Message> messages;
+  final String userId;
+
+  const DeleteSelectedMessagesEvent(this.chatId, this.messages, this.userId);
+
+  @override
+  List<Object> get props => [chatId, messages, userId];
+}
+
+class EditMessageEvent extends ChatEvent {
+  final String chatId;
+  final String messageId;
+  final String newMessage;
+
+  const EditMessageEvent(this.chatId, this.messageId, this.newMessage);
+
+  @override
+  List<Object> get props => [chatId, messageId, newMessage];
+}
+
+class ToggleMessagePinEvent extends ChatEvent {
+  final String chatId;
+  final String messageId;
+  final bool isPinned;
+
+  const ToggleMessagePinEvent(this.chatId, this.messageId, this.isPinned);
+
+  @override
+  List<Object> get props => [chatId, messageId, isPinned];
+}
+import 'package:chat_app/screen/chat_flow/bloc/chat_event.dart';
+import 'package:chat_app/screen/chat_flow/bloc/chat_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:chat_app/screen/chat_flow/data/model.dart';
+import 'package:chat_app/services/firebase_services.dart';
+import 'dart:async';
+
+class ChatBloc extends Bloc<ChatEvent, ChatState> {
+  StreamSubscription<QuerySnapshot>? messagesSubscription;
+
+  ChatBloc() : super(ChatInitialState()) {
+    on<LoadMessagesEvent>(onLoadMessages);
+
+    on<SendMessageEvent>(onSendMessage);
+
+    on<DeleteAllMessagesEvent>(onDeleteAllMessages);
+
+    on<NewMessagesEvent>(onNewMessages);
+
+    on<ToggleReactionEvent>(onToggleReaction);
+ 
+    on<DeleteSelectedMessagesEvent>(onDeleteSelectedMessages);
+
+    on<EditMessageEvent>(onEditMessage);
+
+    on<ToggleMessagePinEvent>((event, emit) async {
+      try {
+        await FirebaseHelper.firebaseHelper.toggleMessagePin(
+          event.chatId,
+          event.messageId,
+          event.isPinned,
+        );
+        
+        add(LoadMessagesEvent(event.chatId));
+      } catch (e) {
+        emit(MessageErrorState(e.toString()));
+      }
+    });
+  }
+
+  void onLoadMessages(LoadMessagesEvent event, Emitter<ChatState> emit) {
+    try {
+      messagesSubscription?.cancel();
+
+      messagesSubscription = FirebaseFirestore.instance
+          .collection('chats')
+          .doc(event.chatId)
+          .collection('messages')
+          .orderBy('timestamp')
+          .snapshots()
+          .listen((snapshot) {
+        // Check if the snapshot is empty
+        if (snapshot.docs.isEmpty) {
+          emit(MessagesEmptyState()); // Emit an empty state if no messages found
+        } else {
+          final messages = snapshot.docs.map((doc) {
+            final data = doc.data();
+            data['id'] = doc.id;
+            return Message.fromMap(data);
+          }).toList();
+
+          add(NewMessagesEvent(messages));
+        }
+      });
+    } catch (e) {
+      emit(MessageErrorState(e.toString()));
+    }
+  }
+
+
+  void onNewMessages(NewMessagesEvent event, Emitter<ChatState> emit) {
+    if (event.messages.isEmpty) {
+      emit(MessagesEmptyState()); // Show empty state if no messages
+    } else {
+      emit(MessagesLoadedState(event.messages));
+    }
+  }
+
+  Future<void> onSendMessage(
+      SendMessageEvent event, Emitter<ChatState> emit) async {
+    try {
+      emit(MessageSendingState());
+
+      await FirebaseHelper.firebaseHelper.sendMessage(
+        event.chatId,
+        event.message,
+      );
+
+      add(LoadMessagesEvent(event.chatId));
+
+      emit(MessageSentState());
+    } catch (e) {
+      emit(MessageErrorState(e.toString()));
+    }
+  }
+
+  Future<void> onDeleteAllMessages(
+      DeleteAllMessagesEvent event, Emitter<ChatState> emit) async {
+    try {
+      final messagesRef = FirebaseFirestore.instance
+          .collection('chats')
+          .doc(event.chatId)
+          .collection('messages');
+
+      final snapshot = await messagesRef.get();
+
+      for (var doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      emit(MessagesDeletedState());
+
+      add(LoadMessagesEvent(event.chatId));
+    } catch (e) {
+      emit(MessageErrorState('Error deleting messages: $e'));
+    }
+  }
+
+  Future<void> onToggleReaction(
+    ToggleReactionEvent event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      emit(ReactionUpdatingState());
+
+      await FirebaseHelper.firebaseHelper.toggleReaction(
+        event.chatId,
+        event.messageId,
+        event.userId,
+        event.reaction,
+      );
+
+      emit(ReactionUpdatedState());
+    } catch (e) {
+      emit(ReactionErrorState(e.toString()));
+    }
+  }
+
+  Future<void> onDeleteSelectedMessages(
+    DeleteSelectedMessagesEvent event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      emit(MessageSendingState());
+
+      await FirebaseHelper.firebaseHelper.deleteMessages(
+        event.chatId,
+        event.messages,
+        event.userId,
+      );
+
+      emit(MessagesDeletedState());
+      add(LoadMessagesEvent(event.chatId));
+    } catch (e) {
+      emit(MessageErrorState(e.toString()));
+    }
+  }
+
+  Future<void> onEditMessage(
+    EditMessageEvent event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      emit(MessageEditingState());
+      
+      await FirebaseHelper.firebaseHelper.editMessage(
+        event.chatId,
+        event.messageId,
+        event.newMessage,
+      );
+
+      emit(MessageEditedState());
+      add(LoadMessagesEvent(event.chatId));
+    } catch (e) {
+      emit(MessageErrorState(e.toString()));
+    }
+  }
+
+  @override
+  Future<void> close() {
+    messagesSubscription?.cancel();
+
+    return super.close();
+  }
+}
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/generated/assets.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_radius.dart';
-import '../../../common_widgets/common_button.dart';
-import '../../../routes_app/all_routes_app.dart';
-import '../../../utils/app_colors.dart';
-import '../../../utils/app_string.dart';
-import '../../../utils/font_manager.dart';
-import '../../../utils/textFormField.dart';
-import '../../controller/signup_Login_controller.dart';
+import '../../../../components/button_common.dart';
+import '../../../../components/text_filed.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/signup_bloc.dart';
+import '../bloc/signup_event.dart';
+import '../bloc/signup_state.dart';
+import 'dart:io';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  _SignupPageState createState() => _SignupPageState();
 }
-
 class _SignupPageState extends State<SignupPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final SignUpLoginController controller = Get.find<SignUpLoginController>();
-  bool isPasswordVisible = false;
-  bool isConfirmPasswordVisible = false;
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 7.w),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            child: Image.asset(Assets.imagesSplash),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            Strings.createAccount,
-                            style: FontManager.semiBold(28),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 6.5.h),
-                          Image.asset(Assets.imagesProfile,height: 13.1.h,width: 30.w,),
-                          SizedBox(height: 2.h),
-                          GestureDetector(
-                            onTap: () {
+  File? profileImage;
 
-                            },
-                            child: Container(
-                              height: 5.2.h,
-                              width: 141,
-                              decoration: const BoxDecoration(
-                                color: AppColors.buttonColor,
-                                borderRadius: BorderRadius.all(AppRadius.radius10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  Strings.addProfileImage,
-                                  style: FontManager.medium(15.sp,color: AppColors.white),
-                                  // Updated here
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-
-                  Text(Strings.nameLabel, style: FontManager.regular(14)),
-                  SizedBox(height: 0.5.h),
-                  CustomTextField(
-                    hintText: Strings.nameHint,
-                    prefixIconImage: Image.asset(Assets.imagesSignupProfile,width: 20, height: 20),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return Strings.nameError;
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => controller.name.value = value!,
-                  ),
-                  SizedBox(height: 3.h),
-                  Text(Strings.mobileNumberLabel,
-                      style: FontManager.regular(14)),
-                  SizedBox(height: 0.5.h),
-
-                  CustomTextField(
-                    hintText: Strings.mobileNumberHint,
-                    prefixIconImage: Image.asset(Assets.imagesPhone,
-                        width: 20, height: 20),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return Strings.mobileNumberError;
-                      } else if (value.length < 10) {
-                        return Strings.mobileNumberLengthError;
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => controller.mobile.value = value!,
-                  ),
-                  SizedBox(height: 3.h),
-                  Text(Strings.emailLabel,
-                      style: FontManager.regular(14, color: Colors.black)),
-                  SizedBox(height: 0.5.h),
-                  CustomTextField(
-                    hintText: Strings.emailHint,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return Strings.emailEmpty;
-                      } else if (!GetUtils.isEmail(value)) {
-                        return Strings.invalidEmail;
-                      }
-                      return null;
-                    },
-                    onChanged: (value) => controller.email.value = value,
-                    prefixIconData: Icons.email_outlined,
-                  ),
-                  SizedBox(height: 3.h),
-                  Text(Strings.passwordLabel, style: FontManager.regular(14)),
-                  SizedBox(height: 0.5.h),
-                  CustomTextField(
-                    hintText: Strings.passwordHint,
-                    prefixIconData: Icons.lock_outline_rounded,
-                    obscureText: !isPasswordVisible,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return Strings.passwordError;
-                      } else if (value.length < 6) {
-                        return Strings.passwordLengthError;
-                      }
-                      return null;
-                    },
-                    onSaved: (value) => controller.password.value = value!,
-                    showSuffixIcon: true,
-                    onSuffixIconPressed: () {
-                      setState(() {
-                        isPasswordVisible = !isPasswordVisible;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 3.h),
-                  Text(Strings.confirmPasswordLabel,
-                      style: FontManager.regular(14)),
-                  SizedBox(height: 0.5.h),
-                  CustomTextField(
-                    hintText: Strings.confirmPasswordHint,
-                    prefixIconData: Icons.lock_outline_rounded,
-                    obscureText: !isConfirmPasswordVisible,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return Strings.confirmPasswordError;
-                      } else if (value != controller.password.value) {
-                        return Strings.passwordMatchError;
-                      }
-                      return null;
-                    },
-                    showSuffixIcon: true,
-                    onSuffixIconPressed: () {
-                      setState(() {
-                        isConfirmPasswordVisible = !isConfirmPasswordVisible;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 11.9.h),
-
-                  CommonButton(
-                    title: Strings.signUp,
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        controller.signup();
-                      }
-                    },
-                  ),
-                  SizedBox(height: 5.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: Strings.alreadyHaveAccount,
-                              style: FontManager.regular(14),
-                            ),
-                            TextSpan(
-                              text: ' ${Strings.login}',
-                              style: FontManager.semiBold(14,color: AppColors.buttonColor),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Get.toNamed(Routes.login);
-                                },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 7.h ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-import 'package:get/get.dart';
-import 'package:travellery_mobile/travellery_mobile/routes_app/all_routes_app.dart';
-
-class SplashController extends GetxController {
-
-  @override
-  void onInit() {
-    super.onInit();
-    navigateToNextScreen();
-  }
-
-  void navigateToNextScreen() {
-    Future.delayed(const Duration(seconds: 3), () {
-      Get.offNamed(Routes.onboarding1);
-    });
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:travellery_mobile/generated/assets.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/splash_screen/splash_controller.dart';
-import '../../../utils/app_colors.dart';
-
-class SplashPage extends StatefulWidget {
-  const SplashPage({super.key});
-
-  @override
-  State<SplashPage> createState() => _SplashPageState();
-}
-
-class _SplashPageState extends State<SplashPage> {
-  SplashController controller = Get.put(SplashController());
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: Image.asset(Assets.imagesSplash),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_radius.dart';
-
-import '../utils/app_colors.dart';
-import '../utils/font_manager.dart';
-
-class CommonButton extends StatelessWidget {
-  final String title;
-  final VoidCallback onPressed;
-
-  const CommonButton({
-    super.key,
-    required this.title,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        height: 6.h,
-        width: 100.w,
-        decoration: const BoxDecoration(
-          color: AppColors.buttonColor,
-          borderRadius: BorderRadius.all(AppRadius.radius10),
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: FontManager.regular(20, color: AppColors.white),
-          ),
-        ),
-      ),
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/common_widgets/common_button.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_colors.dart';
-import '../utils/font_manager.dart';
-
-class CustomDialog {
-  static void showCustomDialog({
-    required BuildContext context,
-    required String title,
-    required String message,
-    required String imageAsset,
-    required String buttonLabel,
-    String? changeEmailLabel,
-    VoidCallback? onResendPressed,
-    VoidCallback? onChangeEmailPressed,
-  }) {
+  Future<void> pickImage() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: const EdgeInsets.all(8.0),
-          title: Column(
-            children: [
-              SizedBox(
-                height: 12.h,
-                child: Image.asset(imageAsset),
-              ),
-               SizedBox(height: 1.h),
-              Text(
-                title,
-                style: FontManager.semiBold(20),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          content: Text(
-            message,
-            textAlign: TextAlign.center,
-            style: FontManager.regular(12, color: AppColors.greyText),
-          ),
-          buttonPadding: const EdgeInsets.all(10),
-          actions: [
-            SizedBox(height: 3.h),
-            CommonButton(
-              title: buttonLabel,
-              onPressed: () {
-                Get.back();
-                if (onResendPressed != null) {
-                  onResendPressed();
-
-                }
+        return SimpleDialog(
+          backgroundColor: Colors.white,
+          title: const Text("Select Image Source"),
+          children: [
+            SimpleDialogOption(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await pickFromGallery();
               },
+              child: const Text('Pick from Gallery'),
             ),
-            SizedBox(height: 2.h),
-            Row(mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (onChangeEmailPressed != null) {
-                      onChangeEmailPressed();
-                    }
-                    Get.back(); // Close the dialog
-                  },
-                  child: Text(
-                    changeEmailLabel ?? "",
-                    textAlign: TextAlign.center,
-                    style: FontManager.regular(14, color: AppColors.buttonColor),
-                  ),
-                ),
-              ],
+            SimpleDialogOption(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await pickFromCamera();
+              },
+              child: const Text('Take a Photo'),
             ),
           ],
         );
       },
     );
   }
-}
-import 'package:flutter/material.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/add_properties_screen/accommodation_details_pages/accommodation_details_page.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/add_properties_screen/amenities_pages/amenities_page.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/add_properties_screen/check_in_out_details_pages/check_in_out_details_page.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/add_properties_screen/homestaydescription_pages/homestaydescription_page.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/add_properties_screen/homestaytitle_pages/homestay_title1.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/add_properties_screen/homestay_type_pages/homestay_type.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/add_properties_screen/house_rules_pages/house_rules_page.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/add_properties_screen/new_amenities_pages/new_amenities_page.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/add_properties_screen/new_rules_pages/new_rules_pages.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/login_page/login_page.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/onbording_pages/onbording_page1.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/onbording_pages/onbording_page2.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/onbording_pages/onbording_page3.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/signup_page/signup_page.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/view/splash_screen/splash_page.dart';
-import '../auth_flow/view/add_properties_screen/address_pages/address_page.dart';
-import '../auth_flow/view/add_properties_screen/list_homestay_pages/list_homestay1.dart';
-import '../auth_flow/view/add_properties_screen/list_homestay_pages/list_homestay2.dart';
-import '../auth_flow/view/add_properties_screen/list_homestay_pages/list_homestay3.dart';
-import '../auth_flow/view/add_properties_screen/location_page/location_page.dart';
-import '../auth_flow/view/add_properties_screen/photos_pages/photo_page.dart';
-import '../auth_flow/view/add_properties_screen/preview_pages/preview_page.dart';
-import '../auth_flow/view/add_properties_screen/price_and_contact_details_pages/price_and_contact_details_page.dart';
-import '../auth_flow/view/forget_password_pages/forget_page/forget_password.dart';
-import '../auth_flow/view/forget_password_pages/reset_page/reset_page.dart';
-import '../auth_flow/view/forget_password_pages/verification_page/verification_page.dart';
 
-class Routes {
-  static const String splash = '/';
-  static const String onboarding1 = 'onboarding1';
-  static const String onboarding2 = 'onboarding2';
-  static const String onboarding3 = 'onboarding3';
-  static const String signup = 'signup';
-  static const String login = 'login';
-  static const String forgetPage = 'forget';
-  static const String verificationPage = 'verification';
-  static const String resetPage = 'resetPage';
-  static const String listHomestayPage1 = 'listHomestayPage1';
-  static const String listHomestayPage2 = 'listHomestayPage2';
-  static const String listHomestayPage3 = 'listHomestayPage3';
-  static const String homestaylist1 = 'homestaylist1';
-  static const String homestayType = 'homestayType';
-  static const String accoummodationPage = 'accoummodationPage';
-  static const String amenities = 'amenities';
-  static const String newamenities = 'newamenities';
-  static const String houseRules = 'houseRules';
-  static const String newRules = 'newRules';
-  static const String checkInOutDetails = 'checkInOutDetails';
-  static const String locationView = 'locationView';
-  static const String addressPage = 'addressPage';
-  static const String photoPage = 'photoPage';
-  static const String homeStayDescriptionPage = 'homeStayDescriptionPage';
-  static const String priceAndContactDetailsPage = 'priceAndContactDetailsPage';
-  static const String previewPage = 'previewPage';
+  Future<void> pickFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-
-  static Map<String, WidgetBuilder> get routes {
-    return {
-      splash: (context) => const SplashPage(),
-      onboarding1: (p0) => const OnbordingPage1(),
-      onboarding2: (p0) => const OnbordingPage2(),
-      onboarding3: (p0) => const OnbordingPage3(),
-      signup: (context) => const SignupPage(),
-      login: (context) => const LoginPage(),
-      forgetPage: (context) => const ForgetPassword(),
-      verificationPage: (context) => const VerificationCodeScreen(),
-      resetPage: (context) => const ResetPasswordScreen(),
-      listHomestayPage1: (context) => const ListHomestayPage1(),
-      listHomestayPage2: (context) => const ListHomestayPage2(),
-      listHomestayPage3: (context) => const ListHomestayPage3(),
-      homestaylist1: (context) => const HomeStayTitleScreen(),
-      homestayType: (context) => const HomeStayTypeScreen(),
-      accoummodationPage: (context) => const AccommodationDetailsPage(),
-      amenities: (context) => const AmenitiesPage(),
-      newamenities: (context) => const NewAmenitiesPages(),
-      houseRules: (context) => const HouseRulesPage(),
-      newRules: (context) => const NewRulesPages(),
-      checkInOutDetails: (context) => const CheckInOutDetailsPage(),
-      locationView: (context) => const LocationView(),
-      addressPage: (context) => const AddressPage(),
-      photoPage: (context) => const PhotoPage(),
-      homeStayDescriptionPage: (context) => const HomeStayDescriptionPage(),
-      priceAndContactDetailsPage: (context) => const PriceAndContactDetailsPage(),
-      previewPage: (context) => const PreviewPage(),
-    };
-  }
-}
-import 'package:flutter/material.dart';
-
-class AppColors {
-  static const Color backgroundColor = Color(0xFFffffff);
-  static const Color white = Color(0xFFffffff);
-  static const Color baseWhite = Color(0xFFFAFAFA);
-  static const Color black = Colors.black;
-  static const Color baseBlack = Color(0xFF0A0A0B);
-  static const Color buttonColor = Color(0xFF6C5AD2);
-  static const Color greySecondary = Color(0xFFAAB9C5);
-  static const Color whiteSmokeSuccess = Color(0xFFA4F4E7);
-  static const Color warning = Color(0xFFF4C790);
-  static const Color redAccent = Color(0xFFFC6565);
-  static const Color primary100 = Color(0xFFE6E3F8);
-  static const Color primary200 = Color(0xFFCEC8F0);
-  static const Color primary300 = Color(0xFFB6ACE9);
-  static const Color primary400 = Color(0xFF9D91E1);
-  static const Color primary500 = Color(0xFF8576DA);
-  static const Color primary600 = Color(0xFF513BCA);
-  static const Color primary700 = Color(0xFF422FAE);
-  static const Color primary800 = Color(0xFF37278F);
-  static const Color primary900 = Color(0xFF2B1F70);
-  static const Color primary1000 = Color(0xFF1F1652);
-  static const Color texFiledColor = Color(0xffC4C8CB);
-  static const Color greyText = Color(0xffB1B6B9);
-  static const Color borderContainerGriedView = Color(0xffECEEF0);
-  static const Color yellow = Color(0xffFCCC51);
-  static const Color perpalContainer = Color(0xffF7F5FF);
-  static const Color textAddProreties = Color(0xff101011);
-  static const Color lightPerpul = Color(0xffE7E4FA);
-}
-import 'package:flutter/material.dart';
-
-class AppRadius {
-  // Define different radius values
-  static const Radius radius0 = Radius.circular(0);
-  static const Radius radius2 = Radius.circular(2);
-  static const Radius radius4 = Radius.circular(4);
-  static const Radius radius6 = Radius.circular(6);
-  static const Radius radius10 = Radius.circular(10);
-  static const Radius radius16 = Radius.circular(16);
-  static const Radius radius24 = Radius.circular(24);
-  static const Radius radius36 = Radius.circular(36);
-  static const Radius radius999 = Radius.circular(999);
-
-  // Named sizes
-  static const Radius radiusXXS = radius2;
-  static const Radius radiusXS = radius4;
-  static const Radius radiusS = radius6;
-  static const Radius radiusSM = radius10;
-  static const Radius radiusM = radius16;
-  static const Radius radiusML = radius24;
-  static const Radius radiusLG = radius36;
-  static const Radius radiusXL = radius999;
-}
-// lib/utils/strings.dart
-
-class Strings {
-  // Onboarding Titles
-  static const String onboardingTitle1 = "Book with ease, travel with joy";
-  static const String onboardingTitle2 = "Discover and find your perfect healing place";
-  static const String onboardingTitle3 = "Giving the best deal just for you";
-
-  // Onboarding Descriptions
-  static const String onboardingDescription1 =
-      '"Discover a seamless booking experience with our user-friendly interface and exclusive deals."';
-  static const String onboardingDescription2 =
-      '"Escape to a world of tranquility and rejuvenation. Discover our curated selection of wellness retreats and healing spaces."';
-  static const String onboardingDescription3 =
-      '"Get exclusive offers and discounts on hotels, flights, and packages, curated just for your travel style."';
-
-  // Button Texts
-  static const String nextButton = "Next";
-  // General Strings
-  static const String welcome = "Welcome";
-  static const String gladToSeeYou = "Glad to see you!";
-
-  // Form Labels
-  static const String rememberMe = "Remember me";
-  static const String forgetPassword = "Forget password?";
-  static const String loginButton = "Login";
-  static const String dontHaveAccount = "Don’t have an account?";
-
-  // Validation Messages
-  static const String emailEmpty = 'Please enter your email';
-  static const String invalidEmail = 'Please enter a valid email';
-  static const String passwordEmpty = 'Please enter your password';
-  static const String shortPassword = 'Password must be at least 6 characters';
-
-  // Hint texts
-  static const String nameHint = 'Enter your name';
-  static const String mobileNumberHint = 'Enter your Mobile Number';
-  static const String emailHint = 'Enter your Email';
-  static const String passwordHint = 'Enter your Password';
-  static const String confirmPasswordHint = 'Confirm Password';
-  static const String addProfileImage = 'Add Profile Image';
-
-  // Labels
-  static const String createAccount = 'Create Account';
-  static const String passwordLabel = 'Password';
-  static const String confirmPasswordLabel = 'Confirm Password';
-  static const String nameLabel = 'Name';
-  static const String mobileNumberLabel = 'Mobile Number';
-  static const String emailLabel = 'Email';
-  static const String signUp = ' Sign Up';
-  static const String alreadyHaveAccount = 'Already have an account?';
-  static const String login = 'Login';
-
-  // Error messages
-  static const String nameError = 'Please enter your name';
-  static const String mobileNumberError = 'Please enter your mobile number';
-  static const String mobileNumberLengthError = 'Mobile number must be at least 10 digits';
-  static const String emailError = 'Please enter your email';
-  static const String emailFormatError = 'Please enter a valid email';
-  static const String passwordError = 'Please enter your password';
-  static const String passwordLengthError = 'Password must be at least 6 characters';
-  static const String confirmPasswordError = 'Please confirm your password';
-  static const String passwordMatchError = 'Passwords do not match';
-
-  static const String forgetPasswordPrompt = "Provide your account's email for which you want to reset your password";
-  static const String reset = "Reset";
-  static const String resend = "Resend";
-  static const String cancel = "Cancel";
-  static const String checkYouEmail = "Check Your Email";
-  static const String theEmailHasBeenResent = "The email has been resent. You will receive an email with a verification code to reset your password.";
-  static const String changeEmail = "Change Email";
-
-  // verification
-  static const String verificationCodeTitle = "Verification Code";
-  static const String verificationCodePrompt = "Enter your verification code sent to jhondoe0601@gmail.com";
-  static const String verificationCodeHint = "Enter verification code";
-  static const String verificationCodeError = "Please enter a valid code";
-  static const String verify = "Verify";
-  static const String verifyFullCodeError = "Please enter the full code";
-  static const String success = "Success";
-  static const String verificationCodeEntered = "Verification code entered!";
-  static const String error = "Error";
-  static const String verifiCodeComple = "Please enter a complete code.";
-
-  static const String resetPassword = "Reset Password";
-  static const String resetCodePrompt = "Enter new password amd confirm password.";
-  static const String newPasswordLabel = "New password";
-  static const String confirmPassword = "Confirm Password";
-  static const String otpEmpty = "This field cannot be empty";
-  static const String submit = "Submit";
-
-  static const String passwordUpdate = "Password Updated";
-  static const String thepasswordChange = "Your password has been updated";
-  static const String listHomeStay = "List Homestay";
-  static const String listHomeStayGreyText = "List your stay in few simple steps to earn and welcome travelers across the world";
-  static const String aboutYourStay = "About your Stay";
-  static const String listHomeStayInto1 = "Give your stay a catchy name and detailed description and provide basic info around accommodation details , amenities you offer , House rules and checkin/checkout details";
-  static const String getStarted = "Get Started";
-  static const String hotToGetThere = "How to get there";
-  static const String listHomeStayInto2 = "Upload beautiful images of your stay as well location and contact details";
-  static const String previewandPublish = "Preview and Publish";
-  static const String listHomeStayInto3 = "Just preview how your details would look like to a traveler and publish. Your are all set to go !";
-  static const String homestayTitle = 'Homestay Title';
-  static const String homestayType = 'Homestay Type';
-
-  static const String titleLabel = 'Title';
-  static const String enterTitle = 'Enter title';
-  static const String titleHint = '0/100';
-  static const String stepCount = 'STEP';
-  static const String nextStep = 'Next';
-  static const String done = "Done";
-  static const String accommodationDetails = "Accommodation Details";
-  static const String entirePlace = "Entire Place";
-  static const String wholePlacetoGuests = "Whole place to Guests";
-  static const String privateRoom = "Private Room";
-  static const String guestsSleepInPrivateRoomButSomeAreasAreShared = "Guests sleep in private room but some areas are shared";
-  static const String maxGuests = "Max. Guests";
-  static const String bedRooms = "Bedrooms";
-  static const String singleBed = "Single Bed";
-  static const String doubleBed = "Double Bed";
-  static const String extraFloorMattress = "Extra floor mattress";
-  static const String bathRooms = "Bathrooms";
-  static const String kitchenAvailable = "Kitchen available";
-  static const String defutlNumber = "06";
-  static const String saveAndExit = "Save And Exit";
-  static const String saveExit1 = "Save & Exit";
-  static const String questionDialogText = "Are you sure, you want to exit? All changes done till now would be saved as Dtaft.";
-  static const String yes = "Yes";
-  static const String no = "No";
-  static const String amenities = 'Amenities';
-  static const String newAmenities = 'New Amenities';
-  static const String wiFi = 'Wi-Fi';
-  static const String airConditioner = 'Air-conditioner';
-  static const String fireAlarm = 'Fire alarm';
-  static const String homeTheater = 'Home Theater';
-  static const String masterSuiteBalcony = 'Master Suite Balcony';
-  static const String amenities3 = 'Amenities 3';
-  static const String amenities4 = 'Amenities 4';
-  static const String amenities5 = 'Amenities 5';
-  static const String houseRules = 'House Rules';
-  static const String addRules = '+ Add Rules';
-  static const String addAmenities = '+ Add Amenities';
-  static const String noSmoking = 'No smoking';
-  static const String noDrinking = 'No drinking';
-  static const String noPet = 'No pet';
-  static const String newRules = 'New Rules';
-  static const String damageToProperty = 'Damage to Property';
-  static const String rules2 = 'Rules 2';
-  static const String rules3 = 'Rules 3';
-  static const String rules4 = 'Rules 4';
-  static const String rules5 = 'Rules 5';
-  static const String checkInOutDetails = 'Check-in/out details';
-  static const String checkInTime = 'Check-In Time';
-  static const String checkOutTime = 'Check-Out Time';
-  static const String flexibleWithCheckInTime = 'Flexible with Check-in time';
-  static const String selectCheckInTime = 'Select Check In Time';
-  static const String selectCheckOutTime = 'Select Check Out Time';
-  static const String selectTime = 'Select Time';
-  static const String turnLocationOn = 'Turn Location On';
-  static const String locationDiscription = 'Your Location is off. please turn on Location to allow travelbud to see your location.';
-  static const String settings = 'Settings';
-  static const String location = 'Location';
-  static const String addLocation = 'Add Location';
-  static const String address = 'Address';
-  static const String addressIcon = '*';
-  static const String streetAddress = 'Street Address';
-  static const String landmark = 'Landmark';
-  static const String cityTown = 'City/Town';
-  static const String pinCode = 'Pin code';
-  static const String state = 'State';
-  static const String showYourSpecificLocation = 'Show your specific location';
-  static const String addressDiscription = 'Make it clear to guests where your place is located. We’ll only share your address after they’ve made a reservation.';
-  static const String enterYourAddress = 'Enter your address';
-  static const String enterYourStreetAddress = 'Enter your street address';
-  static const String enterYourLandmark = 'Enter your landmark';
-  static const String enterYourCity = 'Enter your city';
-  static const String enterYourPinCode = 'Enter your pin code';
-  static const String selectYourState = 'Select your state';
-  static const String coverPhoto = 'Cover Photo';
-  static const String photoChooseDiscription = 'Click photo or';
-  static const String chooseFile = ' choose file';
-  static const String to = ' to\n';
-  static const String upload = 'upload';
-  static const String homestayPhotos = 'Homestay Photos';
-  static const String photos = 'Photos';
-  static const String fileExpection = 'Picked file';
-  static const String noFileSelectedExpection = 'No file selected';
-  static const String homeStayDescription = 'Homestay Description';
-  static const String description = 'Description';
-  static const String enterDescription = 'Enter description';
-  static const String priceAndContactDetailsPage = 'Price and Contact Details';
-  static const String price = 'Price';
-  static const String enterStartPrice = 'Enter start price';
-  static const String enterEndPrice = 'Enter end price';
-  static const String ownerDetails = 'Owner Details';
-  static const String ownerContactNo = 'Owner Contact No.';
-  static const String ownerEmailID = 'Owner Email ID';
-  static const String homeStayDetails = 'Homestay Details';
-  static const String homeStayContactNo = 'Homestay Contact No.';
-  static const String homeStayContactNo1 = 'Enter homestay contact no. 1';
-  static const String homeStayEmailID = 'Homestay Email ID';
-  static const String homeStayEmailID1 = 'Enter homestay email ID 1';
-  static const String homeStayEmailID2 = 'Enter homestay email ID 2';
-  static const String preview = 'Preview';
-  static const String hiltonViewVilla = 'Hilton View Villa';
-  static const String newYorkUSA = 'New York, USA';
-  static const String doller = '5,000 - 6,500';
-  static const String details = 'Details';
-  static const String contact = 'Contact';
-  static const String traditional = 'Traditional';
-  static const String defultbedrooms = '6 Bedrooms';
-  static const String defultSingleBed = '5 Single Bed';
-  static const String defultGuests = '12 Guests';
-  static const String defultBathrooms = '6 Bathrooms';
-  static const String defultDoubleBed = '6 Double Bed';
-  static const String defultFloorMattress = '2 Floor mattress';
-  static const String descriptionReadMore = "'Hilton View Villa is a luxurious retreat offering modern comfort with stunning panoramic views. Featuring elegant rooms, private balconies, a pool,  and gourmet dining, it's perfect for guests seeking relaxation and exclusivity in a scenic setting. ";
-  static const String readMore = ' Read more...';
-
-
-
-
-}
-import 'package:flutter/material.dart';
-
-class FontManager {
-  static const String fontFamily = 'Poppins';
-
-  static TextStyle thin(double size, {Color color = Colors.black}) {
-    return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.w100,
-      fontSize: size,
-      color: color,
-    );
+    if (pickedFile != null) {
+      setState(() {
+        profileImage = File(pickedFile.path);
+      });
+    }
   }
 
-  static TextStyle extraLight(double size, {Color color = Colors.black}) {
-    return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.w200,
-      fontSize: size,
-      color: color,
-    );
+  Future<void> pickFromCamera() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        profileImage = File(pickedFile.path);
+      });
+    }
   }
-
-  static TextStyle light(double size, {Color color = Colors.black}) {
-    return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.w300,
-      fontSize: size,
-      color: color,
-    );
-  }
-
-  static TextStyle regular(double size, {Color color = Colors.black}) {
-    return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.w400,
-      fontSize: size,
-      color: color,
-    );
-  }
-
-  static TextStyle medium(double size, {Color color = Colors.black}) {
-    return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.w500,
-      fontSize: size,
-      color: color,
-    );
-  }
-
-  static TextStyle semiBold(double size, {Color color = Colors.black}) {
-    return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.w600,
-      fontSize: size,
-      color: color,
-    );
-  }
-
-  static TextStyle bold(double size, {Color color = Colors.black}) {
-    return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.w700,
-      fontSize: size,
-      color: color,
-    );
-  }
-
-  static TextStyle extraBold(double size, {Color color = Colors.black}) {
-    return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.w800,
-      fontSize: size,
-      color: color,
-    );
-  }
-
-  static TextStyle black(double size, {Color color = Colors.black}) {
-    return TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.w900,
-      fontSize: size,
-      color: color,
-    );
-  }
-}
-import 'package:flutter/material.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/app_radius.dart';
-import 'package:travellery_mobile/travellery_mobile/utils/font_manager.dart';
-import 'app_colors.dart';
-
-class CustomTextField extends StatelessWidget {
-  final String hintText;
-  final IconData? prefixIconData;
-  final Image? prefixIconImage;
-  final bool obscureText;
-  final String? Function(String?)? validator;
-  final void Function(String?)? onSaved;
-  final void Function(String)? onChanged;
-  final bool showSuffixIcon;
-  final Image? suffixIconImage;
-  final VoidCallback? onSuffixIconPressed;
-  final int? maxLength;
-  final int maxLines;
-  final TextStyle? textStyle;
-
-  const CustomTextField({
-    super.key,
-    required this.hintText,
-    this.prefixIconData,
-    this.prefixIconImage,
-    this.obscureText = false,
-    this.validator,
-    this.onSaved,
-    this.onChanged,
-    this.showSuffixIcon = false,
-    this.suffixIconImage,
-    this.onSuffixIconPressed,
-    this.maxLength,
-    this.maxLines = 1,
-    this.textStyle,
-  });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: obscureText,
-      validator: validator,
-      onSaved: onSaved,
-      onChanged: onChanged,
-      maxLength: maxLength,
-      maxLines: maxLines,
-      style: textStyle ?? FontManager.regular(14),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: FontManager.regular(12, color: AppColors.texFiledColor),
-        border: const OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.texFiledColor),
-          borderRadius: BorderRadius.all(AppRadius.radius10),
-        ),
-        prefixIcon: prefixIconImage != null
-            ? Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: prefixIconImage,
-        )
-            : prefixIconData != null
-            ? Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(prefixIconData, color: AppColors.texFiledColor),
-        )
-            : null,
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.texFiledColor),
-          borderRadius: BorderRadius.all(AppRadius.radius10),
-        ),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.texFiledColor),
-          borderRadius: BorderRadius.all(AppRadius.radius10),
-        ),
-        suffixIcon: showSuffixIcon
-            ? (suffixIconImage != null
-            ? Padding(
-          padding: const EdgeInsets.all(14),
-          child: suffixIconImage,
-        )
-            : IconButton(
-          icon: Icon(
-            obscureText ? Icons.visibility_off : Icons.visibility_rounded,
-            color: AppColors.texFiledColor,
+    return Scaffold(
+      backgroundColor: Colors.grey[300],
+      body: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Center(
+          child: ListView(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey[100],
+                    backgroundImage:
+                    profileImage != null ? FileImage(profileImage!) : null,
+                    child: profileImage == null
+                        ? const Icon(
+                      Icons.camera_alt,
+                      size: 40,
+                      color: Colors.grey,
+                    )
+                        : null,
+                  ),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      pickImage();
+                    },
+                    child: Container(
+                      height: 4.5.h,
+                      width: 141,
+                      decoration: const BoxDecoration(
+                        color: Colors.black38,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Add Profile Image",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  const Text(
+                    "Let's create an account for you!",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        MyTextField(
+                          controller: userNameController,
+                          hintText: "User Name",
+                          obscureText: false,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'User Name is required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        MyTextField(
+                          controller: emailController,
+                          hintText: "Email",
+                          obscureText: false,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Email is required';
+                            }
+
+                            String pattern = r'\w+@\w+\.\w+';
+                            RegExp regExp = RegExp(pattern);
+                            if (!regExp.hasMatch(value)) {
+                              return 'Please enter a valid email';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        MyTextField(
+                          controller: passwordController,
+                          hintText: "Password",
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Password is required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        MyTextField(
+                          controller: confirmPasswordController,
+                          hintText: "Confirm Password",
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please confirm your password';
+                            }
+                            if (value != passwordController.text) {
+                              return 'Passwords do not match';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        BlocConsumer<SignupBloc, SignupState>(
+                          listener: (context, state) {
+                            if (state is SignupFailed) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(state.errorMessage)),
+                              );
+                            }
+                            if (state is SignupSuccess) {
+                              Navigator.pushNamed(context, 'login');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Signup Successful!')),
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state is SignupInProgress) {
+                              return const CircularProgressIndicator(
+                                color: Colors.black,
+                              );
+                            }
+                            return MyButton(
+                              onTap: () {
+                                if (formKey.currentState!.validate()) {
+                                  context.read<SignupBloc>().add(
+                                    SignupButtonPressed(
+                                      username: userNameController.text,
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                      confirmPassword: confirmPasswordController.text,
+                                      urlImage: profileImage,
+                                    ),
+                                  );
+                                }
+                              },
+                              text: "Sign Up",
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Already have an account? "),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, 'login');
+                              },
+                              child: const Text(
+                                "LogIn",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          onPressed: onSuffixIconPressed,
-        ))
-            : null,
+        ),
       ),
     );
   }
 }
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/controller/homestaytitle_controller.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/controller/photo_picke_set.dart';
-import 'package:travellery_mobile/travellery_mobile/auth_flow/controller/signup_Login_controller.dart';
-import 'package:travellery_mobile/travellery_mobile/routes_app/all_routes_app.dart';
+import 'package:equatable/equatable.dart';
 
-void main() {
-  Get.put(SignUpLoginController());
-  Get.put(HomeStayController());
-  Get.put(ImageController());
-  runApp(
-    Sizer(
-      builder: (p0, p1, p2) => GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute: Routes.splash,
-        routes: Routes.routes,
+abstract class SignupState extends Equatable {}
+
+class SignupInitial extends SignupState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SignupInProgress extends SignupState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SignupSuccess extends SignupState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SignupFailed extends SignupState {
+  final String errorMessage;
+
+  SignupFailed(this.errorMessage);
+
+  @override
+  List<Object?> get props => [errorMessage];
+}
+import 'dart:io';
+import 'package:equatable/equatable.dart';
+
+abstract class SignupEvent extends Equatable {}
+
+class SignupButtonPressed extends SignupEvent {
+  final File? urlImage;
+  final String username;
+  final String email;
+  final String password;
+  final String confirmPassword;
+
+  SignupButtonPressed({
+    required this.urlImage,
+    required this.username,
+    required this.email,
+    required this.password,
+    required this.confirmPassword,
+  });
+
+  @override
+  List<Object?> get props =>  [urlImage,username, email, password, confirmPassword];
+}
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../services/firebase_services.dart';
+import 'signup_event.dart';
+import 'signup_state.dart';
+
+class SignupBloc extends Bloc<SignupEvent, SignupState> {
+  final FirebaseHelper firebaseHelper = FirebaseHelper.firebaseHelper;
+
+  SignupBloc() : super(SignupInitial()) {
+    on<SignupButtonPressed>(onSignupButtonPressed);
+  }
+
+  Future<void> onSignupButtonPressed(SignupButtonPressed event, Emitter<SignupState> emit) async {
+    if (event.username.isEmpty ||
+        event.email.isEmpty ||
+        event.password.isEmpty ||
+        event.confirmPassword.isEmpty) {
+      emit(SignupFailed("All fields are required."));
+      return;
+    }
+
+    if (event.password != event.confirmPassword) {
+      emit(SignupFailed('Passwords do not match'));
+      return;
+    }
+
+    if (event.urlImage == null) {
+      emit(SignupFailed("Profile image is required."));
+      return;
+    }
+
+    emit(SignupInProgress());
+
+    try {
+      String result = await firebaseHelper.createAccount(event.email, event.password);
+
+      if (result == "Success") {
+        // String profileImageUrl = '';
+        // if (event.urlImage != null) {
+        //   profileImageUrl =
+        //     await firebaseHelper.uploadProfileImage(event.urlImage!);
+        // }
+
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          await firebaseHelper.saveUserData(
+            user.uid,
+            event.username,
+            event.email,
+            // profileImageUrl,
+          );
+        }
+        emit(SignupSuccess());
+      } else {
+        emit(SignupFailed(result));
+      }
+    } catch (e) {
+      emit(SignupFailed(e.toString()));
+    }
+  }
+}
+import 'package:chat_app/components/button_common.dart';
+import 'package:chat_app/screen/auth_flow/login_flow/bloc/login_bloc.dart';
+import 'package:chat_app/screen/auth_flow/login_flow/bloc/login_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
+import '../../../../components/text_filed.dart';
+import '../../../../services/firebase_services.dart';
+import '../bloc/login_event.dart';
+
+class LogInPage extends StatelessWidget {
+  const LogInPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+
+    return Scaffold(
+      backgroundColor: Colors.grey[300],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Center(
+            child: ListView(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    const Icon(
+                      Icons.message_rounded,
+                      size: 100,
+                    ),
+                    SizedBox(
+                      height: 6.h,
+                    ),
+                    const Text(
+                      "Welcome back you've been missed!!",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 6.h,
+                    ),
+                    MyTextField(
+                      controller: emailController,
+                      hintText: "Email",
+                      obscureText: false,
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    MyTextField(
+                      controller: passwordController,
+                      hintText: "Password",
+                      obscureText: true,
+                    ),
+                    SizedBox(
+                      height: 7.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            await FirebaseHelper.firebaseHelper
+                                .signInAnonymously()
+                                .then(
+                              (value) {
+                                Navigator.pushReplacementNamed(context, 'home');
+                              },
+                            );
+                          },
+                          child: Container(
+                            height: 7.h,
+                            width: 30.w,
+                            decoration: BoxDecoration(
+                              color: const Color(0xffDADADA),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(Icons.person,
+                                color: Color(0xff2D2B2B)),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            await FirebaseHelper.firebaseHelper
+                                .googleSignIn()
+                                .then((userCredential) {
+                              debugPrint(
+                                  "User signed in: ${userCredential.user!.displayName}");
+                              Navigator.pushReplacementNamed(context, 'home');
+                            }).catchError((e) {
+                              debugPrint("Error signing in with Google: $e");
+                            });
+                          },
+                          child: Container(
+                            height: 7.h,
+                            width: 30.w,
+                            decoration: BoxDecoration(
+                              color: const Color(0xffDADADA),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.g_mobiledata_outlined,
+                              color: Color(0xff2D2B2B),
+                              size: 40,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 9.h,
+                    ),
+                    BlocConsumer<LoginBloc, LoginState>(
+                      listener: (context, state) {
+                        if (state is LoginFailed) {
+                          if (state.errorMessage == "User not found. Please sign up.") {
+                            Navigator.pushReplacementNamed(context, 'signUp');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Please create an account first')),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(state.errorMessage)),
+                            );
+                          }
+                        }
+                        if (state is LoginSuccess) {
+                          Navigator.pushReplacementNamed(context, 'home');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Login Successful!')),
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state is LoginInProgress) {
+                          return const CircularProgressIndicator(
+                            color: Colors.black,
+                          );
+                        }
+                        return MyButton(
+                          onTap: () {
+                            String email = emailController.text;
+                            String password = passwordController.text;
+
+                            if (email.isEmpty || password.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('All fields are required!')),
+                              );
+                            } else if (!isValidEmail(email)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Invalid email format!')),
+                              );
+                            } else if (password.length < 6) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Password must be at least 6 characters!')),
+                              );
+                            } else {
+                              context.read<LoginBloc>().add(
+                                    LoginButtonPressed(
+                                      email: email,
+                                      password: password,
+                                    ),
+                                  );
+                            }
+                          },
+                          text: "LogIn",
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Don't have an account? "),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, 'signUp');
+                          },
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-    ), 
-  );
+    );
+  }
+  bool isValidEmail(String email) {
+    RegExp regex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return regex.hasMatch(email);
+  }
+}
+import 'package:equatable/equatable.dart';
+
+abstract class LoginState extends Equatable {
+  @override
+  List<Object> get props => [];
+}
+
+class LoginInitial extends LoginState {}
+
+class LoginInProgress extends LoginState {}
+
+class LoginSuccess extends LoginState {}
+
+class LoginFailed extends LoginState {
+  final String errorMessage;
+
+  LoginFailed(this.errorMessage);
+
+  @override
+  List<Object> get props => [errorMessage];
+}
+import 'package:equatable/equatable.dart';
+
+abstract class LoginEvent extends Equatable {
+  @override
+  List<Object> get props => [];
+}
+
+class LoginButtonPressed extends LoginEvent {
+  final String email;
+  final String password;
+
+  LoginButtonPressed({required this.email, required this.password});
+
+  @override
+  List<Object> get props => [email,password];
+}
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../services/firebase_services.dart';
+import 'login_event.dart';
+import 'login_state.dart';
+
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  final FirebaseHelper firebaseHelper = FirebaseHelper.firebaseHelper;
+
+  LoginBloc() : super(LoginInitial()) {
+    on<LoginButtonPressed>(onLoginButtonPressed);
+  }
+
+  Future<void> onLoginButtonPressed(LoginButtonPressed event, Emitter<LoginState> emit) async {
+    if (event.email.isEmpty || event.password.isEmpty) {
+      emit(LoginFailed("All fields are required."));
+      return;
+    }
+
+    emit(LoginInProgress());
+
+    try {
+      String result = await firebaseHelper.signInWithEmailPassword(event.email, event.password);
+
+      if (result == "Success") {
+        User? user = firebaseHelper.auth.currentUser;
+        if (user != null) {
+          bool userExists = await firebaseHelper.checkUserExists(user.uid);
+          if (userExists) {
+            emit(LoginSuccess());
+          } else {
+            emit(LoginFailed("User not found. Please sign up."));
+            await firebaseHelper.deleteUserAccount(user.uid);
+          }
+        }
+      } else {
+        if (result.contains("invalid-credential")) {
+          emit(LoginFailed("User not found. Please sign up."));
+        } else {
+          emit(LoginFailed(result));
+        }
+      }
+    } catch (e) {
+      String errorMessage = e.toString();
+      if (errorMessage.contains("invalid-credential") || 
+          errorMessage.contains("user-not-found")) {
+        emit(LoginFailed("User not found. Please sign up."));
+      } else {
+        emit(LoginFailed(errorMessage));
+      }
+    }
+  }
+}
+import 'package:chat_app/generated/assets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import '../../../services/firebase_services.dart';
+import '../../chat_flow/view/chat_page.dart';
+import '../bloc/chatlist_bloc.dart';
+import '../bloc/chatlist_event.dart';
+import '../bloc/chatlist_state.dart';
+
+class ChatListPage extends StatefulWidget {
+  const ChatListPage({super.key});
+
+  @override
+  State<ChatListPage> createState() => _ChatListPageState();
+}
+
+class _ChatListPageState extends State<ChatListPage> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  late ChatListBloc chatListBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    chatListBloc = ChatListBloc(firebaseHelper: FirebaseHelper.firebaseHelper);
+    chatListBloc.add(LoadChatsEvent());
+  }
+
+  @override
+  void dispose() {
+    chatListBloc.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => chatListBloc,
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Colors.grey.shade100,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Messages',
+            style: TextStyle(
+              color: Colors.black54,
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings, color: Colors.black54),
+              onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
+            ),
+          ],
+        ),
+        endDrawer: Drawer(
+          child: FutureBuilder<DocumentSnapshot>(
+            future: FirebaseHelper.firebaseHelper.getUserData(
+              FirebaseHelper.firebaseHelper.auth.currentUser!.uid,
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+
+              if (!snapshot.hasData) {
+                return const Center(child: Text('No user data available.'));
+              }
+
+              var userData = snapshot.data!.data() as Map<String, dynamic>;
+              String username = userData['username'] ?? 'Unknown User';
+              String profileImage = userData['profileImage'] ?? '';
+              String email = userData['email'] ?? '';
+
+              return _buildDrawerContent(username, profileImage, email);
+            },
+          ),
+        ),
+        body: Column(
+          children: [
+            _buildSearchBar(),
+            Expanded(
+              child: BlocBuilder<ChatListBloc, ChatListState>(
+                builder: (context, state) {
+                  if (state is ChatListLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is ChatListError) {
+                    return Center(child: Text(state.error));
+                  }
+
+                  if (state is ChatListLoaded) {
+                    return StreamBuilder<QuerySnapshot>(
+                      stream: state.chatsStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        }
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+
+                        final chatRooms = snapshot.data?.docs ?? [];
+                        if (chatRooms.isEmpty) {
+                          return _buildEmptyState();
+                        }
+
+                        return _buildChatList(chatRooms);
+                      },
+                    );
+                  }
+
+                  return const SizedBox();
+                },
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.pushNamed(context, 'user'),
+          backgroundColor: Colors.black54,
+          elevation: 4,
+          child: const Icon(Icons.chat_rounded, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: Colors.white,
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: 'Search',
+          hintStyle: TextStyle(color: Colors.grey[400]),
+          prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
+          filled: true,
+          fillColor: Colors.grey[100],
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 12,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'No Chats yet',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatList(List<QueryDocumentSnapshot> chatRooms) {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      physics: const BouncingScrollPhysics(),
+      itemCount: chatRooms.length,
+      itemBuilder: (context, index) => _buildChatItem(chatRooms[index]),
+    );
+  }
+
+  Widget _buildChatItem(QueryDocumentSnapshot chatRoom) {
+    final chatData = chatRoom.data() as Map<String, dynamic>;
+    final lastMessage = chatData['lastMessage'] ?? '';
+    final lastMessageTime = chatData['lastMessageTime'] as Timestamp?;
+    final isGroup = chatData['isGroup'] ?? false;
+
+    int unreadCount = 0;
+    if (chatData['unreadCount'] != null && chatData['unreadCount'] is Map) {
+      final unreadCounts = Map<String, dynamic>.from(chatData['unreadCount']);
+      unreadCount =
+          unreadCounts[FirebaseHelper.firebaseHelper.auth.currentUser!.uid] ??
+              0;
+    }
+
+    String formattedTime = lastMessageTime != null
+        ? DateFormat('hh:mm a').format(lastMessageTime.toDate())
+        : '';
+
+    return InkWell(
+      onTap: () => _navigateToChat(chatRoom.id),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            _buildAvatar(chatData, isGroup),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildChatName(chatData, isGroup),
+                  const SizedBox(height: 4),
+                  _buildLastMessage(lastMessage, unreadCount),
+                ],
+              ),
+            ),
+            _buildTimeAndUnread(formattedTime, unreadCount),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatar(Map<String, dynamic> chatData, bool isGroup) {
+    if (isGroup) {
+      return CircleAvatar(
+        backgroundColor: Colors.grey[200],
+        radius: 24,
+        child: Icon(Icons.group, color: Colors.grey[600], size: 32),
+      );
+    }
+
+    List<String> users = List<String>.from(chatData['users']);
+    String otherUserId = users.firstWhere(
+      (userId) => userId != FirebaseHelper.firebaseHelper.auth.currentUser!.uid,
+      orElse: () => '',
+    );
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseHelper.firebaseHelper.getUserData(otherUserId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data?.data() != null) {
+          final userData = snapshot.data!.data() as Map<String, dynamic>;
+          final profileImage = userData['profileImage'] ?? '';
+
+          return CircleAvatar(
+            radius: 24,
+            backgroundImage: profileImage.isNotEmpty
+                ? NetworkImage(profileImage)
+                : const AssetImage(Assets.imagesProfile) as ImageProvider,
+          );
+        }
+        return CircleAvatar(
+          backgroundColor: Colors.grey[200],
+          radius: 24,
+          child: Icon(Icons.person, color: Colors.grey[600], size: 32),
+        );
+      },
+    );
+  }
+
+  Widget _buildChatName(Map<String, dynamic> chatData, bool isGroup) {
+    if (isGroup) {
+      return Text(
+        chatData['groupName'] ?? 'Unnamed Group',
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      );
+    }
+
+    List<String> users = List<String>.from(chatData['users']);
+    String otherUserId = users.firstWhere(
+      (userId) => userId != FirebaseHelper.firebaseHelper.auth.currentUser!.uid,
+      orElse: () => '',
+    );
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseHelper.firebaseHelper.getUserData(otherUserId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data?.data() != null) {
+          final userData = snapshot.data!.data() as Map<String, dynamic>;
+          return Text(
+            userData['username'] ?? 'Unknown User',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          );
+        }
+        return const Text('Loading...');
+      },
+    );
+  }
+
+  Widget _buildLastMessage(String lastMessage, int unreadCount) {
+    return Text(
+      lastMessage,
+      style: TextStyle(
+        fontSize: 14,
+        color: unreadCount > 0 ? Colors.black87 : Colors.grey.shade600,
+        fontWeight: unreadCount > 0 ? FontWeight.w500 : FontWeight.normal,
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget _buildTimeAndUnread(String formattedTime, int unreadCount) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          formattedTime,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey.shade600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        if (unreadCount > 0)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: Colors.black54,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            constraints: const BoxConstraints(
+              minWidth: 20,
+              minHeight: 20,
+            ),
+            child: Center(
+              child: Text(
+                unreadCount.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  height: 1,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  void _navigateToChat(String chatId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatPage(chatId: chatId),
+      ),
+    );
+  }
+
+  Widget _buildDrawerContent(
+      String username, String profileImage, String email) {
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        _buildDrawerHeader(username, profileImage, email),
+        _buildDrawerItem(
+          icon: Icons.home,
+          title: 'Home',
+          onTap: () => Navigator.pop(context),
+        ),
+        _buildDrawerItem(
+          icon: Icons.group,
+          title: 'Create Group',
+          onTap: () => Navigator.pushNamed(context, 'groupSelect'),
+        ),
+        _buildDrawerItem(
+          icon: Icons.mail,
+          title: 'Invitations',
+          onTap: () => Navigator.pushNamed(context, 'notification'),
+        ),
+        _buildDrawerItem(
+          icon: Icons.logout,
+          title: 'Logout',
+          onTap: () async {
+            await FirebaseHelper.firebaseHelper.userLogout();
+            Navigator.pushReplacementNamed(context, 'login');
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDrawerHeader(
+      String username, String profileImage, String email) {
+    return DrawerHeader(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Colors.black87, Colors.black54],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 27,
+            backgroundColor: Colors.white,
+            child: CircleAvatar(
+              radius: 25,
+              backgroundImage: profileImage.isNotEmpty
+                  ? NetworkImage(profileImage)
+                  : const AssetImage(Assets.imagesProfile) as ImageProvider,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            username,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            email,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.black87),
+      title: Text(title, style: const TextStyle(fontSize: 16)),
+      onTap: onTap,
+    );
+  }
+}
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+
+abstract class ChatListState extends Equatable {}
+
+class ChatListInitial extends ChatListState {
+  @override
+  List<Object?> get props => [];
+}
+
+class ChatListLoading extends ChatListState {
+  @override
+  List<Object?> get props => [];
+}
+
+class ChatListLoaded extends ChatListState {
+  final Stream<QuerySnapshot> chatsStream;
+  ChatListLoaded(this.chatsStream);
+
+  @override
+  List<Object?> get props => [chatsStream];
+}
+
+class ChatListError extends ChatListState {
+  final String error;
+  ChatListError(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
+import 'package:equatable/equatable.dart';
+
+abstract class ChatListEvent extends Equatable {}
+
+class LoadChatsEvent extends ChatListEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class UpdateUnreadCountEvent extends ChatListEvent {
+  final String chatId;
+  UpdateUnreadCountEvent(this.chatId);
+  
+  @override
+  List<Object?> get props => [chatId];
+}
+import 'package:chat_app/screen/all_chats_flow/bloc/chatlist_event.dart';
+import 'package:chat_app/screen/all_chats_flow/bloc/chatlist_state.dart';
+import 'package:chat_app/services/firebase_services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
+  final FirebaseHelper firebaseHelper;
+
+  ChatListBloc({required this.firebaseHelper}) : super(ChatListInitial()) {
+    on<LoadChatsEvent>(onLoadChats);
+    on<UpdateUnreadCountEvent>(onUpdateUnreadCount);
+  }
+
+  void onLoadChats(LoadChatsEvent event, Emitter<ChatListState> emit) async {
+    try {
+      emit(ChatListLoading());
+      final chatsStream = firebaseHelper.getChatsStream();
+      emit(ChatListLoaded(chatsStream));
+    } catch (e) {
+      emit(ChatListError(e.toString()));
+    }
+  }
+
+  void onUpdateUnreadCount(
+      UpdateUnreadCountEvent event, Emitter<ChatListState> emit) async {
+    try {
+      await firebaseHelper.resetUnreadCount(event.chatId);
+    } catch (e) {
+      emit(ChatListError(e.toString()));
+    }
+  }
 }
 ///This file is automatically generated. DO NOT EDIT, all your changes would be lost.
 class Assets {
   Assets._();
 
-  static const String fontsOFL = 'assets/fonts/OFL.txt';
-  static const String fontsPoppinsBlack = 'assets/fonts/Poppins-Black.ttf';
-  static const String fontsPoppinsBlackItalic = 'assets/fonts/Poppins-BlackItalic.ttf';
-  static const String fontsPoppinsBold = 'assets/fonts/Poppins-Bold.ttf';
-  static const String fontsPoppinsBoldItalic = 'assets/fonts/Poppins-BoldItalic.ttf';
-  static const String fontsPoppinsExtraBold = 'assets/fonts/Poppins-ExtraBold.ttf';
-  static const String fontsPoppinsExtraBoldItalic = 'assets/fonts/Poppins-ExtraBoldItalic.ttf';
-  static const String fontsPoppinsExtraLight = 'assets/fonts/Poppins-ExtraLight.ttf';
-  static const String fontsPoppinsExtraLightItalic = 'assets/fonts/Poppins-ExtraLightItalic.ttf';
-  static const String fontsPoppinsItalic = 'assets/fonts/Poppins-Italic.ttf';
-  static const String fontsPoppinsLight = 'assets/fonts/Poppins-Light.ttf';
-  static const String fontsPoppinsLightItalic = 'assets/fonts/Poppins-LightItalic.ttf';
-  static const String fontsPoppinsMedium = 'assets/fonts/Poppins-Medium.ttf';
-  static const String fontsPoppinsMediumItalic = 'assets/fonts/Poppins-MediumItalic.ttf';
-  static const String fontsPoppinsRegular = 'assets/fonts/Poppins-Regular.ttf';
-  static const String fontsPoppinsSemiBold = 'assets/fonts/Poppins-SemiBold.ttf';
-  static const String fontsPoppinsSemiBoldItalic = 'assets/fonts/Poppins-SemiBoldItalic.ttf';
-  static const String fontsPoppinsThin = 'assets/fonts/Poppins-Thin.ttf';
-  static const String fontsPoppinsThinItalic = 'assets/fonts/Poppins-ThinItalic.ttf';
-  static const String imagesAdventure = 'assets/images/adventure.png';
-  static const String imagesAirCondioner = 'assets/images/airCondioner.png';
-  static const String imagesBathRooms = 'assets/images/bathRooms.png';
-  static const String imagesBedRooms = 'assets/images/bedRooms.png';
-  static const String imagesBedbreakfast = 'assets/images/bedbreakfast.png';
-  static const String imagesClock = 'assets/images/clock.png';
-  static const String imagesDamageToProretiy = 'assets/images/damageToProretiy.png';
-  static const String imagesDialogPassword = 'assets/images/dialogPassword.png';
-  static const String imagesDialogemail = 'assets/images/dialogemail.png';
-  static const String imagesDividecircle = 'assets/images/dividecircle.png';
-  static const String imagesDividecircle2 = 'assets/images/dividecircle2.png';
-  static const String imagesDubleBed = 'assets/images/dubleBed.png';
-  static const String imagesEcofriendly = 'assets/images/ecofriendly.png';
-  static const String imagesEmail = 'assets/images/email.png';
-  static const String imagesExtraFloor = 'assets/images/extraFloor.png';
-  static const String imagesFacbookicon = 'assets/images/facbookicon.png';
-  static const String imagesFirAlarm = 'assets/images/firAlarm.png';
-  static const String imagesGoogleIcon = 'assets/images/googleIcon.png';
-  static const String imagesHomeProgres2 = 'assets/images/homeProgres2.png';
-  static const String imagesHomeProgres3 = 'assets/images/homeProgres3.png';
-  static const String imagesHomeProgres4 = 'assets/images/homeProgres4.png';
-  static const String imagesHomeProgress5 = 'assets/images/homeProgress5.png';
-  static const String imagesHomestayProgres = 'assets/images/homestayProgres.png';
-  static const String imagesHometherater = 'assets/images/hometherater.png';
-  static const String imagesImageProgres6 = 'assets/images/imageProgres6.png';
-  static const String imagesImageRectangle = 'assets/images/imageRectangle.png';
-  static const String imagesImagesHomestayProgres1 = 'assets/images/imagesHomestayProgres1.png';
-  static const String imagesInto1 = 'assets/images/into1.png';
-  static const String imagesInto2 = 'assets/images/into2.png';
-  static const String imagesInto3 = 'assets/images/into3.png';
-  static const String imagesIntoarro = 'assets/images/intoarro.png';
-  static const String imagesIntodesh = 'assets/images/intodesh.png';
-  static const String imagesIntodesh2 = 'assets/images/intodesh2.png';
-  static const String imagesIntodesh3 = 'assets/images/intodesh3.png';
-  static const String imagesKitchen = 'assets/images/kitchen.png';
-  static const String imagesListHome = 'assets/images/listHome.png';
-  static const String imagesListHome2 = 'assets/images/listHome2.png';
-  static const String imagesListHome3 = 'assets/images/listHome3.png';
-  static const String imagesLuxury = 'assets/images/luxury.png';
-  static const String imagesMastrSuite = 'assets/images/mastrSuite.png';
-  static const String imagesMaxGuests = 'assets/images/maxGuests.png';
-  static const String imagesNoDrinking = 'assets/images/noDrinking.png';
-  static const String imagesNoPet = 'assets/images/noPet.png';
-  static const String imagesNoSmoking = 'assets/images/noSmoking.png';
-  static const String imagesOr = 'assets/images/or.png';
-  static const String imagesPassword = 'assets/images/password.png';
-  static const String imagesPhone = 'assets/images/phone.png';
-  static const String imagesPluscircle = 'assets/images/pluscircle.png';
-  static const String imagesPluscircle2 = 'assets/images/pluscircle2.png';
-  static const String imagesPrivateRoom = 'assets/images/privateRoom.png';
   static const String imagesProfile = 'assets/images/profile.png';
-  static const String imagesQuestionDialog = 'assets/images/questionDialog.png';
-  static const String imagesSignupProfile = 'assets/images/signup_profile.png';
-  static const String imagesSingleBed = 'assets/images/singleBed.png';
   static const String imagesSplash = 'assets/images/splash.png';
-  static const String imagesTraditional = 'assets/images/traditional.png';
-  static const String imagesUploadImage = 'assets/images/uploadImage.png';
-  static const String imagesUrban = 'assets/images/urban.png';
-  static const String imagesWiFi = 'assets/images/wiFi.png';
-
 }
-name: travellery_mobile
+import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+
+class MyButton extends StatelessWidget {
+  final void Function()? onTap;
+  final String text;
+
+  const MyButton({
+    super.key,
+    required this.onTap,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 6.h,
+        width: double.infinity,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(9),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+
+class MyTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final bool obscureText;
+  final FormFieldValidator<String>? validator;
+
+  const MyTextField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    required this.obscureText,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade200),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        fillColor: Colors.grey[100],
+        filled: true,
+        hintText: hintText,
+        hintStyle: const TextStyle(color: Colors.grey),
+      ),
+      validator: validator,
+    );
+  }
+}
+name: chat_app
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -4779,16 +4889,28 @@ dependencies:
   flutter:
     sdk: flutter
 
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  get: ^4.6.6
+  flutter_bloc: ^8.1.6
+  firebase_auth: ^5.3.4
+  firebase_core: ^3.9.0
   sizer: ^3.0.4
-  pin_code_fields: ^8.0.1
-  intl: ^0.19.0
-  google_maps_flutter: ^2.9.0
-  file_picker: ^8.1.2
-
+  equatable:
+  google_sign_in: ^6.2.2
+  image_picker: ^1.1.2
+  cloud_firestore: ^5.6.0
+  firebase_storage: ^12.3.7
+  intl: ^0.20.1
+  firebase_messaging: ^15.1.6
+  flutter_local_notifications: ^18.0.1
+  flutter_chat_bubble: ^2.0.2
+  auto_route: ^9.2.2
+  auto_route_generator: ^9.0.0
+  app_links: ^6.3.3
+  url_launcher: ^6.3.1
+  link_text: ^0.2.1
 
 dev_dependencies:
   flutter_test:
@@ -4830,26 +4952,310 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Poppins
-      fonts:
-        - asset: assets/fonts/Poppins-Thin.ttf
-          weight: 100
-        - asset: assets/fonts/Poppins-ExtraLight.ttf
-          weight: 200
-        - asset: assets/fonts/Poppins-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Poppins-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Poppins-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Poppins-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Poppins-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Poppins-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/Poppins-Black.ttf
-          weight: 900
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+// File generated by FlutterFire CLI.
+// ignore_for_file: type=lint
+import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+
+/// Default [FirebaseOptions] for use with your Firebase apps.
+///
+/// Example:
+/// ```dart
+/// import 'firebase_options.dart';
+/// // ...
+/// await Firebase.initializeApp(
+///   options: DefaultFirebaseOptions.currentPlatform,
+/// );
+/// ```
+class DefaultFirebaseOptions {
+  static FirebaseOptions get currentPlatform {
+    if (kIsWeb) {
+      return web;
+    }
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return android;
+      case TargetPlatform.iOS:
+        return ios;
+      case TargetPlatform.macOS:
+        return macos;
+      case TargetPlatform.windows:
+        return windows;
+      case TargetPlatform.linux:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for linux - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      default:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions are not supported for this platform.',
+        );
+    }
+  }
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBfcNUMKbOOjKBlyK41vPXrjvcC46ijMV4',
+    appId: '1:181375027074:web:d40a0eaec22a07b1f1b19b',
+    messagingSenderId: '181375027074',
+    projectId: 'chatapp-4c7b9',
+    authDomain: 'chatapp-4c7b9.firebaseapp.com',
+    storageBucket: 'chatapp-4c7b9.firebasestorage.app',
+    measurementId: 'G-8LSLJJJNYH',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyDNrEL9m_H46BT6Dz03Q4o3EHJLj4in-y8',
+    appId: '1:181375027074:android:e42d47268fa07d07f1b19b',
+    messagingSenderId: '181375027074',
+    projectId: 'chatapp-4c7b9',
+    storageBucket: 'chatapp-4c7b9.firebasestorage.app',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBVxnaQ0xYM4LPPR70nlTNgRe65uuwB6nU',
+    appId: '1:181375027074:ios:1b8a29e7feea5e2ff1b19b',
+    messagingSenderId: '181375027074',
+    projectId: 'chatapp-4c7b9',
+    storageBucket: 'chatapp-4c7b9.firebasestorage.app',
+    iosBundleId: 'com.example.chatApp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBVxnaQ0xYM4LPPR70nlTNgRe65uuwB6nU',
+    appId: '1:181375027074:ios:1b8a29e7feea5e2ff1b19b',
+    messagingSenderId: '181375027074',
+    projectId: 'chatapp-4c7b9',
+    storageBucket: 'chatapp-4c7b9.firebasestorage.app',
+    iosBundleId: 'com.example.chatApp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBfcNUMKbOOjKBlyK41vPXrjvcC46ijMV4',
+    appId: '1:181375027074:web:b421e61fb440e96ef1b19b',
+    messagingSenderId: '181375027074',
+    projectId: 'chatapp-4c7b9',
+    authDomain: 'chatapp-4c7b9.firebaseapp.com',
+    storageBucket: 'chatapp-4c7b9.firebasestorage.app',
+    measurementId: 'G-G89H2GM1R0',
+  );
+
+}
+{
+  "project_info": {
+    "project_number": "181375027074",
+    "project_id": "chatapp-4c7b9",
+    "storage_bucket": "chatapp-4c7b9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181375027074:android:6d90e7c1cf6a6f2ef1b19b",
+        "android_client_info": {
+          "package_name": "com.chatapp.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181375027074-iqu9is43d633v11ksumqg3vdnf555102.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chatapp.app",
+            "certificate_hash": "6c2359a9c8b6a151d87780607b3e2497db3e4ebd"
+          }
+        },
+        {
+          "client_id": "181375027074-b0kh15bv7qdnkatcpel9cs51miaip55t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNrEL9m_H46BT6Dz03Q4o3EHJLj4in-y8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181375027074-b0kh15bv7qdnkatcpel9cs51miaip55t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "181375027074-n11fjue0j1cj2mqs9cualeg9cl4to770.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181375027074:android:e42d47268fa07d07f1b19b",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181375027074-97pn0c6h21hhm2hehsl367l6df13et9u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chat_app",
+            "certificate_hash": "6c2359a9c8b6a151d87780607b3e2497db3e4ebd"
+          }
+        },
+        {
+          "client_id": "181375027074-b0kh15bv7qdnkatcpel9cs51miaip55t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNrEL9m_H46BT6Dz03Q4o3EHJLj4in-y8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181375027074-b0kh15bv7qdnkatcpel9cs51miaip55t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "181375027074-n11fjue0j1cj2mqs9cualeg9cl4to770.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
+plugins {
+    id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.chat_app"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId = "com.example.chat_app"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        minSdk = 23
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.chat_app">
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <application
+        android:label="chat_app"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+    <!-- Required to query activities that can process text, see:
+         https://developer.android.com/training/package-visibility and
+         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+
+         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+</manifest>
+
